@@ -1,0 +1,102 @@
+/* stylereg.css */
+.register {
+  background: #f1f7fc;
+  padding: 80px 0;
+  display: flex;
+  justify-content: flex-end; /* Align to the right side */
+  align-items: center;
+  height: 400px;
+}
+
+
+.register .form-container {
+  max-width: 300px;
+  width: 90%;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.register form {
+  width: 400px;
+  background-color: #ffffff;
+  padding: 40px 60px;
+  color: #505e6c;
+}
+
+@media (max-width: 991px) {
+  .register form {
+    padding: 40px;
+  }
+}
+
+.register form h2 {
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+.register form .form-control {
+  background: #f7f9fc;
+  border: none;
+  border-bottom: 1px solid #dfe7f1;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  color: inherit;
+  text-indent: 4px;
+  height: 20px;
+  font-size: 14px;
+}
+
+.register form .form-check {
+  font-size: 8px;
+  line-height: 15px;
+}
+
+.register form .btn-primary {
+  background: #014d07;
+  border: none;
+  border-radius: 4px;
+  padding: 11px;
+  box-shadow: none;
+  margin-top: 35px;
+  text-shadow: none;
+  outline: none !important;
+}
+
+.register form .btn-primary:hover,
+.register form .btn-primary:active {
+  background: #014d07;
+}
+
+.register form .btn-primary:active {
+  transform: translateY(1px);
+}
+
+.register form .already {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  color: #6f7a85;
+  opacity: 0.9;
+  text-decoration: none;
+}
+
+/* Additional style for role selection dropdown */
+.register form .form-select {
+  background: #f7f9fc;
+  border: none;
+  border-bottom: 1px solid #dfe7f1;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  color: inherit;
+  height: 40px; /* Match the height of other form controls */
+  width: 300px; /* Match the width of other form controls */
+}
+.reset-link {
+  color: #FF0000; /* Color for "Forgot Password?" text */
+}
+
+.reset-link span {
+  color: rgb(140, 22, 22); /* Color for "here" text */
+}

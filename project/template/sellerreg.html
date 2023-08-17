@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/stylereg.css' %}">
+<link rel="apple-touch-icon" href="{% static 'img/logo.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo.css' %}">
+    <link rel="stylesheet" href="{% static '/css/custom.css' %}">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+
+</head>
+
+<body >
+
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="logo">
+                <a class="navbar-brand" href="index.html">
+                    <img src="{% static 'img/gusto.png' %}" alt="Site Logo" class="img-fluid w-auto h-100" style="max-height: 100px;">
+                </a>
+            </div>
+           
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+                <div class="flex-fill">
+                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="shop.html">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="navbar align-self-center d-flex">
+                    <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
+                            <div class="input-group-text">
+                                <i class="fa fa-fw fa-search "></i>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
+                        <i class="fa fa-fw fa-search text-light mr-2"></i>
+                    </a>
+                    <a class="nav-icon position-relative text-decoration-none" href="#">
+                        <i class="fa fa-fw fa-cart-arrow-down text-light mr-1"></i>
+                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span> {% endcomment %}
+                    </a>
+                    <a class="nav-icon position-relative text-decoration-none" href="">
+                        <i class="fa fa-fw fa-user text-light mr-1"></i>
+                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span> {% endcomment %}
+                    </a>
+                    {% if user.is_authenticated %}
+                    <h4 class=" text-light">{{user.name}}<h4>
+                        <div style="margin-left: 5px;" class="mt-2">
+                            <a class="nav-icon position-relative text-decoration-none" href="{% url 'logout' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logout">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        
+                        
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+<!-- registration starts    -->
+
+    <div class="register" style="padding-right: 400px;
+    background-image: url('{% static 'img/bgimg.jpeg' %}');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100vh;
+    width:100%
+        filter: blur(5px); ">
+        <div class="form-container">
+            <div class="image-holder"></div>
+            <form method="post" id="sellerRegisterForm">
+                {% csrf_token %}
+                <h2 class="text-center"><strong>Create</strong> a seller account.</h2>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="name" id="name" placeholder="Name">
+                    <span id="sellerName-error" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="email" name="email" id="email" placeholder="Email">
+                    
+                    <span id="email-error" class="error-message"></span>
+                    {% comment %} <div class="">
+                        {% if messages % }
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        {% endif %}
+
+                    </div> {% endcomment %}
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password" id="password" placeholder="Password">
+                    <span id="password-error" class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password-repeat" id="password-repeat" placeholder=" Confirm Password">
+                    <span id="password-repeat-error" class="error-message"></span>
+                </div>
+                <input type="hidden" name="role" value="seller">
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit" id="sellerSignUpBtn" name="seller_register">Sign Up as Seller</button>
+                </div>
+                <a href="{% url 'login' %}" class="already">You already have an account? <b>Login here.</b>.</a>
+            </form>
+        </div>
+    </div>
+    
+
+    <!-- Include your JavaScript file -->
+    <script src="{% static 'js/validation.js' %}"></script>
+</body>
+
+</html>
