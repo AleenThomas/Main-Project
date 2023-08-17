@@ -68,8 +68,8 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'index' %}">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cust_profile' %}">About</a>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cust_profile' user.id %}">Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="shop.html">Shop</a>
@@ -102,11 +102,13 @@ https://templatemo.com/tm-559-zay-shop
                     <div class="dropdown-menu dropdown-menu-end always-show-dropdown" style="min-width: 200px;" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="{% url 'customer_register' %}" style="color:rgb(2, 48, 2);">Register as Customer</a>
                         <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register as Seller</a>
+                        <a class="dropdown-item" href="{% url 'login' %}" style="color:rgb(2, 48, 2);">Login</a>
+
                     </div>
                         {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span> {% endcomment %}
                     
                     {% if user.is_authenticated %}
-                    <h4 class=" text-light">{{user.name}}<h4>
+                    <h4 class=" text-light" >{{user.name}}<h4>
                         <div style="margin-left: 5px;" class="mt-2">
                             <a class="nav-icon position-relative text-decoration-none" href="{% url 'logout' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logout">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -114,6 +116,7 @@ https://templatemo.com/tm-559-zay-shop
                                     <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
                                 </svg>
                             </a>
+                           
                     {% endif %}
                         </div>
                         
@@ -428,8 +431,8 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="row pt-2">
                     <div class="col-12">
                         <p class="text-left text-light">
-                            Copyright &copy; 2021 Company Name 
-                            | Designed by <a rel="sponsored" href="https://templatemo.com" target="_blank">TemplateMo</a>
+                            Copyright &copy; 2021 GustoGrove 
+                            {% comment %} | Designed by <a rel="sponsored" href="https://templatemo.com" target="_blank">TemplateMo</a> {% endcomment %}
                         </p>
                     </div>
                 </div>

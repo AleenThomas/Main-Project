@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('registerForm');
     const emailInput = document.getElementById('email');
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         emailInput.classList.add('is-invalid');
         emailError.innerText = 'Please enter a valid email address.';
       } else {
+        console.log("Entered");
         emailInput.classList.remove('is-invalid');
         emailError.innerText = '';
       }
@@ -25,19 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
   
       const errors = [];
       if (password.length < 6) {
-        errors.push('Password must be at least 6 characters long.');
+        errors.push('Atleast 6 chars.');
       }
       if (!containsUppercase(password)) {
-        errors.push('Password must contain at least one uppercase letter.');
+        errors.push('requires Uppercase,');
       }
       if (!containsLowercase(password)) {
-        errors.push('Password must contain at least one lowercase letter.');
+        errors.push('Lowercasse,');
       }
       if (!containsSpecialCharacter(password)) {
-        errors.push('Password must contain at least one special character.');
+        errors.push('Number.');
       }
       if(!containsNumber(password)) {
-        errors.push('Password must contain at least one number character.');
+        errors.push('special symbol .');
       }
   
       if (errors.length > 0) {

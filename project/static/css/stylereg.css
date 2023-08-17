@@ -105,3 +105,7 @@ body{
 .reset-link span {
   color: rgb(140, 22, 22); /* Color for "here" text */
 }
+.error-message {
+  color: red;
+  font-size: 14px;
+}

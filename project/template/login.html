@@ -86,7 +86,14 @@
 
 
     <!-- Login start-->
-    <div class="register "  style="padding-right:500px;">
+     <div>
+        {% if messages %}
+        {% for message in messages %}
+            <span id="email-error" class="error-message">{{ message }}</span>
+        {% endfor %}
+    {% endif %}
+    </div>
+    <div class="register d-flex justify-content-center " >
         <div class="form-container">
             <div class="image-holder"></div>
             <form method="post" onsubmit="return validateLoginForm()">

@@ -10,12 +10,9 @@ def customer_register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         role = request.POST.get('role', None)
-        
-        if email and password and role:
-            if CustomUser.objects.filter(email=email).exists():
-                messages.error(request, "Email already exists")
-                return redirect('login')
-            
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request,"email already exits")
+        elif email and password and role:
             user = CustomUser(name=name, email=email)
             user.set_password(password)
             
@@ -23,7 +20,7 @@ def customer_register(request):
                 user.is_customer = True
             user.save()
             messages.success(request, "Registered as a customer successfully")
-            return redirect('/')  # Redirect to homepage or thank-you page
+            return redirect('login')  # Redirect to homepage or thank-you page
         
         else:
             messages.error(request, "Missing required fields")
@@ -39,11 +36,12 @@ def seller_register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         role = request.POST.get('role', None)
-        
-        if email and password and role:
-            if CustomUser.objects.filter(email=email).exists():
-                messages.error(request, "Email already exists")
-                return redirect('seller_register')
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request,"email already exits")
+        elif email and password and role:
+            # if CustomUser.objects.filter(email=email).exists():
+            #     messages.error(request, "Email already exists")
+            #     return redirect('seller_register')
             
             user = CustomUser(name=name, email=email)
             user.set_password(password)
