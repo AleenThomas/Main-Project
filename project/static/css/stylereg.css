@@ -1,18 +1,23 @@
 /* stylereg.css */
+body{
+  background-color: white;
+}
 .register {
   background: #f1f7fc;
   padding: 80px 0;
   display: flex;
-  justify-content: flex-end; /* Align to the right side */
-  align-items: center;
-  height: 400px;
-}
+  /* justify-content: center; /* Center horizontally */
+  /* align-items: center; /* Center vertically */
+  /* min-height: 100vh; */ 
 
+}
 
 .register .form-container {
   max-width: 300px;
   width: 90%;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  /* justify-content: center; /* Align to the right side */
+  /* align-items: center;  */
 }
 
 .register form {
@@ -31,7 +36,7 @@
 .register form h2 {
   font-size: 24px;
   line-height: 1;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .register form .form-control {
@@ -44,7 +49,7 @@
   color: inherit;
   text-indent: 4px;
   height: 20px;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .register form .form-check {
