@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 # from.models import CustomUser
@@ -22,6 +23,21 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.name
+    
+
+
+class Product(models.Model):
+    product_name = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField(upload_to='products/', null=True, blank=True)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    date_added = models.DateField(default=timezone.now)
+    brand_name = models.CharField(max_length=255,default="")
+
+    def __str__(self):
+        return self.product_name
+
 # # class Customer(models.Model):
 # # 	user = models.OneToOneField(CustomUser, null=True, blank=True, on_delete=models.CASCADE)
 # # 	name = models.CharField(max_length=200, null=True)

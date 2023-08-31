@@ -3,14 +3,38 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from .models import UserProfile
+from .forms import ProductForm
+from .models import Product
+from django.shortcuts import render, get_object_or_404
+
 def index(request):
     return render(request,'index.html')
+
+def seller_index(request):
+    return render(request,'sellerhome.html')
 
 def cust_profile(request,user):
     print(user)
     data=UserProfile.objects.filter(user_id=user)
     return render(request,'custprofile.html',{'data':data})
 
+
+
+def shop(request):
+    # Get products added by the suppliers
+    supplier_products = Product.objects.all()  # You can add filters if needed
+    
+    context = {
+        'supplier_products': supplier_products
+    }
+    return render(request, 'shop.html', context)
+
+# views.py
+
+
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    return render(request, 'shop-single.html', {'product': product})
 
 
 # @login_required
@@ -101,6 +125,18 @@ def profile(request):
 
     return render(request, 'custprofile.html', context)
 
+
+
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')  # Redirect to a page showing the list of products
+    else:
+        form = ProductForm()
+
+    return render(request, 'add_product.html', {'form': form})
 
 
 

@@ -106,7 +106,7 @@
                         <!-- User Profile Display -->
                         <div class="account-settings">
                             <div class="user-profile">
-                                <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
+                                <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}" id="profileform">
                                     {% csrf_token %}
                                     <!-- ... other fields ... -->
                                     <div class="form-group">
@@ -147,12 +147,12 @@
                                         <span id="firstNameError" class="error-message"></span>
 
                                     </div>
-                                    {% endfor %}
+                                    
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="fullName">Last Name</label>
-                                        <input type="text" class="form-control"  name="sName"id="sName" placeholder="Enter last name" value="{{ user_profile.full_name }}">
+                                        <input type="text" class="form-control"  name="sName"id="sName"  value="{{ i.l_name }}">
                                         <span id="secondNameError" class="error-message"></span>
 
                                     </div>
@@ -160,7 +160,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="eMail">Email</label>
-                                        <input type="email" class="form-control" name="email"id="eMail" disabled value="{{user.email}}" placeholder="Enter email ID" value="{{ user_profile.email }}">
+                                        <input type="email" class="form-control" name="email"id="eMail" disabled value="{{user.email}}"  value="{{ user_profile.email }}">
                                         <span id="emailError" class="error-message"></span>
 
                                     </div>
@@ -168,7 +168,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="phone">Phone</label>
-                                        <input type="text" class="form-control" id="phone" name="phone"placeholder="Enter phone number" value="{{ user_profile.phone }}">
+                                        <input type="text" class="form-control" id="phone" name="phone" value="{{ i.phone }}">
                                         <span id="phoneError" class="error-message"></span>
 
                                     </div>
@@ -187,7 +187,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="Street">Street</label>
-                                        <input type="name" name="street"class="form-control" id="Street" placeholder="Enter Street" value="{{ user_profile.street }}">
+                                        <input type="name" name="street"class="form-control" id="Street" value="{{ i.street }}">
                                         <span id="streetError" class="error-message"></span>
 
                                     </div>
@@ -195,7 +195,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="ciTy">City</label>
-                                        <input type="name"name="city" class="form-control" id="ciTy" placeholder="Enter City" value="{{ user_profile.city }}">
+                                        <input type="name"name="city" class="form-control" id="ciTy" value="{{ i.city }}">
                                         <span id="cityError" class="error-message"></span>
 
                                     </div>
@@ -203,7 +203,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="sTate">State</label>
-                                        <input type="text" name="state"class="form-control" id="sTate" placeholder="Enter State" value="{{ user_profile.state }}">
+                                        <input type="text" name="state"class="form-control" id="sTate" value="{{ i.state }}">
                                         <span id="stateError" class="error-message"></span>
 
                                     </div>
@@ -211,11 +211,12 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="zIp">Zip Code</label>
-                                        <input type="text" class="form-control" name="zip_code" id="zIp" placeholder="Zip Code" value="{{ user_profile.zip_code }}">
+                                        <input type="text" class="form-control" name="zip_code" id="zIp" value="{{ i.zip_code }}">
                                         <span id="zipError" class="error-message"></span>
 
                                     </div>
                                 </div>
+                                {% endfor %}
                             </div>
                                 <!-- ... Other fields ... -->
                             </div>

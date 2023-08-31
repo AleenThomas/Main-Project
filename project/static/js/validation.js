@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   
     function isValidEmail(email) {
-      const emailRegex = /\S+@\S+\.\S+/;
+      const emailRegex =  /^[a-zA-Z0-9._%+-]+@[a-z]+\.[a-zA-Z]+(?:\.[a-zA-Z]+)?$/;;
       return emailRegex.test(email);
     }
     function containsNumber(text) {
