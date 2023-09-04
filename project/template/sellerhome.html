@@ -72,10 +72,10 @@ https://templatemo.com/tm-559-zay-shop
                             {% comment %} <a class="nav-link" href="{% url 'cust_profile' user.id %}">Profile</a> {% endcomment %}
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="shop.html">Add Products</a>
+                            <a class="nav-link" href="{% url 'add_product' %}">Add Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">View Products</a>
+                            <a class="nav-link" href="{% url 'seller_product_listing' %}">View Products</a>
                         </li>
                     </ul>
                 </div>
@@ -91,18 +91,16 @@ https://templatemo.com/tm-559-zay-shop
                     <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
                         <i class="fa fa-fw fa-search text-light mr-2"></i>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-cart-arrow-down text-light mr-1"></i>
-                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span> {% endcomment %}
-                    </a>
+                   
                     <a class="nav-icon position-relative text-decoration-none dropdown" href="#" data-bs-toggle="dropdown">
                         <i class="fa fa-fw fa-user text-light mr-1"></i>
                     </a>
                    
                     <div class="dropdown-menu dropdown-menu-end always-show-dropdown" style="min-width: 200px;" aria-labelledby="userDropdown">
-                        {% comment %} <a class="dropdown-item" href="{% url 'customer_register' %}" style="color:rgb(2, 48, 2);">Register as Customer</a>
+                        {% comment %} <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register</a> {% endcomment %}
+                        <a class="dropdown-item" href="{% url 'custom_login' %}" style="color:rgb(2, 48, 2);">Login</a>
                         <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register as Seller</a>
-                        <a class="dropdown-item" href="{% url 'login' %}" style="color:rgb(2, 48, 2);">Login</a> {% endcomment %}
+
 
                     </div>
                         {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span> {% endcomment %}
@@ -148,92 +146,28 @@ https://templatemo.com/tm-559-zay-shop
 
 
 
-    <!-- Start Banner Hero -->
-    <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
-        <ol class="carousel-indicators">
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="0" class="active"></li>
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="1"></li>
-            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid" src="{% static 'img/car01.jpeg' %}" alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left align-self-center">
-                                <h1 class="h1"><b> Welcome To GustoGrove</b></h1>
-                                {% comment %} <h3 class="h2">Tiny and Perfect eCommerce Template</h3> {% endcomment %}
-                                <p >
-                                    
-                                     {% comment %} <a rel="sponsored" class="text-success" href="https://templatemo.com" target="_blank">TemplateMo</a> website.   {% endcomment %}
-                                    {% comment %} Image credits go to <a rel="sponsored" class="text-success" href="https://stories.freepik.com/" target="_blank">Freepik Stories</a>, {% endcomment %}
-                                    {% comment %} <a rel="sponsored" class="text-success" href="https://unsplash.com/" target="_blank">Unsplash</a> and
-                                    <a rel="sponsored" class="text-success" href="https://icons8.com/" target="_blank">Icons 8</a>. {% endcomment %}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+   
+   
+    <div class="container">
+        <div class="row p-5">
+            <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
+                <img class="img-fluid" src="{% static 'img/car01.jpeg' %}" alt="">
             </div>
-            {% comment %} <div class="carousel-item">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid" src="{% static 'img/car3.jpeg' %}" alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left">
-                                <h1 class="h1"><b>Savor the Exotic<b></h1>
-                                {% comment %} <h3 class="h2">Aliquip ex ea commodo consequat</h3> {% endcomment %}
-                                {% comment %} <p>
-                                    Embark on a gastronomic journey as you explore the flavors of different cultures. Our exotic spices bring the world's cuisines to your table, allowing you to savor the essence of distant lands
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-            {% comment %} <div class="carousel-item">
-                <div class="container">
-                    <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid" src="{% static 'img/car4.jpg' %}" alt="">
-                        </div>
-                        <div class="col-lg-6 mb-0 d-flex align-items-center">
-                            <div class="text-align-left">
-                                <h1 class="h1"><b>From Farm to Table<b></h1>
-                                {% comment %} <h3 class="h2">Ullamco laboris nisi ut </h3> {% endcomment %}
-                                {% comment %} <p>
-                                    Experience the journey of flavor from the lush spice farms to your dining table. Our commitment to sourcing the finest spices ensures you're getting the best quality for your culinary creations.
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-lg-6 mb-0 d-flex align-items-center">
+                <div class="text-align-left align-self-center">
+                    <h1 class="h1"><b> Sell online with GustoGrove</b></h1>
+                    <a href="{% url 'seller_register' %}" class="btn btn-success">Start Selling</a>
                 </div>
             </div>
         </div>
-        <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="prev">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-        <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="next">
-            <i class="fas fa-chevron-right"></i>
-        </a>
-    </div>  {% endcomment %}
-    <!-- End Banner Hero -->
+    </div>
 
-
-   
-
-
-    <!-- Start Footer -->
     <footer class="bg-dark" id="tempaltemo_footer">
         <div class="container">
             <div class="row">
 
                 <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-success border-bottom pb-3 border-light logo">Zay Shop</h2>
+                    <h2 class="h2 text-success border-bottom pb-3 border-light logo">GustoGrove</h2>
                     <ul class="list-unstyled text-light footer-link-list">
                         <li>
                             <i class="fas fa-map-marker-alt fa-fw"></i>
@@ -245,7 +179,7 @@ https://templatemo.com/tm-559-zay-shop
                         </li>
                         <li>
                             <i class="fa fa-envelope fa-fw"></i>
-                            <a class="text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                            <a class="text-decoration-none" href="mailto:info@company.com">gustogrove@gmail.com</a>
                         </li>
                     </ul>
                 </div>
@@ -253,13 +187,13 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="col-md-4 pt-5">
                     <h2 class="h2 text-light border-bottom pb-3 border-light">Products</h2>
                     <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Luxury</a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Wear</a></li>
-                        <li><a class="text-decoration-none" href="#">Men's Shoes</a></li>
-                        <li><a class="text-decoration-none" href="#">Women's Shoes</a></li>
-                        <li><a class="text-decoration-none" href="#">Popular Dress</a></li>
-                        <li><a class="text-decoration-none" href="#">Gym Accessories</a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Shoes</a></li>
+                        <li><a class="text-decoration-none" href="#">Cardamom</a></li>
+                        <li><a class="text-decoration-none" href="#">pepper</a></li>
+                        <li><a class="text-decoration-none" href="#">Clove</a></li>
+                        <li><a class="text-decoration-none" href="#">Gift Hamper</a></li>
+                        <li><a class="text-decoration-none" href="#">Spice Combos</a></li>
+                        {% comment %} <li><a class="text-decoration-none" href="#"></a></li>
+                        <li><a class="text-decoration-none" href="#">Sport Shoes</a></li> {% endcomment %}
                     </ul>
                 </div>
 
@@ -311,8 +245,8 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="row pt-2">
                     <div class="col-12">
                         <p class="text-left text-light">
-                            Copyright &copy; 2021 GustoGrove 
-                            {% comment %} | Designed by <a rel="sponsored" href="https://templatemo.com" target="_blank">TemplateMo</a> {% endcomment %}
+                            Copyright &copy; 2021 Company Name 
+                            <a rel="sponsored" href="https://templatemo.com" target="_blank"></a>
                         </p>
                     </div>
                 </div>
@@ -320,7 +254,6 @@ https://templatemo.com/tm-559-zay-shop
         </div>
 
     </footer>
-    <!-- End Footer -->
 
     <!-- Start Script -->
     <script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>

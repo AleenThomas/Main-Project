@@ -4,22 +4,32 @@ from django.conf import settings
 from django.contrib import messages
 from .models import UserProfile
 from .forms import ProductForm
-from .models import Product
+from .models import Product,CustomUser
 from django.shortcuts import render, get_object_or_404
 
 def index(request):
+    
+    user=request.user
+    if user.is_anonymous:
+        return render(request,'index.html')
+    elif user.is_seller==True:
+        return redirect('seller_index')
+    else:
+        
+        return render(request,'index.html')
     return render(request,'index.html')
+    
+def contact(request):
+    return render(request,'contact.html')
 
 def seller_index(request):
     return render(request,'sellerhome.html')
-
+@login_required(login_url='custom_login')
 def cust_profile(request,user):
-    print(user)
     data=UserProfile.objects.filter(user_id=user)
     return render(request,'custprofile.html',{'data':data})
 
-
-
+    
 def shop(request):
     # Get products added by the suppliers
     supplier_products = Product.objects.all()  # You can add filters if needed
@@ -31,10 +41,23 @@ def shop(request):
 
 # views.py
 
-
+@login_required
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     return render(request, 'shop-single.html', {'product': product})
+
+
+
+@login_required(login_url='custom_login')
+def seller_product_listing(request):
+    current_seller = request.user
+    seller_products = Product.objects.filter(seller=current_seller)
+    
+    context = {
+        'seller_products': seller_products
+    }
+    
+    return render(request, 'product_list.html', context)
 
 
 # @login_required
@@ -91,7 +114,7 @@ def product_detail(request, product_id):
 #         return self.user.username
 #     return render(request, 'custprofile.html', context)
 
-@login_required
+@login_required(login_url='custom_login')
 def profile(request):
     try:
         user_profile = UserProfile.objects.get(user=request.user)
@@ -127,16 +150,25 @@ def profile(request):
 
 
 
+@login_required(login_url='custom_login')  # Redirects to the login page if not logged in
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)
+            product.seller = request.user  # Assign the logged-in seller to the product
+            product.save()
             return redirect('index')  # Redirect to a page showing the list of products
     else:
         form = ProductForm()
 
     return render(request, 'add_product.html', {'form': form})
+
+
+
+
+
+
 
 
 
