@@ -1,0 +1,591 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Registration</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+     *, *:before, *:after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            font: 14px/1 'Open Sans', sans-serif;
+            color: #555;
+            background: #eee;
+            margin: 0; /* Remove default margin to ensure full-width */
+        }
+        
+        h1 {
+            padding: 50px 0;
+            font-weight: 400;
+            text-align: center;
+        }
+        
+        p {
+            margin: 0 0 20px;
+            line-height: 1.5;
+        }
+        
+        main {
+            min-width: 320px;
+            padding: 50px;
+            background: #fff;
+        }
+        
+        section {
+            display: none;
+            padding: 20px 0 0;
+            border-top: 1px solid #ddd;
+        }
+        
+        input[name="tabs"] {
+            display: none;
+        }
+        
+        label {
+            display: inline-block;
+            margin: 0;
+            padding: 15px 0; /* Adjust padding to center the tabs */
+            width: 20%; /* Set each tab to occupy 20% of the viewport width */
+            font-weight: 600;
+            text-align: center;
+            color: #bbb;
+            border: 1px solid transparent;
+        }
+        
+        label:before {
+            font-family: fontawesome;
+            font-weight: normal;
+            margin-right: 10px;
+        }
+        
+        label[for*='1']:before {
+            content: '\f007';
+        }
+        
+        label[for*='2']:before {
+            content: '\f015';
+        }
+        
+        label[for*='3']:before {
+            content: '\f015';
+        }
+        
+        label[for*='4']:before {
+            content: '\f1a9';
+        }
+        
+        label:hover {
+            color: #888;
+            cursor: pointer;
+        }
+        input [type="radio"][name="delivery-type"]:checked {
+            border: 2px solid green; /* Add a border around the radio button content */
+            padding: 8px; /* Optional: Add some padding to visually separate it */
+        }
+        input[name="tabs"]:checked + label {
+            color: #555;
+            border: 1px solid #ddd;
+            border-top: 2px  solid green;
+            border-bottom: 1px solid #fff;
+        }
+        
+        #tab1:checked ~ #content1,
+        #tab2:checked ~ #content2,
+        #tab3:checked ~ #content3,
+        #tab4:checked ~ #content4 {
+            display: block;
+        }
+        
+        @media screen and (max-width: 650px) {
+            label {
+                font-size: 0;
+            }
+        
+            label:before {
+                margin: 0;
+                font-size: 18px;
+            }
+        }
+        
+        @media screen and (max-width: 400px) {
+            label {
+                padding: 15px;
+            }
+        }
+        .tabcontent {
+            display: none; 
+        }
+
+    
+        .active {
+            display: block;
+        }
+        
+    </style>
+</head>
+<body>
+   
+
+    <main>
+        <input id="tab1" type="radio" name="tabs" checked>
+        <label for="tab1">Step 1</label>
+
+        <input id="tab2" type="radio" name="tabs" >
+        <label for="tab2">Step 2</label>
+
+        <input id="tab3" type="radio" name="tabs" >
+        <label for="tab3">Step 3</label>
+
+        <input id="tab4" type="radio" name="tabs">
+        <label for="tab4">Step 4</label> 
+{% comment %} 
+<button id="tab1" name='tabs'>Step 1</button>
+<button id="tab2" name='tabs'>Step 2</button>
+<button id="tab3" name='tabs'>Step 3</button>
+<button id="tab4" name='tabs'>Step 4</button> {% endcomment %}
+        <section id="content1">
+            <div class="container mt-1 pt-1 bg-white">
+                <div class="row justify-content-center"> <!-- Center align the row -->
+                    <!-- Form Fields with Specific Width -->
+                    <div class="col-md-6">
+                        <div class="signup-content">
+                            <div class="signup-form">
+                                <h2 class="form-title">Sign up</h2>
+                                <form method="POST" class="register-form active" id="register-form" action="{% url 'seller_reg_step' %}" data-form="step1">
+                                    {% csrf_token %}
+        
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" required>
+                                        </div>
+                                        <span id="name-error" class="error-message"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                                        </div>
+                                        <span id="email-error" class="error-message"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                            <input type="text" class="form-control" name="gstn" id="gstn" placeholder="GSTN Number" required>
+                                        </div>
+                                        <span id="gstn-error" class="error-message"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                                        </div>
+                                        <span id="password-error" class="error-message"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
+                                            <input type="password" class="form-control" name="password-repeat" id="password-repeat" placeholder="Repeat your password" required>
+                                        </div>
+                                        <span id="password-repeat-error" class="error-message"></span>
+                                    </div>
+                                    <input type="hidden" name="step" value="1">
+
+                                    <div class="mb-3 form-button">
+                                        <input type="hidden" name="current_step" value="step1">
+                                        <button type="button" name="submit_step1" id="btn1" class="form-submit " value="Register" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;" >Save</button>  
+                                        <button type="button" id="nextBtn1" class="form-submit2" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+                              
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="content2">
+            {% comment %} <h2>Step 2: Verify Your GST Number</h2> {% endcomment %}
+            <form method="POST" class="register-form" id="form-step2" action="{% url 'seller_reg_step' %}" data-form="step2">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <!-- Label for Store Name -->
+                            <label for="store-name">Store Name:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-store"></i></span>
+                                <input type="text" class="form-control" name="store-name" id="store-name" placeholder="Store Name" required>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <!-- Label for Phone Number -->
+                            <label for="phone-number">Phone Number:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input type="tel" class="form-control" name="phone-number" id="phone-number" placeholder="Phone Number" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Label for Pickup Address -->
+                        <label for="pickup-address">Pickup Address:</label>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <input type="text" class="form-control" name="pincode" id="pincode" placeholder="Pincode" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <input type="text" class="form-control" name="pickup-address" id="pickup-address" placeholder="Street Address" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-city"></i></span>
+                                <input type="text" class="form-control" name="city" id="city" placeholder="City" required>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-flag"></i></span>
+                                <input type="text" class="form-control" name="state" id="state" placeholder="State" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="step" value="2">
+
+                <div class="mb-3 form-button">
+                    <input type="hidden" name="current_step" value="step2">
+                    <button type="button" name="submit_step2" class="form-submit" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Save</button>
+                    <button type="button" id="nextBtn2" class="form-submit2" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+                </div>
+            </form>
+        </section>
+        
+
+        <section id="content3">
+            <h2>Step 3: Enter Account Details</h2>
+            <form method="POST" class="register-form" id="form-step3" action="{% url 'seller_reg_step' %}" data-form="step3">
+                {% csrf_token %}
+        
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" name="account-holder-name" id="account-holder-name" placeholder="Account Holder Name">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                <input type="text" class="form-control" name="account-number" id="account-number" placeholder="Account Number">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                <input type="text" class="form-control" name="bank-name" id="bank-name" placeholder="Bank Name">
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-university"></i></span>
+                                <input type="text" class="form-control" name="branch" id="branch" placeholder="Branch">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-address-card"></i></span>
+                                <input type="text" class="form-control" name="ifsc-code" id="ifsc-code" placeholder="IFSC Code">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="step" value="3">
+
+                <div class="d-flex justify-content-end">
+                    <div class="mb-3 ps-2">
+                        <input type="hidden" name="current_step" value="step2">
+                        <input type="button" name="submit_step3" id="btn3" class="form-submit" value="Save" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Save</button>
+                        <button type="button" id="nextBtn3" class="form-submit2" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+                    </div>
+            </form>
+        </section>
+        
+        
+        
+
+        <section id="content4">
+            <div class="text-center">
+                <i class="fas fa-check-circle fa-5x" style="color: green;"></i>
+                <h2>Registration Completed</h2>
+                <p>Congratulations, you are now a GustoGrove seller.</p>
+                <a href="#" class="btn btn-primary">Add Products and Start Selling</a>
+            </div>
+        </section>
+        
+    </main>
+  <!-- Include jQuery -->
+<!-- Include jQuery -->
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% comment %} <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll('input[type="radio"]');
+        const saveButtons = document.querySelectorAll('.form-submit');
+        const nextButtons = document.querySelectorAll('.form-submit2');
+        let currentTab = 0;
+
+        // Disable all tabs except the first one initially
+        for (let i = 1; i < tabs.length; i++) {
+            tabs[i].disabled = true;
+        }
+
+        // Function to move to the next tab and deactivate the previous tab
+        function moveToNextTab() {
+            // Remove the "active" class from the current tab
+            document.querySelector('.register-form.active').classList.remove('active');
+
+            // Move to the next tab
+            tabs[currentTab + 1].disabled = false;
+            tabs[currentTab + 1].click(); // Trigger a click event on the next tab radio button
+            currentTab++;
+
+            // Add the "active" class to the new active tab
+            document.querySelector('.register-form.active').classList.add('active');
+        }
+
+        // Add event listeners to the "Save" buttons
+        for (let i = 0; i < saveButtons.length; i++) {
+            saveButtons[i].addEventListener("click", function (event) {
+                // Check if the form is valid
+                const form = document.querySelector('.register-form.active');
+                if (form && form.checkValidity()) {
+                    // Serialize the form data
+                    const formData = $(form).serialize();
+
+                    // Send an AJAX request to submit the form
+                    $.ajax({
+                        type: "POST",
+                        url: form.action,
+                        data: formData,
+                        success: function (response) {
+                            // Check if the submission was successful
+                            if (response.success) {
+                                // Show an alert
+                                alert("Form submitted successfully!");
+
+                                // Move to the next tab after form submission
+                                moveToNextTab();
+                            } else {
+                                alert("Form submission failed."); // You can handle errors accordingly
+                            }
+                        },
+                        error: function () {
+                            alert("Form submission failed."); // Handle AJAX errors
+                        }
+                    });
+
+                    event.preventDefault(); // Prevent the default form submission behavior
+                }
+            });
+        }
+
+        // Add event listeners to the "Next" buttons
+        for (let i = 0; i < nextButtons.length; i++) {
+            nextButtons[i].addEventListener("click", function () {
+                moveToNextTab(); // Move to the next tab when "Next" is clicked
+            });
+        }
+    });
+</script> {% endcomment %}
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+        
+
+
+    
+
+    {% comment %} <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabs = document.querySelectorAll('input[type="radio"]');
+            const saveButtons = document.querySelectorAll('.form-submit');
+            let currentTab = 0;
+    
+            // Disable all tabs except the first one initially
+            for (let i = 1; i < tabs.length; i++) {
+                tabs[i].disabled = true;
+            }
+    
+            // Add event listeners to the "Save" buttons
+            for (let i = 0; i < saveButtons.length; i++) {
+                saveButtons[i].addEventListener("click", function (event) {
+                    // Check if the form is valid (you can add your form validation logic here)
+                    const isFormValid = true; // Replace with your validation logic
+    
+                    if (isFormValid) {
+                        // Perform the form submission here
+                        const form = event.target.closest('form');
+                        if (form) {
+                            // Submit the form
+                            form.submit();
+                        }
+                    } else {
+                        event.preventDefault(); // Prevent the default form submission if validation fails
+                    }
+                });
+            }
+    
+            // Handle form submission for Step 2
+            const formStep2 = document.getElementById("form-step2");
+            formStep2.addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent the default form submission
+    
+                // Perform your form submission AJAX here
+                const formData = new FormData(formStep2);
+    
+                // Simulate a successful submission
+                setTimeout(function () {
+                    // Check if the submission was successful (replace this condition)
+                    const isFormValid = true;
+    
+                    if (isFormValid) {
+                        // Enable the next tab (Step 3)
+                        tabs[currentTab + 1].disabled = false;
+    
+                        // Switch to the next tab (Step 3)
+                        tabs[currentTab + 1].checked = true;
+    
+                        // Update the current tab
+                        currentTab++;
+                    }
+                }, 1000); // Simulated AJAX delay (remove this in your actual code)
+            });
+    
+            // Handle form submission for Step 3
+            const formStep3 = document.getElementById("form-step3");
+            formStep3.addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent the default form submission
+    
+                // Perform your form submission AJAX here
+                const formData = new FormData(formStep3);
+    
+                // Simulate a successful submission
+                setTimeout(function () {
+                    // Check if the submission was successful (replace this condition)
+                    const isFormValid = true;
+    
+                    if (isFormValid) {
+                        // Enable the next tab (Step 4)
+                        tabs[currentTab + 1].disabled = false;
+    
+                        // Switch to the next tab (Step 4)
+                        tabs[currentTab + 1].checked = true;
+    
+                        // Update the current tab
+                        currentTab++;
+                    }
+                }, 1000); // Simulated AJAX delay (remove this in your actual code)
+            });
+        });
+    </script>
+     {% endcomment %}
+    
+    
+        
+        
+ <!-- JavaScript -->
+ <!-- JavaScript -->
+ <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const saveButtons = document.querySelectorAll('.form-submit');
+        const nextButtons = document.querySelectorAll('.form-submit2');
+        let currentTab = 0;
+
+        // Function to handle form submission
+        function submitForm(form) {
+            // Check if the form is valid
+            if (form.checkValidity()) {
+                // Display a confirmation alert
+                const confirmation = confirm("Do you want to save this information?");
+                if (confirmation) {
+                    // If "OK" is clicked in the alert, submit the form
+                    form.submit();
+                }
+            }
+        }
+
+        // Add event listeners to the "Save" buttons
+        for (let i = 0; i < saveButtons.length; i++) {
+            saveButtons[i].addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent the default form submission
+                const form = document.querySelector('.register-form.active');
+                submitForm(form);
+            });
+        }
+
+        // Add event listeners to the "Next" buttons
+        for (let i = 0; i < nextButtons.length; i++) {
+            nextButtons[i].addEventListener("click", function () {
+                // Check if the form is valid
+                console.log("Next button clicked!");
+                const form = document.querySelector('.register-form.active');
+                if (form && form.checkValidity()) {
+                    // Remove "active" class from the current form
+                    form.classList.remove('active');
+                    
+                    // Move to the next tab (increment currentTab)
+                    currentTab++;
+                    const currentForm = document.getElementById(`step${currentTab}-form`);
+                    if (currentForm) {
+                        currentForm.classList.add('active'); // Add "active" class to the next form
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+    
+    
+</body>
+</html>

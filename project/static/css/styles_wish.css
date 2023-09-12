@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.input-container {
+    margin-bottom: 20px;
+}
+
+#item {
+    padding: 5px;
+    width: 200px;
+}
+
+#add-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+.remove-btn {
+    background-color: #ff0000;
+    color: #fff;
+    padding: 2px 5px;
+    border: none;
+    cursor: pointer;
+}

@@ -54,7 +54,7 @@ https://templatemo.com/tm-559-zay-shop
     <nav class="navbar navbar-expand-lg ">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="logo">
-                <a class="navbar-brand" href="{% url 'index' %}">
+                <a class="navbar-brand" href="{% url 'seller_index' %}">
                     <img src="{% static 'img/gusto (2).png' %}" alt="Site Logo" class="img-fluid w-auto h-100" style="max-height: 100px;">
                 </a>
             </div>
@@ -68,16 +68,16 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Home</a>
+                            <a class="nav-link" href="{% url 'seller_index' %}">Home</a>
                         </li>
                          <li class="nav-item">
                             {% comment %} <a class="nav-link" href="{% url 'cust_profile' user.id %}">Profile</a> {% endcomment %}
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'shop' %}">Shop</a>
+                            <a class="nav-link" href="{% url 'add_product' %}">Add Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'add_product' %}">Contact</a>
+                            <a class="nav-link" href="{% url 'seller_product_listing' %}">View Products</a>
                         </li>
                     </ul>
                 </div>
@@ -93,18 +93,16 @@ https://templatemo.com/tm-559-zay-shop
                     <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
                         <i class="fa fa-fw fa-search text-light mr-2"></i>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-cart-arrow-down text-light mr-1"></i>
-                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span> {% endcomment %}
-                    </a>
+                   
                     <a class="nav-icon position-relative text-decoration-none dropdown" href="#" data-bs-toggle="dropdown">
                         <i class="fa fa-fw fa-user text-light mr-1"></i>
                     </a>
                    
                     <div class="dropdown-menu dropdown-menu-end always-show-dropdown" style="min-width: 200px;" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="{% url 'customer_register' %}" style="color:rgb(2, 48, 2);">Register as Customer</a>
-                        <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register as Seller</a>
+                        {% comment %} <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register</a> {% endcomment %}
                         <a class="dropdown-item" href="{% url 'custom_login' %}" style="color:rgb(2, 48, 2);">Login</a>
+                        <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register as Seller</a>
+
 
                     </div>
                         {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span> {% endcomment %}
@@ -232,6 +230,10 @@ https://templatemo.com/tm-559-zay-shop
                                 <p class="text-center mb-0">{{ product.description }}</p>
 
                             </div>
+                            <div class="text-center mt-3">
+                                <a href="" class="btn btn-primary">Update</a>
+                                <a href="" class="btn btn-danger">Delete</a>
+                            </div>
                         </div>
                        
                     </div>
@@ -269,6 +271,7 @@ https://templatemo.com/tm-559-zay-shop
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                         Lorem ipsum dolor sit amet.
                     </p>
+                    
                 </div>
                 <div class="col-lg-9 m-auto tempaltemo-carousel">
                     <div class="row d-flex flex-row">

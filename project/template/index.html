@@ -68,9 +68,9 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'index' %}">Home</a>
                         </li>
-                         {% comment %} <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cust_profile' user.id %}">Profile</a> 
-                        </li> {% endcomment %}
+                       <li class="nav-item">
+                            <a class="nav-link" href="{% url 'customer_profile' %}">Profile</a> 
+                        </li> 
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                         </li>
@@ -100,6 +100,9 @@ https://templatemo.com/tm-559-zay-shop
                     </a>
                     <a class="nav-icon position-relative text-decoration-none dropdown" href="#" data-bs-toggle="dropdown">
                         <i class="fa fa-fw fa-user text-light mr-1"></i>
+                    </a>
+                    <a href="{% url 'wishlist' %}" class="btn btn-success">
+                        <i class="fas fa-heart"></i> 
                     </a>
                    
                     <div class="dropdown-menu dropdown-menu-end always-show-dropdown" style="min-width: 200px;" aria-labelledby="userDropdown">

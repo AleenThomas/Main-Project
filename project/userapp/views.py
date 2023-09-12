@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from.models import CustomUser
-from storeapp.models import UserProfile
+# from storeapp.models import UserProfile
 from django.contrib.auth import authenticate, login as auth_login
 # Create your views here.
 def customer_register(request):
@@ -88,7 +88,7 @@ def custom_login(request):
                 if user.is_customer:
                     return redirect('index')  # Redirect to customer index page
                 elif user.is_seller:
-                    return redirect('seller_index') 
+                    return redirect('seller_index')
             else:
                 error_message = "Invalid login credentials."
                 return render(request, 'custlogin.html', {'error_message': error_message})

@@ -98,146 +98,100 @@
 </nav>
 <!-- Close Header -->
 
-    <div class="container mt-3" >
-        <div class="row gutters">
-            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <!-- User Profile Display -->
-                        <div class="account-settings">
-                            <div class="user-profile">
-                                <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}" id="profileform">
-                                    {% csrf_token %}
-                                    <!-- ... other fields ... -->
-                                    <div class="form-group">
-                                        
-                                        <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
-                                    </div>
-                                    <!-- ... submit button ... -->
-                                </form>
-                                <h5 class="user-name">{{ user_profile.full_name }}</h5>
-                                <h6 class="user-email">{{ user_profile.email }}</h6>
-                            </div>
-                            {% comment %} <div class="about">
-                                <h5>About</h5>
-                                <p>I'm {{ user_profile.full_name }}. {{ user_profile.about }}</p>
-                            </div> {% endcomment %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <!-- User Profile Update Form -->
-                        <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
-                            {% csrf_token %}
-                            <div class="row gutters">
-                                <!-- Personal Details Section -->
+{% if messages %}
+<div class="messages">
+  {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
 
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <h6 class="mb-2 text-success">Personal Details</h6>
-                                </div>
-                                
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    {% for i in data %}
-                                    <div class="form-group">
-                                        <label for="fullName">First Name</label>
-                                        <input type="text" class="form-control"  name="fName" id="fName" value="{{ i.f_name }}">
-                                        <span id="firstNameError" class="error-message"></span>
-
-                                    </div>
-                                    
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="fullName">Last Name</label>
-                                        <input type="text" class="form-control"  name="sName"id="sName"  value="{{ i.l_name }}">
-                                        <span id="secondNameError" class="error-message"></span>
-
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="eMail">Email</label>
-                                        <input type="email" class="form-control" name="email"id="eMail" disabled value="{{user.email}}"  value="{{ user_profile.email }}">
-                                        <span id="emailError" class="error-message"></span>
-
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="phone">Phone</label>
-                                        <input type="text" class="form-control" id="phone" name="phone" value="{{ i.phone }}">
-                                        <span id="phoneError" class="error-message"></span>
-
-                                    </div>
-                                </div>
-                                 {% comment %} <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="website">Password</label>
-                                        <input type="Password" class="form-control" name="password"id="website" placeholder="Password" value="{{ user_profile.password }}">
-                                    </div>
-                                </div> 
-                            </div> {% endcomment %}
-                            <div class="row gutters">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <h6 class="mt-3 mb-2 text-success">Address</h6>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="Street">Street</label>
-                                        <input type="name" name="street"class="form-control" id="Street" value="{{ i.street }}">
-                                        <span id="streetError" class="error-message"></span>
-
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="ciTy">City</label>
-                                        <input type="name"name="city" class="form-control" id="ciTy" value="{{ i.city }}">
-                                        <span id="cityError" class="error-message"></span>
-
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="sTate">State</label>
-                                        <input type="text" name="state"class="form-control" id="sTate" value="{{ i.state }}">
-                                        <span id="stateError" class="error-message"></span>
-
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label for="zIp">Zip Code</label>
-                                        <input type="text" class="form-control" name="zip_code" id="zIp" value="{{ i.zip_code }}">
-                                        <span id="zipError" class="error-message"></span>
-
-                                    </div>
-                                </div>
-                               
-                            </div>
-                                
-                            </div>
-                            <div class="row gutters">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div class="text-right">
-                                        <button type="submit" name="action" value="submit" class="btn btn-success mt-2">Submit</button>
-
-                                        {% comment %} <button type="button" class="btn btn-secondary">Cancel</button> {% endcomment %}
-                                        {% comment %} <button type="submit" name="action" value="update" class="btn btn-success mt-2" >Update</button> {% endcomment %}
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </form>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+<div class="container ">
+<div class="row ">
+    <!-- Sidebar -->
+    <div class="col-lg-3 mb-4 mt-5 d-flex flex-column shadow-lg" style="background-color: #F8F9F9">
+        <!-- Profile Picture -->
+        <div class="text-center p-4">
+            <img src="{% static 'img/avatar.png' %}" alt="Profile Picture" class="img-fluid rounded-circle mb-3 mt-4" width="100">
+            <!-- Greeting -->
+            <p class="mb-0"><b>Hello!</b></p>
+        </div>
+        <div class="list-group mt-3 flex-grow-1">
+            <a href="#" class="list-group-item list-group-item-action mb-2">My Addresses</a>
+            <a href="#" class="list-group-item list-group-item-action mb-2">My Gifts</a>
+            <a href="#" class="list-group-item list-group-item-action mb-2">Payments</a>
+            <!-- Add more sidebar items as needed -->
         </div>
     </div>
+    
+    <div class="col-lg-9 mt-5 ">
+        <!-- Main Content -->
+        <div class="col-lg-9 shadow-lg">      
+            <!-- Form START -->
+            <form method="POST" class="file-upload mt-1 " style="background-color: #ffffff;" action="{% url 'customer_profile' %}">
+                {% csrf_token %}
+                <div class="row mb-5 gx-5">
+                    <!-- Contact detail -->
+                    <div class="col-xxl-8 mb-5 mb-xxl-0">
+                        <div class="bg-secondary-soft px-4 py-5 rounded">
+                            <div class="row g-3">
+                                <h5 class="mb-4 mt-0">Personal Details</h5>
+            
+                                <!-- First Name -->
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter your First Name" value="{% if form_submitted %}{{ request.POST.first_name }}{% else %}{{ user_profile.first_name }}{% endif %}" {% if not form_submitted %}disabled{% endif %} oninput="validateName(this)">
+                                    <div id="first_name_error" class="text-danger"></div>
+                                </div>
+            
+                                <!-- Last Name -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter your Last Name" value="{% if form_submitted %}{{ request.POST.last_name }}{% else %}{{ user_profile.last_name }}{% endif %}" {% if not form_submitted %}disabled{% endif %} oninput="validateName(this)">
+                                    <div id="last_name_error" class="text-danger"></div>
+                                </div>
+                            </div> <!-- Row 1 END -->
+            
+                            <!-- Space -->
+                            <div class="mb-3"></div>
+            
+                            <!-- Mobile number -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Mobile number *</label>
+                                    <input type="text" class="form-control" id="mobile_number" name="mobile_number" placeholder="Enter your mobile no." value="{% if form_submitted %}{{ request.POST.mobile_number }}{% else %}{{ user_profile.mobile_number }}{% endif %}" {% if not form_submitted %}disabled{% endif %}>
+                                    <div id="mobile_number_error" class="text-danger"></div>
+                                </div>
+                            </div> <!-- Row 2 END -->
+            
+                            <!-- Space -->
+                            <div class="mb-3"></div>
+            
+                            <!-- Email -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="inputEmail4" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="inputEmail4" name="email" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}" disabled>
+                                </div>
+                            </div> <!-- Row 3 END -->
+            
+                            <!-- Add margin to move buttons up -->
+                            <div class="mt-3"></div>
+            
+                            <div class="gap-3 d-md-flex justify-content-md-center text-center">
+                                <button type="submit" class="btn btn-danger btn" id="save_button">Save</button>
+                                <button type="submit" class="btn btn-primary btn" id="update_button">Update</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> <!-- Row END -->
+            </form>
+             <!-- Form END -->
+        </div>
+    </div>
+</div>
+</div>
     {% comment %} <footer class="bg-dark" id="tempaltemo_footer">
         <div class="container">
             <div class="row">
@@ -344,5 +298,96 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+
+
+
+
+    <script>
+        // Add event listeners for input fields
+        const firstNameInput = document.querySelector('input[name="first_name"]');
+        const lastNameInput = document.querySelector('input[name="last_name"]');
+        const mobileNumberInput = document.querySelector('input[name="mobile_number"]');
+        const saveButton = document.querySelector('button#save_button');
+        const updateButton = document.querySelector('button#update_button');
+    
+        firstNameInput.addEventListener('input', validateForm);
+        lastNameInput.addEventListener('input', validateForm);
+        mobileNumberInput.addEventListener('input', validateForm);
+    
+        function enableInputs(enable) {
+            [firstNameInput, lastNameInput, mobileNumberInput].forEach((input) => {
+                input.disabled = !enable;
+            });
+        }
+    
+        updateButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the form from submitting
+    
+            // Enable input fields except for email
+            enableInputs(true);
+    
+            // Disable the email field
+            emailInput.disabled = true;
+        });
+    
+        function validateForm() {
+        const firstName = firstNameInput.value.trim();
+        const lastName = lastNameInput.value.trim();
+        let mobileNumber = mobileNumberInput.value.trim();
+        const firstNameError = document.getElementById('first_name_error');
+        const lastNameError = document.getElementById('last_name_error');
+        const mobileNumberError = document.getElementById('mobile_number_error');
+    
+        // Validate First Name
+        if (firstName === '') {
+            firstNameError.textContent = 'First Name is required';
+        } else if (!/^[a-zA-Z]+$/.test(firstName)) {
+            firstNameError.textContent = 'Only alphabets are allowed';
+        } else {
+            firstNameError.textContent = '';
+        }
+    
+        // Validate Last Name
+        if (lastName === '') {
+            lastNameError.textContent = 'Last Name is required';
+        } else if (!/^[a-zA-Z]+$/.test(lastName)) {
+            lastNameError.textContent = 'Only alphabets are allowed';
+        } else {
+            lastNameError.textContent = '';
+        }
+    
+        // Remove spaces and non-digit characters from mobile number
+        mobileNumber = mobileNumber.replace(/\D/g, '');
+    
+        // Automatically add "+91" in front of mobile number if it has 10 digits
+        if (mobileNumber.length === 10) {
+            mobileNumber = '+91' + mobileNumber;
+        }
+    
+        // Validate Mobile Number
+        if (mobileNumber === '') {
+            mobileNumberError.textContent = 'Mobile Number is required';
+        } else if (!/^\+91\d{10}$/.test(mobileNumber)) {
+            mobileNumberError.textContent = 'Mobile Number must start with +91 and have 10 digits';
+        } else {
+            mobileNumberError.textContent = '';
+        }
+    
+        // Update the input field with the formatted mobile number
+        mobileNumberInput.value = mobileNumber;
+    
+        // Enable or disable buttons based on validation
+        if (firstName !== '' && /^[a-zA-Z]+$/.test(firstName) &&
+            lastName !== '' && /^[a-zA-Z]+$/.test(lastName) &&
+            mobileNumber !== '' && /^\+91\d{10}$/.test(mobileNumber)) {
+            saveButton.disabled = false;
+            updateButton.disabled = false;
+        } else {
+            saveButton.disabled = true;
+            updateButton.disabled = true;
+        }
+    }
+    </script>
 </body>
 </html>

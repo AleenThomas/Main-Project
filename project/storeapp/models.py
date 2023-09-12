@@ -11,20 +11,14 @@ from django.utils import timezone
 from userapp.models import CustomUser
 from django.contrib.auth.models import AbstractUser
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(default="user_avatar.jpg", blank=True, null=True)
-    f_name = models.CharField(max_length=100)
-    l_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
-    street = models.CharField(max_length=100)
-    city = models.CharField(max_length=50)
-    state = models.CharField(max_length=50)
-    zip_code = models.CharField(max_length=10)
+class Customer_Profile(models.Model):
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    mobile_number = models.CharField(max_length=15)
 
-    def __str__(self):
-        return self.user.name
+    def _str_(self):
+        return self.user.email
     
 
 
@@ -40,6 +34,24 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+    
+class CartItem(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.product_name}"
+
+
+class Wishlist(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product)
+
+    def __str__(self):
+        return self.user.username + "'s Wishlist"
+
+
 
 # # class Customer(models.Model):
 # # 	user = models.OneToOneField(CustomUser, null=True, blank=True, on_delete=models.CASCADE)
@@ -51,3 +63,26 @@ class Product(models.Model):
 
 # # 	def __str__(self):
 # # 		return self.name
+
+
+class SellerDetails(models.Model):
+    # Step 2 Fields
+    store_name = models.CharField(max_length=255,null=True)
+    phone_number = models.CharField(max_length=15,null=True)
+    pincode = models.CharField(max_length=10,null=True)
+    pickup_address = models.CharField(max_length=255,null=True)
+    city = models.CharField(max_length=100,null=True)
+    state = models.CharField(max_length=100,null=True)
+    
+    # Step 3 Fields
+    account_holder_name = models.CharField(max_length=255,null=True)
+    account_number = models.CharField(max_length=20,null=True)
+    bank_name = models.CharField(max_length=255,null=True)
+    branch = models.CharField(max_length=255)
+    ifsc_code = models.CharField(max_length=20)
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='seller_details_user',null=True)
+
+    def __str__(self):
+        return self.store_name
+    class Meta:
+        verbose_name_plural = "SellerDetails"
