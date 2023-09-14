@@ -1,0 +1,9 @@
+<!-- search_results.html -->
+{% for product in results %}
+  <div class="search-result">
+    <h3>{{ product.product_name }}</h3>
+    <p>{{ product.description }}</p>
+  </div>
+{% empty %}
+  <p>No results found.</p>
+{% endfor %}

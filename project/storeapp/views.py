@@ -8,6 +8,7 @@ from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
+from .models import CustomUser, SellerDetails
 
 
 
@@ -25,8 +26,8 @@ def index(request):
     
 def contact(request):
     return render(request,'contact.html')
-def reg_step(request):
-    return render(request,'reg_step.html')
+# def reg_step(request):
+#     return render(request,'reg_step.html')
 
 
 def wishlist_view(request):
@@ -52,7 +53,7 @@ def remove_from_wishlist(request, product_id):
     success_message = f'{product.product_name} removed from your wishlist.'
 
     # You can pass the success_message to the template
-    return redirect('remove_from_wishlist')
+    return redirect('wishlist')
 def update_wishlist_quantity(request, product_id, new_quantity):
     try:
         new_quantity = int(new_quantity)
@@ -73,243 +74,19 @@ def update_wishlist_quantity(request, product_id, new_quantity):
         return JsonResponse({'message': 'Quantity updated successfully'})
     else:
         return JsonResponse({'message': 'Product not found in wishlist'}, status=404)
-# def seller_reg_step(request):
-#     if request.method == 'POST':
-#         if 'submit_step1' in request.POST:
-#             name = request.POST.get('name')
-#             email = request.POST.get('email')
-#             password = request.POST.get('password')
-#             confirm_password = request.POST.get('password-repeat')
-#             gstn = request.POST.get('gstn')
-
-#             if CustomUser.objects.filter(email=email).exists():
-#                 messages.error(request, "Email already exists")
-#             elif password != confirm_password:
-#                 messages.error(request, "Passwords do not match")
-#             elif not gstn:
-#                 messages.error(request, "GSTN field is required")
-#             elif email and password:
-#                 user = CustomUser(name=name, email=email, gstn=gstn)
-#                 user.set_password(password)
-#                 user.is_seller = True
-#                 user.save()
-#                 messages.success(request, "Step 1 completed successfully")
-#                 # return redirect('seller_register')
-#         elif 'submit_step2' in request.POST:
-#             # Code for handling Step 2 data
-#             pincode = request.POST.get('pincode')
-#             pickup_address = request.POST.get('pickup-address')
-#             city = request.POST.get('city')
-#             state = request.POST.get('state')
-            
-#             # Assuming you have an authenticated user, you can link the data to the user
-#             if request.user.is_authenticated:
-#                 user = request.user
-#                 user.sellerregistration.pincode = pincode
-#                 user.sellerregistration.pickup_address = pickup_address
-#                 user.sellerregistration.city = city
-#                 user.sellerregistration.state = state
-#                 user.sellerregistration.save()
-#                 messages.success(request, "Step 2 completed successfully")
-
-#         elif 'submit_step3' in request.POST:
-#             # Code for handling Step 3 data
-#             account_holder_name = request.POST.get('account-holder-name')
-#             account_number = request.POST.get('account-number')
-#             bank_name = request.POST.get('bank-name')
-#             branch = request.POST.get('branch')
-#             ifsc_code = request.POST.get('ifsc-code')
-            
-#             # Assuming you have an authenticated user, you can link the data to the user
-#             if request.user.is_authenticated:
-#                 user = request.user
-#                 user.sellerregistration.account_holder_name = account_holder_name
-#                 user.sellerregistration.account_number = account_number
-#                 user.sellerregistration.bank_name = bank_name
-#                 user.sellerregistration.branch = branch
-#                 user.sellerregistration.ifsc_code = ifsc_code
-#                 user.sellerregistration.save()
-#                 messages.success(request, "Step 3 completed successfully")
-
-#     return render(request,'seller_reg_step.html')
- # Assuming you want only authenticated users to access this view
-# def seller_reg_step(request):
-#     if request.method == 'POST':
-#         if 'submit_step1' in request.POST:
-#             # Step 1 Data
-#             name = request.POST.get('name')
-#             email = request.POST.get('email')
-#             password = request.POST.get('password')
-#             gstn = request.POST.get('gstn')
-
-#             # Create a CustomUser and save Step 1 Data to it
-#             user = CustomUser(name=name, email=email, gstn=gstn)
-#             user.set_password(password)
-#             user.is_seller = True
-#             user.save()
-            
-#             request.session['user_id'] = user.id  # Store the user's ID in the session
-            
-#             messages.success(request, "Step 1 completed successfully")
-
-#         elif 'submit_step2' in request.POST:
-#             # Step 2 Data
-#             store_name = request.POST.get('store-name')
-#             phone_number = request.POST.get('phone-number')
-#             pincode = request.POST.get('pincode')
-#             pickup_address = request.POST.get('pickup-address')
-#             city = request.POST.get('city')
-#             state = request.POST.get('state')
-
-#             # Retrieve the user from the session and link Step 2 Data to the user
-#             user_id = request.session.get('user_id')
-#             if user_id:
-#                 user = CustomUser.objects.get(id=user_id)
-#                 user_details = SellerDetails(
-#                     store_name=store_name,
-#                     phone_number=phone_number,
-#                     pincode=pincode,
-#                     pickup_address=pickup_address,
-#                     city=city,
-#                     state=state
-#                 )
-#                 user_details.save()
-#                 user.seller_details = user_details
-#                 user.save()
-                
-#                 messages.success(request, "Step 2 completed successfully")
-
-#         elif 'submit_step3' in request.POST:
-#             # Step 3 Data
-#             account_holder_name = request.POST.get('account-holder-name')
-#             account_number = request.POST.get('account-number')
-#             bank_name = request.POST.get('bank-name')
-#             branch = request.POST.get('branch')
-#             ifsc_code = request.POST.get('ifsc-code')
-
-#             # Retrieve the user from the session and link Step 3 Data to the user
-#             user_id = request.session.get('user_id')
-#             if user_id:
-#                 user = CustomUser.objects.get(id=user_id)
-#                 user_details = user.seller_details
-#                 user_details.account_holder_name = account_holder_name
-#                 user_details.account_number = account_number
-#                 user_details.bank_name = bank_name
-#                 user_details.branch = branch
-#                 user_details.ifsc_code = ifsc_code
-#                 user_details.save()
-                
-#                 messages.success(request, "Step 3 completed successfully")
-
-#     return render(request, 'seller_reg_step.html')
 
 
 
 
-
-# Import the necessary models
-# from .models import CustomUser, SellerDetails
-
-# # ...
-
-# def seller_reg_step(request):
-#     if request.method == 'POST':
-#         # Check which step the form data is coming from
-#         if 'submit_step1' in request.POST:
-#             # Step 1 Data
-#             name = request.POST.get('name')
-#             email = request.POST.get('email')
-#             password = request.POST.get('password')
-#             gstn = request.POST.get('gstn')
-
-#             # Check for existing user with the same email
-#             if CustomUser.objects.filter(email=email).exists():
-#                 messages.error(request, "Email already exists.")
-#             else:
-#                 # Create a new user and set the password
-#                 user = CustomUser(name=name, email=email, gstn=gstn)
-#                 user.password = make_password(password)  # Hash the password
-#                 user.is_seller = True  # Mark as a seller
-#                 user.save()
-
-#                 # Store the user ID in the session for future steps
-#                 request.session['user_id'] = user.id
-
-#                 messages.success(request, "Step 1 completed successfully.")
-#                 # Redirect to step 2 or confirmation page
-
-#         elif 'submit_step2' in request.POST:
-#             # Step 2 Data
-#             user_id = request.session.get('user_id')
-#             if user_id:
-#                 user = CustomUser.objects.get(id=user_id)
-                
-#                 store_name = request.POST.get('store-name')
-#                 phone_number = request.POST.get('phone-number')
-#                 pincode = request.POST.get('pincode')
-#                 pickup_address = request.POST.get('pickup-address')
-#                 city = request.POST.get('city')
-#                 state = request.POST.get('state')
-
-#                 # Check if the user already has seller details
-#                 seller_details, created = SellerDetails.objects.get_or_create(user=user)
-
-#                 # Update the seller details
-#                 seller_details.store_name = store_name
-#                 seller_details.phone_number = phone_number
-#                 seller_details.pincode = pincode
-#                 seller_details.pickup_address = pickup_address
-#                 seller_details.city = city
-#                 seller_details.state = state
-#                 seller_details.save()
-
-#                 messages.success(request, "Step 2 completed successfully.")
-#                 # Redirect to step 3 or confirmation page
-
-#         elif 'submit_step3' in request.POST:
-#             # Step 3 Data
-#             user_id = request.session.get('user_id')
-#             if user_id:
-#                 user = CustomUser.objects.get(id=user_id)
-                
-#                 account_holder_name = request.POST.get('account-holder-name')
-#                 account_number = request.POST.get('account-number')
-#                 bank_name = request.POST.get('bank-name')
-#                 branch = request.POST.get('branch')
-#                 ifsc_code = request.POST.get('ifsc-code')
-
-#                 # Check if the user already has seller details
-#                 seller_details, created = SellerDetails.objects.get_or_create(user=user)
-
-#                 # Update the seller details
-#                 seller_details.account_holder_name = account_holder_name
-#                 seller_details.account_number = account_number
-#                 seller_details.bank_name = bank_name
-#                 seller_details.branch = branch
-#                 seller_details.ifsc_code = ifsc_code
-#                 seller_details.save()
-
-#                 messages.success(request, "Step 3 completed successfully.")
-#                 # Redirect to confirmation page or other steps
-
-#     return render(request, 'seller_reg_step.html')
-
-
-
-
-
-# Import the necessary models
-from .models import CustomUser, SellerDetails
-
-# ...
 
 def seller_reg_step(request):
     if request.method == 'POST':
-        print("data enteed")
         step = request.POST.get('step')
+
+        print(step)
         # Check which step the form data is coming from
         if step == '1':
-            print("data enteed")
+            print("one")
             # Step 1 Data
             name = request.POST.get('name')
             email = request.POST.get('email')
@@ -333,7 +110,7 @@ def seller_reg_step(request):
                 # Redirect to step 2 or confirmation page
 
         elif step == '2':
-            print("second section")
+            print("two")
             # Step 2 Data
             user_id = request.session.get('user_id')
             if user_id:
@@ -347,36 +124,22 @@ def seller_reg_step(request):
                 state = request.POST.get('state')
 
                 # Check if the user already has seller details
-                seller_details = user.seller_details_user.all().first()  # Get the first associated seller_details (if exists)
+                seller_details, created = SellerDetails.objects.get_or_create(user=user)
 
-                if not seller_details:
-                    # If seller_details doesn't exist, create a new one
-                    seller_details = SellerDetails(
-                        user=user,
-                        store_name=store_name,
-                        phone_number=phone_number,
-                        pincode=pincode,
-                        pickup_address=pickup_address,
-                        city=city,
-                        state=state
-                    )
-                    seller_details.save()
-                else:
-                    # Update the existing seller_details
-                    seller_details.store_name = store_name
-                    seller_details.phone_number = phone_number
-                    seller_details.pincode = pincode
-                    seller_details.pickup_address = pickup_address
-                    seller_details.city = city
-                    seller_details.state = state
-                    seller_details.save()
+                # Update the seller details
+                seller_details.store_name = store_name
+                seller_details.phone_number = phone_number
+                seller_details.pincode = pincode
+                seller_details.pickup_address = pickup_address
+                seller_details.city = city
+                seller_details.state = state
+                seller_details.save()
 
                 messages.success(request, "Step 2 completed successfully.")
                 # Redirect to step 3 or confirmation page
-                return redirect('seller_reg_step')
 
         elif step == '3':
-            print("third section")
+            print("three")
             # Step 3 Data
             user_id = request.session.get('user_id')
             if user_id:
@@ -389,72 +152,57 @@ def seller_reg_step(request):
                 ifsc_code = request.POST.get('ifsc-code')
 
                 # Check if the user already has seller details
-                seller_details = user.seller_details_user.all().first()  # Get the first associated seller_details (if exists)
+                seller_details, created = SellerDetails.objects.get_or_create(user=user)
 
-                if not seller_details:
-                    # If seller_details doesn't exist, create a new one
-                    seller_details = SellerDetails(
-                        user=user,
-                        account_holder_name=account_holder_name,
-                        account_number=account_number,
-                        bank_name=bank_name,
-                        branch=branch,
-                        ifsc_code=ifsc_code
-                    )
-                    seller_details.save()
-                else:
-                    # Update the existing seller_details with step 3 data
-                    seller_details.account_holder_name = account_holder_name
-                    seller_details.account_number = account_number
-                    seller_details.bank_name = bank_name
-                    seller_details.branch = branch
-                    seller_details.ifsc_code = ifsc_code
-                    seller_details.save()
+                # Update the seller details
+                seller_details.account_holder_name = account_holder_name
+                seller_details.account_number = account_number
+                seller_details.bank_name = bank_name
+                seller_details.branch = branch
+                seller_details.ifsc_code = ifsc_code
+                seller_details.save()
 
                 messages.success(request, "Step 3 completed successfully.")
-                return redirect('seller_reg_step')
-
                 # Redirect to confirmation page or other steps
 
     return render(request, 'seller_reg_step.html')
 
 
+
+
+
+# Import the necessary models
+
+
+# ...
+
 # def seller_reg_step(request):
 #     if request.method == 'POST':
-#         print("Entered")
+#         step = request.POST.get('step')
         
-#         # Check which step the form data is coming from
-#         if 'submit_step1' in request.POST:
-#             print("Entered")
+#         if step == '1':
 #             # Step 1 Data
 #             name = request.POST.get('name')
 #             email = request.POST.get('email')
 #             password = request.POST.get('password')
 #             gstn = request.POST.get('gstn')
 
-#             # Check for existing user with the same email
 #             if CustomUser.objects.filter(email=email).exists():
 #                 messages.error(request, "Email already exists.")
 #             else:
-                
-#                 # Create a new user and set the password
 #                 user = CustomUser(name=name, email=email, gstn=gstn)
-#                 user.password = make_password(password)  # Hash the password
-#                 user.is_seller = True  # Mark as a seller
+#                 user.password = make_password(password)
+#                 user.is_seller = True
 #                 user.save()
-                
-#                 # Store the user ID in the session for future steps
+
 #                 request.session['user_id'] = user.id
 
 #                 messages.success(request, "Step 1 completed successfully.")
-#                 # return redirect('seller_reg_step')  # Redirect to step 2 or confirmation page
+#                 return redirect('reg_step')
 
-#         elif 'submit_step2' in request.POST:
-#             print("First")
-
+#         elif step == '2':
 #             # Step 2 Data
 #             user_id = request.session.get('user_id')
-#             print(user_id)
 #             if user_id:
 #                 user = CustomUser.objects.get(id=user_id)
                 
@@ -465,22 +213,32 @@ def seller_reg_step(request):
 #                 city = request.POST.get('city')
 #                 state = request.POST.get('state')
 
-#                 # Create a new SellerDetails instance and link it to the user
-#                 seller_details = SellerDetails(
-#                     user_id=user.id,
-#                     store_name=store_name,
-#                     phone_number=phone_number,
-#                     pincode=pincode,
-#                     pickup_address=pickup_address,
-#                     city=city,
-#                     state=state
-#                 )
-#                 seller_details.save()
+#                 seller_details = user.seller_details_user.all().first()
+
+#                 if not seller_details:
+#                     seller_details = SellerDetails(
+#                         user=user,
+#                         store_name=store_name,
+#                         phone_number=phone_number,
+#                         pincode=pincode,
+#                         pickup_address=pickup_address,
+#                         city=city,
+#                         state=state
+#                     )
+#                     seller_details.save()
+#                 else:
+#                     seller_details.store_name = store_name
+#                     seller_details.phone_number = phone_number
+#                     seller_details.pincode = pincode
+#                     seller_details.pickup_address = pickup_address
+#                     seller_details.city = city
+#                     seller_details.state = state
+#                     seller_details.save()
 
 #                 messages.success(request, "Step 2 completed successfully.")
-#                 # return redirect('seller_reg_step')  # Redirect to step 3 or confirmation page
+#                 return redirect('reg_step')
 
-#         elif 'submit_step3' in request.POST:
+#         elif step == '3':
 #             # Step 3 Data
 #             user_id = request.session.get('user_id')
 #             if user_id:
@@ -492,19 +250,33 @@ def seller_reg_step(request):
 #                 branch = request.POST.get('branch')
 #                 ifsc_code = request.POST.get('ifsc-code')
 
-#                 # Update the existing SellerDetails instance with step 3 data
-#                 seller_details = user.seller_details
-#                 seller_details.account_holder_name = account_holder_name
-#                 seller_details.account_number = account_number
-#                 seller_details.bank_name = bank_name
-#                 seller_details.branch = branch
-#                 seller_details.ifsc_code = ifsc_code
-#                 seller_details.save()
+#                 seller_details = user.seller_details_user.all().first()
+
+#                 if not seller_details:
+#                     seller_details = SellerDetails(
+#                         user=user,
+#                         account_holder_name=account_holder_name,
+#                         account_number=account_number,
+#                         bank_name=bank_name,
+#                         branch=branch,
+#                         ifsc_code=ifsc_code
+#                     )
+#                     seller_details.save()
+#                 else:
+#                     seller_details.account_holder_name = account_holder_name
+#                     seller_details.account_number = account_number
+#                     seller_details.bank_name = bank_name
+#                     seller_details.branch = branch
+#                     seller_details.ifsc_code = ifsc_code
+#                     seller_details.save()
 
 #                 messages.success(request, "Step 3 completed successfully.")
-#                 # return redirect('seller_registration')  # Redirect to confirmation page or other steps
+#                 # Redirect to confirmation page or other steps
+#                 return redirect('seller_reg_step')
 
-#     return render(request, 'seller_reg_step.html')
+#     return render(request, 'reg_step.html')
+
+
 
 
 
@@ -618,51 +390,57 @@ def customer_Profile(request):
 
 @login_required
 def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
-    cart_item, created = CartItem.objects.get_or_create(user=request.user, product=product)
+    product = get_object_or_404(Product, id=product_id)
+    cart_item, created = CartItem.objects.get_or_create(user=request.user, product_id=product.id)
     
     if not created:
         cart_item.quantity += 1
         cart_item.save()
 
-    return redirect('cart')
+    return redirect('shop')
 
 @login_required
 def cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
     total_price = sum(item.product.price * item.quantity for item in cart_items)
-    
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
+    total_items = sum(item.quantity for item in cart_items)
+    context = {
+        'cart_items': cart_items,
+        'total_items': total_items,
+        'total_price': total_price,
+        # ... other context variables ...
+    }
+    return render(request, 'cart.html',context)
 
-@login_required
 def remove_from_cart(request, product_id):
-    cart_item = get_object_or_404(CartItem, user=request.user, product__pk=product_id)
+    cart_item = get_object_or_404(CartItem, user=request.user, id=product_id)
+    print(f"Received product_id: {product_id}")  #Fixed the typo here
     cart_item.delete()
     return redirect('cart')
 
-def update_cart(request):
-    if request.method == 'POST':
-        cart_item_id = request.POST.get('cart_item_id')
-        action = request.POST.get('action')
+# def update_cart(request):
+#     if request.method == 'POST':
+#         cart_item_id = request.POST.get('cart_item_id')
+#         action = request.POST.get('action')
 
-        try:
-            cart_item = CartItem.objects.get(id=cart_item_id)
+#         try:
+#             cart_item = CartItem.objects.get(id=cart_item_id)
 
-            if action == 'increase':
-                cart_item.quantity += 1
-                cart_item.save()
-            elif action == 'decrease':
-                if cart_item.quantity > 1:
-                    cart_item.quantity -= 1
-                    cart_item.save()
-                else:
-                    cart_item.delete()
-                    messages.info(request, "Item removed from the cart.")
+#             if action == 'increase':
+#                 cart_item.quantity += 1
+#                 cart_item.save()
+#             elif action == 'decrease':
+#                 if cart_item.quantity > 1:
+#                     cart_item.quantity -= 1
+#                     cart_item.save()
+#                 else:
+#                     cart_item.delete()
+#                     messages.info(request, "Item removed from the cart.")
 
-        except CartItem.DoesNotExist:
-            messages.warning(request, "Item does not exist in the cart.")
+#         except CartItem.DoesNotExist:
+#             messages.warning(request, "Item does not exist in the cart.")
     
-    return redirect('cart')  # Redirect back to t
+#     return redirect('cart')  # Redirect back to t
 
 
 def decrease_item(request, item_id):
@@ -683,3 +461,13 @@ def increase_item(request, item_id):
     except CartItem.DoesNotExist:
         pass  # Handle the case when the item does not exist in the cart
     return redirect('cart')
+
+
+def search(request):
+    query = request.GET.get('q')
+    if query:
+        results = Product.objects.filter(product_name__icontains=query)
+    else:
+        results = []
+
+    return render(request, 'search_results.html', {'results': results})

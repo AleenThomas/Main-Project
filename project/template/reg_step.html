@@ -1,247 +1,295 @@
-{% load static %}<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Wizard-v4</title>
-	<!-- Mobile Specific Metas -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<!-- Font-->
-	<link rel="stylesheet" type="text/css" href="{% static 'css/opensans-font.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'css/roboto-font.css' %}">
-	<link rel="stylesheet" type="text/css" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
-	<!-- datepicker -->
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
-	<!-- Main Style Css -->
-    <link rel="stylesheet" href="css/style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Tabs</title>
+    <!-- Add Bootstrap CSS link here -->
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add your custom CSS if needed -->
 </head>
 <body>
-	<div class="page-content" style="background-image: url('images/wizard-v4.jpg')">
-		<div class="wizard-v4-content">
-			<div class="wizard-form">
-				<div class="wizard-header">
-					<h3 class="heading">Sign Up To Financial</h3>
-					<p>Fill all form field to go next step</p>
-				</div>
-		        <form class="form-register" action="#" method="post">
-		        	<div id="form-total">
-		        		<!-- SECTION 1 -->
-			            <h2>
-			            	<span class="step-icon"><i class="zmdi zmdi-account"></i></span>
-			            	<span class="step-text">About</span>
-			            </h2>
-			            <section>
-			                <div class="inner">
-			                	<h3>Personal Information:</h3>
-								<div class="form-row">
-									<div class="form-holder">
-										<label class="form-row-inner">
-											<input type="text" class="form-control" id="first-name" name="first-name" required>
-											<span class="label">First Name</span>
-					  						<span class="border"></span>
-										</label>
-									</div>
-									<div class="form-holder">
-										<label class="form-row-inner">
-											<input type="text" class="form-control" id="last-name" name="last-name" required>
-											<span class="label">Last Name</span>
-					  						<span class="border"></span>
-										</label>
-									</div>
-								</div>
-								<div class="form-row">
-									<div class="form-holder form-holder-1">
-										<label class="form-row-inner">
-											<input type="text" class="form-control" id="address" name="address" required>
-											<span class="label">Address Location</span>
-					  						<span class="border"></span>
-										</label>
-									</div>
-									<div class="form-holder">
-										<label class="form-row-inner">
-											<input type="text" class="form-control" id="code" name="code" required>
-											<span class="label">Zip Code</span>
-					  						<span class="border"></span>
-										</label>
-									</div>
-								</div>
-								<div class="form-row">
-									<div class="form-holder form-holder-2">
-										<label class="form-row-inner">
-											<input type="text" class="form-control" id="phone" name="phone" required>
-											<span class="label">Phone Number</span>
-					  						<span class="border"></span>
-										</label>
-									</div>
-								</div>
-							</div>
-			            </section>
-						<!-- SECTION 2 -->
-			            <h2>
-			            	<span class="step-icon"><i class="zmdi zmdi-lock"></i></span>
-			            	<span class="step-text">Account</span>
-			            </h2>
-			            <section>
-			                <div class="inner">
-			                	<h3>Do you have an account?</h3>
-								<div class="form-row">
-									<div id="radio">
-										<input type="radio" name="gender" value="male" checked class="radio-1"> I already have an account.
-  										<input type="radio" name="gender" value="female"> I'm newbie
-									</div>
-								</div>
-								<div class="form-row">
-									<div class="form-holder form-holder-2">
-										<label class="form-row-inner">
-											<input type="text" name="your_email_1" id="your_email_1" class="form-control" required>
-											<span class="label">E-Mail</span>
-					  						<span class="border"></span>
-										</label>
-									</div>
-								</div>
-								<div class="form-row">
-									<div class="form-holder">
-										<label class="form-row-inner">
-											<input type="password" name="password_1" id="password_1" class="form-control" required>
-											<span class="label">Password</span>
-											<span class="border"></span>
-										</label>
-									</div>
-									<div class="form-holder">
-										<label class="form-row-inner">
-											<input type="password" name="comfirm_password_1" id="comfirm_password_1" class="form-control" required>
-											<span class="label">Comfirm Password</span>
-											<span class="border"></span>
-										</label>
+    <div class="container mt-5">
+        <ul class="nav nav-tabs" id="myTabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#tab1">Step 1</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab2">Step 2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab3">Step 3</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab4">Step 4</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="tab1" class="tab-pane fade show active">
+                <section id="content1">
+					<div class="container mt-1 pt-1 bg-white">
+						<div class="row justify-content-center"> <!-- Center align the row -->
+							<!-- Form Fields with Specific Width -->
+							<div class="col-md-6">
+								<div class="signup-content">
+									<div class="signup-form">
+										<h2 class="form-title">Sign up</h2>
+										<form method="POST" class="register-form active" id="register-form" action="{% url 'reg_step' %}" data-form="step1">
+											{% csrf_token %}
+				
+											<div class="mb-3">
+												<div class="input-group">
+													<span class="input-group-text"><i class="fas fa-user"></i></span>
+													<input type="text" class="form-control" name="name" id="name" placeholder="Your Name" required>
+												</div>
+												<span id="name-error" class="error-message"></span>
+											</div>
+											<div class="mb-3">
+												<div class="input-group">
+													<span class="input-group-text"><i class="fas fa-envelope"></i></span>
+													<input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+												</div>
+												<span id="email-error" class="error-message"></span>
+											</div>
+											<div class="mb-3">
+												<div class="input-group">
+													<span class="input-group-text"><i class="fas fa-id-card"></i></span>
+													<input type="text" class="form-control" name="gstn" id="gstn" placeholder="GSTN Number" required>
+												</div>
+												<span id="gstn-error" class="error-message"></span>
+											</div>
+											<div class="mb-3">
+												<div class="input-group">
+													<span class="input-group-text"><i class="fas fa-lock"></i></span>
+													<input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+												</div>
+												<span id="password-error" class="error-message"></span>
+											</div>
+											<div class="mb-3">
+												<div class="input-group">
+													<span class="input-group-text"><i class="fas fa-sync-alt"></i></span>
+													<input type="password" class="form-control" name="password-repeat" id="password-repeat" placeholder="Repeat your password" required>
+												</div>
+												<span id="password-repeat-error" class="error-message"></span>
+											</div>
+											<input type="hidden" name="step" value="1">
+		
+											<div class="mb-3 form-button">
+												<input type="hidden" name="current_step" value="step1">
+												<button type="submit" name="submit_step1" id="btn1" class="form-submit " value="Register" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;" >Save</button>  
+												<button type="button" id="nextBtn1" class="form-submit2" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+									  
+												</div>
+										</form>
 									</div>
 								</div>
 							</div>
-			            </section>
-			            <!-- SECTION 3 -->
-			            <h2>
-			            	<span class="step-icon"><i class="zmdi zmdi-receipt"></i></span>
-			            	<span class="step-text">Ownership</span>
-			            </h2>
-			            <section>
-			                <div class="inner">
-			                	<h3>More About Yourself</h3>
-								<div class="form-row">
-									<div class="form-holder">
-										<label class="form-row-inner">
-											<input type="text" class="form-control" id="first-name-1" name="first-name-1" required>
-											<span class="label">First Name</span>
-											<span class="border"></span>
-										</label>
-									</div>
-									<div class="form-holder">
-										<label class="form-row-inner">
-											<input type="text" class="form-control" id="last-name-1" name="last-name-1" required>
-											<span class="label">Last Name</span>
-											<span class="border"></span>
-										</label>
+						</div>
+					</div>
+				</section>
+            </div>
+            <div id="tab2" class="tab-pane fade">
+                <section id="content2">
+					{% comment %} <h2>Step 2: Verify Your GST Number</h2> {% endcomment %}
+					<form method="POST" class="register-form" id="form-step2" action="{% url 'reg_step' %}" data-form="step2">
+						{% csrf_token %}
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="mb-3">
+									<!-- Label for Store Name -->
+									<label for="store-name">Store Name:</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-store"></i></span>
+										<input type="text" class="form-control" name="store-name" id="store-name" placeholder="Store Name" required>
 									</div>
 								</div>
-								<div class="form-row">
-									<div class="form-holder form-holder-2">
-										<select name="position" id="position">
-											<option value="Position" disabled selected>Position</option>
-											<option value="Manager">Manager</option>
-											<option value="Employee">Employee</option>
-											<option value="Director">Director</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-row">
-									<div class="form-holder form-holder-2">
-										<select name="area" id="area">
-											<option value="Business Area" disabled selected>Business Area</option>
-											<option value="Marketing">Marketing</option>
-											<option value="Finance">Finance</option>
-											<option value="IT Support">IT Support</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-row form-row-date">
-									<div class="form-holder form-holder-2">
-										<label for="date" class="special-label">Date of Birth:</label>
-										<select name="date" id="date">
-											<option value="Day" disabled selected>Day</option>
-											<option value="16">16</option>
-											<option value="17">17</option>
-											<option value="18">18</option>
-											<option value="19">19</option>
-										</select>
-										<select name="month" id="month">
-											<option value="Month" disabled selected>Month</option>
-											<option value="Feb">Feb</option>
-											<option value="Mar">Mar</option>
-											<option value="Apr">Apr</option>
-											<option value="May">May</option>
-										</select>
-										<select name="year" id="year">
-											<option value="Year" disabled selected>Year</option>
-											<option value="2017">2017</option>
-											<option value="2016">2016</option>
-											<option value="2015">2015</option>
-											<option value="2014">2014</option>
-											<option value="2013">2013</option>
-										</select>
+								<div class="mb-0">
+									<!-- Label for Phone Number -->
+									<label for="phone-number">Phone Number:</label>
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-phone"></i></span>
+										<input type="tel" class="form-control" name="phone-number" id="phone-number" placeholder="Phone Number" required>
 									</div>
 								</div>
 							</div>
-			            </section>
-			            <!-- SECTION 4 -->
-			            <h2>
-			            	<span class="step-icon"><i class="zmdi zmdi-money"></i></span>
-			            	<span class="step-text">Financing</span>
-			            </h2>
-			            <section>
-			                <div class="inner">
-			                	<h3>Financing Information</h3>
-			                	<div class="form-row">
-									<div class="form-holder form-holder-2">
-										<select name="inventory" id="inventory">
-											<option value="Buy Inventory" disabled selected>Buy Inventory</option>
-											<option value="Yes">Yes</option>
-											<option value="No">No</option>
-										</select>
+							<div class="col-md-6">
+								<!-- Label for Pickup Address -->
+								<label for="pickup-address">Pickup Address:</label>
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+										<input type="text" class="form-control" name="pincode" id="pincode" placeholder="Pincode" required>
 									</div>
 								</div>
-								<div class="form-row">
-									<div id="checkbox">
-										<span>Do you have existing business financing?: </span>
-										<input type="checkbox" name="vehicle1" value="Yes"> Yes
-  										<input type="checkbox" name="vehicle2" value="No"> No
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+										<input type="text" class="form-control" name="pickup-address" id="pickup-address" placeholder="Street Address" required>
 									</div>
 								</div>
-								<h4>Existing Balance </h4>
-								<div class="form-row">
-									<div class="form-holder form-holder-2">
-										<label class="form-row-inner">
-											<input type="text" name="business" id="business" class="form-control" required>
-											<span class="label">Business</span>
-											<span class="border"></span>
-										</label>
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-city"></i></span>
+										<input type="text" class="form-control" name="city" id="city" placeholder="City" required>
 									</div>
 								</div>
-								<div class="form-row">
-									<div class="form-holder form-holder-2">
-										<label class="form-row-inner">
-											<input type="text" name="balance" id="balance" class="form-control" required>
-											<span class="label">Current Balance</span>
-											<span class="border"></span>
-										</label>
+								<div class="mb-0">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-flag"></i></span>
+										<input type="text" class="form-control" name="state" id="state" placeholder="State" required>
 									</div>
 								</div>
 							</div>
-			            </section>
-		        	</div>
-		        </form>
-			</div>
-		</div>
-	</div>
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.steps.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/main.js"></script>
+						</div>
+						<input type="hidden" name="step" value="2">
+		
+						<div class="mb-3 form-button">
+							<input type="hidden" name="current_step" value="step2">
+							<button type="submit" name="submit_step2" class="form-submit" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Save</button>
+							<button type="button" id="nextBtn2" class="form-submit2" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+						</div>
+					</form>
+				</section>
+				
+            </div>
+            <div id="tab3" class="tab-pane fade">
+                <section id="content3">
+					<h2>Step 3: Enter Account Details</h2>
+					<form method="POST" class="register-form" id="form-step3" action="{% url 'reg_step' %}" data-form="step3">
+						{% csrf_token %}
+				
+						<div class="row">
+							<div class="col-md-6">
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-user"></i></span>
+										<input type="text" class="form-control" name="account-holder-name" id="account-holder-name" placeholder="Account Holder Name">
+									</div>
+								</div>
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+										<input type="text" class="form-control" name="account-number" id="account-number" placeholder="Account Number">
+									</div>
+								</div>
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-building"></i></span>
+										<input type="text" class="form-control" name="bank-name" id="bank-name" placeholder="Bank Name">
+									</div>
+								</div>
+							</div>
+				
+							<div class="col-md-6">
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-university"></i></span>
+										<input type="text" class="form-control" name="branch" id="branch" placeholder="Branch">
+									</div>
+								</div>
+								<div class="mb-3">
+									<div class="input-group">
+										<span class="input-group-text"><i class="fas fa-address-card"></i></span>
+										<input type="text" class="form-control" name="ifsc-code" id="ifsc-code" placeholder="IFSC Code">
+									</div>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="step" value="3">
+		
+						<div class="d-flex justify-content-end">
+							<div class="mb-3 ps-2">
+								<input type="hidden" name="current_step" value="step2">
+								<input type="submit" name="submit_step3" id="btn3" class="form-submit" value="Save" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Save</button>
+								<button type="button" id="nextBtn3" class="form-submit2" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+							</div>
+					</form>
+				</section>
+				
+            </div>
+            <div id="tab4" class="tab-pane fade">
+				<section id="content4">
+					<div class="text-center">
+						<i class="fas fa-check-circle fa-5x" style="color: green;"></i>
+						<h2>Registration Completed</h2>
+						<p>Congratulations, you are now a GustoGrove seller.</p>
+						<a href="#" class="btn btn-primary">Add Products and Start Selling</a>
+					</div>
+				</section>
+				
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap and jQuery scripts at the end of the body -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<!-- Add this script after your previous script -->
+<!-- Add this script after your previous script -->
+<!-- Add this script after your previous script -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const nextButtons = document.querySelectorAll('.form-submit2');
+    const saveButtons = document.querySelectorAll('.form-submit'); // Add Save buttons
+    
+    let currentTab = 0;
+
+    // Function to handle "Next" button click
+    function handleNextButtonClick() {
+        const form = document.querySelector('.tab-pane.active');
+        
+        // Check if the form is valid (you can add validation logic here)
+        // For now, it proceeds to the next tab without validation
+        if (form) {
+            form.classList.remove('show', 'active'); // Hide the current tab
+            currentTab++; // Move to the next tab
+            const nextTab = document.getElementById(`tab${currentTab}`);
+            if (nextTab) {
+                nextTab.classList.add('show', 'active'); // Show the next tab
+                // Enable the corresponding tab link
+                const tabLink = document.querySelector(`[href="#tab${currentTab}"]`);
+                if (tabLink) {
+                    tabLink.removeAttribute('disabled');
+                    tabLink.click(); // Simulate a click to activate the tab
+                }
+            }
+        }
+    }
+
+    // Function to handle "Save" button click
+    function handleSaveButtonClick() {
+        const form = document.querySelector('.tab-pane.active form[data-form="step' + (currentTab + 1) + '"]');
+        
+        // Check if the form is valid (you can add validation logic here)
+        if (form) {
+            form.submit(); // Submit the form
+        }
+    }
+
+    // Add event listeners to the "Next" buttons
+    for (let i = 0; i < nextButtons.length; i++) {
+        nextButtons[i].addEventListener("click", handleNextButtonClick);
+    }
+
+    // Add event listeners to the "Save" buttons
+    for (let i = 0; i < saveButtons.length; i++) {
+        saveButtons[i].addEventListener("click", handleSaveButtonClick);
+    }
+
+    // Enable the first tab link by default
+    const firstTabLink = document.querySelector('[href="#tab1"]');
+    if (firstTabLink) {
+        firstTabLink.click();
+    }
+});
+</script>
 </body>
 </html>

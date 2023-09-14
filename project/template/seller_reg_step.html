@@ -156,11 +156,7 @@
 
         <input id="tab4" type="radio" name="tabs">
         <label for="tab4">Step 4</label> 
-{% comment %} 
-<button id="tab1" name='tabs'>Step 1</button>
-<button id="tab2" name='tabs'>Step 2</button>
-<button id="tab3" name='tabs'>Step 3</button>
-<button id="tab4" name='tabs'>Step 4</button> {% endcomment %}
+
         <section id="content1">
             <div class="container mt-1 pt-1 bg-white">
                 <div class="row justify-content-center"> <!-- Center align the row -->
@@ -211,8 +207,8 @@
 
                                     <div class="mb-3 form-button">
                                         <input type="hidden" name="current_step" value="step1">
-                                        <button type="button" name="submit_step1" id="btn1" class="form-submit " value="Register" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;" >Save</button>  
-                                        <button type="button" id="nextBtn1" class="form-submit2" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+                                        <button type="button" name="submit_step1" id="btn1" class="form-submit " value="Register" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;" >Save and Next</button>  
+                                        {% comment %} <button type="button" id="nextBtn1" class="form-submit2" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button> {% endcomment %}
                               
                                         </div>
                                 </form>
@@ -279,15 +275,15 @@
 
                 <div class="mb-3 form-button">
                     <input type="hidden" name="current_step" value="step2">
-                    <button type="button" name="submit_step2" class="form-submit" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Save</button>
-                    <button type="button" id="nextBtn2" class="form-submit2" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button>
+                    <button type="button" name="submit_step2" class="form-submit" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Save and Next</button>
+                    {% comment %} <button type="button" id="nextBtn2" class="form-submit2" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button> {% endcomment %}
                 </div>
             </form>
         </section>
         
 
         <section id="content3">
-            <h2>Step 3: Enter Account Details</h2>
+            {% comment %} <h2>Step 3: Enter Account Details</h2> {% endcomment %}
             <form method="POST" class="register-form" id="form-step3" action="{% url 'seller_reg_step' %}" data-form="step3">
                 {% csrf_token %}
         
@@ -352,16 +348,21 @@
         </section>
         
     </main>
-  <!-- Include jQuery -->
-<!-- Include jQuery -->
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 
 
-{% comment %} <script>
-    document.addEventListener("DOMContentLoaded", function () {
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% comment %} ---------------------------original------------------------- {% endcomment %}
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
         const tabs = document.querySelectorAll('input[type="radio"]');
         const saveButtons = document.querySelectorAll('.form-submit');
-        const nextButtons = document.querySelectorAll('.form-submit2');
         let currentTab = 0;
 
         // Disable all tabs except the first one initially
@@ -369,223 +370,60 @@
             tabs[i].disabled = true;
         }
 
-        // Function to move to the next tab and deactivate the previous tab
-        function moveToNextTab() {
-            // Remove the "active" class from the current tab
-            document.querySelector('.register-form.active').classList.remove('active');
-
-            // Move to the next tab
-            tabs[currentTab + 1].disabled = false;
-            tabs[currentTab + 1].click(); // Trigger a click event on the next tab radio button
-            currentTab++;
-
-            // Add the "active" class to the new active tab
-            document.querySelector('.register-form.active').classList.add('active');
-        }
-
         // Add event listeners to the "Save" buttons
         for (let i = 0; i < saveButtons.length; i++) {
             saveButtons[i].addEventListener("click", function (event) {
-                // Check if the form is valid
-                const form = document.querySelector('.register-form.active');
-                if (form && form.checkValidity()) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Check if the form is valid (you can add your form validation logic here)
+                const isFormValid = true; // Replace with your validation logic
+
+                if (isFormValid) {
                     // Serialize the form data
-                    const formData = $(form).serialize();
+                    const formData = $(this).closest('form').serialize();
 
-                    // Send an AJAX request to submit the form
+                    // Get the CSRF token from the page
+                    const csrfToken = $('input[name=csrfmiddlewaretoken]').val();
+
+                    // Send an AJAX POST request to your Django view
                     $.ajax({
-                        type: "POST",
-                        url: form.action,
+                        type: 'POST',
+                        url: '{% url "seller_reg_step" %}', // Replace with your Django view URL
                         data: formData,
+                        headers: {
+                            'X-CSRFToken': csrfToken, // Include the CSRF token in the request headers
+                        },
                         success: function (response) {
-                            // Check if the submission was successful
-                            if (response.success) {
-                                // Show an alert
-                                alert("Form submitted successfully!");
+                            // Handle the response here if needed
+                            console.log(response);
 
-                                // Move to the next tab after form submission
-                                moveToNextTab();
-                            } else {
-                                alert("Form submission failed."); // You can handle errors accordingly
+                            // Disable all previous tabs (you may need to adjust this part)
+                            for (let i = 0; i < currentTab; i++) {
+                                tabs[i].disabled = true;
+                            }
+
+                            // Enable the next tab (if available)
+                            if (currentTab < tabs.length - 1) {
+                                tabs[currentTab + 1].disabled = false;
+
+                                // Switch to the next tab
+                                tabs[currentTab + 1].checked = true;
+
+                                // Update the current tab
+                                currentTab++;
                             }
                         },
-                        error: function () {
-                            alert("Form submission failed."); // Handle AJAX errors
-                        }
+                        error: function (xhr, textStatus, errorThrown) {
+                            // Handle errors if needed
+                            console.error(xhr.responseText);
+                        },
                     });
-
-                    event.preventDefault(); // Prevent the default form submission behavior
-                }
-            });
-        }
-
-        // Add event listeners to the "Next" buttons
-        for (let i = 0; i < nextButtons.length; i++) {
-            nextButtons[i].addEventListener("click", function () {
-                moveToNextTab(); // Move to the next tab when "Next" is clicked
-            });
-        }
-    });
-</script> {% endcomment %}
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-
-        
-
-
-    
-
-    {% comment %} <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const tabs = document.querySelectorAll('input[type="radio"]');
-            const saveButtons = document.querySelectorAll('.form-submit');
-            let currentTab = 0;
-    
-            // Disable all tabs except the first one initially
-            for (let i = 1; i < tabs.length; i++) {
-                tabs[i].disabled = true;
-            }
-    
-            // Add event listeners to the "Save" buttons
-            for (let i = 0; i < saveButtons.length; i++) {
-                saveButtons[i].addEventListener("click", function (event) {
-                    // Check if the form is valid (you can add your form validation logic here)
-                    const isFormValid = true; // Replace with your validation logic
-    
-                    if (isFormValid) {
-                        // Perform the form submission here
-                        const form = event.target.closest('form');
-                        if (form) {
-                            // Submit the form
-                            form.submit();
-                        }
-                    } else {
-                        event.preventDefault(); // Prevent the default form submission if validation fails
-                    }
-                });
-            }
-    
-            // Handle form submission for Step 2
-            const formStep2 = document.getElementById("form-step2");
-            formStep2.addEventListener("submit", function (event) {
-                event.preventDefault(); // Prevent the default form submission
-    
-                // Perform your form submission AJAX here
-                const formData = new FormData(formStep2);
-    
-                // Simulate a successful submission
-                setTimeout(function () {
-                    // Check if the submission was successful (replace this condition)
-                    const isFormValid = true;
-    
-                    if (isFormValid) {
-                        // Enable the next tab (Step 3)
-                        tabs[currentTab + 1].disabled = false;
-    
-                        // Switch to the next tab (Step 3)
-                        tabs[currentTab + 1].checked = true;
-    
-                        // Update the current tab
-                        currentTab++;
-                    }
-                }, 1000); // Simulated AJAX delay (remove this in your actual code)
-            });
-    
-            // Handle form submission for Step 3
-            const formStep3 = document.getElementById("form-step3");
-            formStep3.addEventListener("submit", function (event) {
-                event.preventDefault(); // Prevent the default form submission
-    
-                // Perform your form submission AJAX here
-                const formData = new FormData(formStep3);
-    
-                // Simulate a successful submission
-                setTimeout(function () {
-                    // Check if the submission was successful (replace this condition)
-                    const isFormValid = true;
-    
-                    if (isFormValid) {
-                        // Enable the next tab (Step 4)
-                        tabs[currentTab + 1].disabled = false;
-    
-                        // Switch to the next tab (Step 4)
-                        tabs[currentTab + 1].checked = true;
-    
-                        // Update the current tab
-                        currentTab++;
-                    }
-                }, 1000); // Simulated AJAX delay (remove this in your actual code)
-            });
-        });
-    </script>
-     {% endcomment %}
-    
-    
-        
-        
- <!-- JavaScript -->
- <!-- JavaScript -->
- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const saveButtons = document.querySelectorAll('.form-submit');
-        const nextButtons = document.querySelectorAll('.form-submit2');
-        let currentTab = 0;
-
-        // Function to handle form submission
-        function submitForm(form) {
-            // Check if the form is valid
-            if (form.checkValidity()) {
-                // Display a confirmation alert
-                const confirmation = confirm("Do you want to save this information?");
-                if (confirmation) {
-                    // If "OK" is clicked in the alert, submit the form
-                    form.submit();
-                }
-            }
-        }
-
-        // Add event listeners to the "Save" buttons
-        for (let i = 0; i < saveButtons.length; i++) {
-            saveButtons[i].addEventListener("click", function (event) {
-                event.preventDefault(); // Prevent the default form submission
-                const form = document.querySelector('.register-form.active');
-                submitForm(form);
-            });
-        }
-
-        // Add event listeners to the "Next" buttons
-        for (let i = 0; i < nextButtons.length; i++) {
-            nextButtons[i].addEventListener("click", function () {
-                // Check if the form is valid
-                console.log("Next button clicked!");
-                const form = document.querySelector('.register-form.active');
-                if (form && form.checkValidity()) {
-                    // Remove "active" class from the current form
-                    form.classList.remove('active');
-                    
-                    // Move to the next tab (increment currentTab)
-                    currentTab++;
-                    const currentForm = document.getElementById(`step${currentTab}-form`);
-                    if (currentForm) {
-                        currentForm.classList.add('active'); // Add "active" class to the next form
-                    }
                 }
             });
         }
     });
 </script>
 
-    
-    
+
 </body>
 </html>
