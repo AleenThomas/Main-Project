@@ -28,7 +28,6 @@
         body {
             font: 14px/1 'Open Sans', sans-serif;
             color: #555;
-            background: #eee;
             margin: 0; /* Remove default margin to ensure full-width */
         }
         
@@ -352,6 +351,89 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Function to validate name field
+    function validateName() {
+        const nameInput = document.getElementById('name');
+        const nameError = document.getElementById('name-error');
+        const nameRegex = /^[A-Za-z\s]+$/; // Regular expression to allow only letters and spaces
+
+        if (!nameInput.value.match(nameRegex)) {
+            nameError.textContent = 'Please enter a valid name (letters and spaces only)';
+            nameError.style.color = 'red';
+            return false;
+        } else {
+            nameError.textContent = '';
+            return true;
+        }
+    }
+
+    // Function to validate email field
+    function validateEmail() {
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('email-error');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression to validate email
+
+        if (!emailInput.value.match(emailRegex)) {
+            emailError.textContent = 'Please enter a valid email address';
+            emailError.style.color = 'red';
+            return false;
+        } else {
+            emailError.textContent = '';
+            return true;
+        }
+    }
+
+    // Function to validate GSTN field
+    function validateGSTN() {
+        const gstnInput = document.getElementById('gstn');
+        const gstnError = document.getElementById('gstn-error');
+        const gstnRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9A-Z]{1}$/; // Regular expression to allow only uppercase letters and numbers
+
+        if (!gstnInput.value.match(gstnRegex)) {
+            gstnError.textContent = 'Please enter a valid GSTN';
+            gstnError.style.color = 'red';
+            return false;
+        } else {
+            gstnError.textContent = '';
+            return true;
+        }
+    }
+
+    // Function to validate password
+    function validatePassword() {
+        const passwordInput = document.getElementById('password');
+        const passwordError = document.getElementById('password-error');
+
+        // Regular expression to enforce password requirements
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+        if (!passwordInput.value.match(passwordRegex)) {
+            passwordError.textContent = 'Password must i';
+            passwordError.style.color = 'red';
+            return false;
+        } else {
+            passwordError.textContent = '';
+            return true;
+        }
+    }
+
+    // Add event listeners to validate on input
+    document.getElementById('name').addEventListener('input', validateName);
+    document.getElementById('email').addEventListener('input', validateEmail);
+    document.getElementById('gstn').addEventListener('input', validateGSTN);
+    document.getElementById('password').addEventListener('input', validatePassword);
+</script>
+
+
+
+
+
+
+
+
+
+
 {% comment %} ---------------------------original------------------------- {% endcomment %}
 
 
@@ -423,6 +505,7 @@
         }
     });
 </script>
+
 
 
 </body>
