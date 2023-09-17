@@ -471,3 +471,10 @@ def search(request):
         results = []
 
     return render(request, 'search_results.html', {'results': results})
+
+
+
+
+# -------------------------------------------------admin---------------------------------------------------
+def index_admin(request):
+    return render(request,'admin\indexadmin.html')

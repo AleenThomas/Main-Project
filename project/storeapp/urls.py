@@ -28,6 +28,9 @@ urlpatterns = [
     path('contact/',views.contact,name='contact'),
     path('seller_product_listing/', views.seller_product_listing, name='seller_product_listing'),
     path('search/',views.search,name='search'),
+    # ----------------------------------admin--------------------------------------
+        path('index_admin/', views.index_admin, name='index_admin'),
+
 
 
 

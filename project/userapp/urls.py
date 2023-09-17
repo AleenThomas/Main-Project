@@ -8,6 +8,11 @@ urlpatterns = [
     path('sellerregister',views.seller_register,name='seller_register'),
     path('login/',views.custom_login,name='custom_login'),
     path('logout/',views.logout,name='logout'),
+     
+     
+    
+    path('email-verification/<str:uidb64>/<str:token>/', views.email_verification, name='email_verification'),
+    
     
     path("accounts/", include("allauth.urls")),
 

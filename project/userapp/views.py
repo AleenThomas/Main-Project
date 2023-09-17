@@ -2,6 +2,13 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from.models import CustomUser
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_bytes
 # from storeapp.models import UserProfile
 from django.contrib.auth import authenticate, login as auth_login
 # Create your views here.
@@ -23,15 +30,44 @@ def customer_register(request):
             user.is_customer = True
             # if role == 'customer':
             #     user.is_customer = True
+            user.is_active = False
             user.save()
            
-            messages.success(request, "Registered as a customer successfully")
-            return redirect('custom_login')  # Redirect to homepage or thank-you page
-        
+          
+          
+            print("message")
+
+            # Generate a verification token
+            token = default_token_generator.make_token(user)
+
+            # Create the verification URL with the token
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            verification_url = reverse('email_verification', args=[uidb64, token])
+
+            # Construct the email message with the verification URL
+            message = f"Click the following link to verify your email: {request.build_absolute_uri(verification_url)}"
+
+            # Send the verification email
+            send_mail(
+                'Email Verification',
+                message,
+                'grovegusto@gmail.com',  # Replace with your sender email
+                [user.email],
+                fail_silently=False,
+            )
+
+            messages.success(request, "Registration successful! Please check your email to verify your account.")
         else:
-            messages.error(request, "Missing required fields")
-    
+            messages.error(request, "Registration failed. Please try again.")
     return render(request, 'custreg.html')
+           
+    #         messages.success(request, "Registered as a customer successfully")
+    #         return redirect('custom_login')  # Redirect to homepage or thank-you page
+        
+    #     else:
+    #         messages.error(request, "Missing required fields")
+    
+    # return render(request, 'custreg.html')
 
 
 
@@ -100,3 +136,19 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
+def email_verification(request, uidb64, token):
+    User = get_user_model()
+
+    try:
+        user_id = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=user_id)
+
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            messages.success(request, "Email verification successful! You can now log in.")
+        else:
+            messages.error(request, "Email verification failed. Please request a new verification email.")
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    return redirect('custom_login')
