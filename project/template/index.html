@@ -169,7 +169,20 @@ https://templatemo.com/tm-559-zay-shop
                     
                 </div>
             </form>
-            <ul id="modalSearchResults"></ul>
+            <div id="modalSearchResults" class="card-columns">
+
+                {% for result in results %}
+    <li class="list-group-item">
+        <div class="card" style="max-width: 200px;">
+            <img class="card-img-top w-100" src="{{ result.image.url }}" alt="{{ result.name }}">
+            <div class="card-body">
+                <h4 class="card-title">{{ result.name }}</h4>
+                <p class="card-text">{{ result.description }}</p>
+            </div>
+        </div>
+    </li>
+{% endfor %}
+            </div>
         </div>
     </div>
 
@@ -517,18 +530,16 @@ https://templatemo.com/tm-559-zay-shop
                             // Generate HTML for each product result
                             
                             const productHtml = `
-                                <li class="list-group-item">
-                                    <a href="/product_detail/${result.id}/">
-                                        <div class="card" style="width: 300px">
-                                            <img class="card-img-top w-100" src="${result.image}" alt="${result.name}">
-                                            <div class="card-body">
-                                                <h4 class="card-title">${result.name}</h4>
-                                                <p class="card-text">${result.description}</p>
-                                                
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
+                            <li class="list-group-item">
+                                <div class="card" style="max-width: 200px;" data-product-detail-url="/product_detail/${result.id}/">
+                                    <img class="card-img-top w-100" src="${result.image}" alt="${result.name}">
+                                    <div class="card-body">
+                                        <h4 class="card-title">${result.name}</h4>
+                                        <p class="card-text">${result.description}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        
                             `;
 
                         resultList.append(productHtml);
