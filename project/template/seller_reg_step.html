@@ -206,7 +206,7 @@
 
                                     <div class="mb-3 form-button">
                                         <input type="hidden" name="current_step" value="step1">
-                                        <button type="button" name="submit_step1" id="btn1" class="form-submit " value="Register" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;" >Save and Next</button>  
+                                        <button type="button" name="submit_step1" disable id="btn1" class="form-submit " value="Register" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;" >Save and Next</button>  
                                         {% comment %} <button type="button" id="nextBtn1" class="form-submit2" style="background-color: rgb(2, 48, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button> {% endcomment %}
                               
                                         </div>
@@ -274,7 +274,7 @@
 
                 <div class="mb-3 form-button">
                     <input type="hidden" name="current_step" value="step2">
-                    <button type="button" name="submit_step2" class="form-submit" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Save and Next</button>
+                    <button type="button" name="submit_step2" class="form-submit" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;" id="btn2">Save and Next</button>
                     {% comment %} <button type="button" id="nextBtn2" class="form-submit2" style="background-color: rgb(2, 40, 2); color: #fff; border: none; padding: 15px 25px; border-radius: 5px; cursor: pointer;">Next</button> {% endcomment %}
                 </div>
             </form>
@@ -352,6 +352,22 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    // Function to check if all fields are valid
+    function areAllFieldsValid() {
+        const nameValid = validateName();
+        const emailValid = validateEmail();
+        const gstnValid = validateGSTN();
+        const passwordValid = validatePassword();
+
+        // Enable the button if all fields are valid, otherwise disable it
+        const submitButton = document.getElementById('btn1');
+        if (nameValid && emailValid && gstnValid && passwordValid) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    }
+
     // Function to validate name field
     function validateName() {
         const nameInput = document.getElementById('name');
@@ -418,12 +434,17 @@
         }
     }
 
+    // Disable the submit button initially
+    document.getElementById('submit-button').disabled = true;
+
     // Add event listeners to validate on input
-    document.getElementById('name').addEventListener('input', validateName);
-    document.getElementById('email').addEventListener('input', validateEmail);
-    document.getElementById('gstn').addEventListener('input', validateGSTN);
-    document.getElementById('password').addEventListener('input', validatePassword);
+    document.getElementById('name').addEventListener('input', areAllFieldsValid);
+    document.getElementById('email').addEventListener('input', areAllFieldsValid);
+    document.getElementById('gstn').addEventListener('input', areAllFieldsValid);
+    document.getElementById('password').addEventListener('input', areAllFieldsValid);
 </script>
+
+
 
 
 
