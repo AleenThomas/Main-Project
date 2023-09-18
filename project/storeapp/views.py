@@ -10,6 +10,7 @@ from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from .models import CustomUser, SellerDetails
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 
@@ -295,9 +296,12 @@ def seller_index(request):
 def shop(request):
     # Get products added by the suppliers
     supplier_products = Product.objects.all()  # You can add filters if needed
-    
+    paginator = Paginator(supplier_products, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     context = {
-        'supplier_products': supplier_products
+        'supplier_products': supplier_products,
+        'page':page
     }
     return render(request, 'shop.html', context)
 

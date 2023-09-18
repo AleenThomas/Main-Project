@@ -17,9 +17,20 @@
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="{% static 'css\fontawesome.min.css' %}">
-    <style> .btn.added {
-    color: red; /* Change the color when it's in the wishlist */
-}</style>
+    <style>
+         .btn.added {
+    color: red; /* Change the color when it's in the wishlist */}
+    {% comment %} a.page-link {
+        background-color: black;
+        color: white; /* Text color */
+    }
+    
+    /* Change to blue when hovered */
+     a.page-link:hover {
+        background-color: blue;
+        color: white; /* Text color */
+    } {% endcomment %}
+</style>
 <!--
     
 TemplateMo 559 Zay Shop
@@ -319,19 +330,38 @@ https://templatemo.com/tm-559-zay-shop
                   
                     
                 {% endfor %}
-                <div div="row">
-                    <ul class="pagination pagination-lg justify-content-end">
-                        <li class="page-item disabled">
-                            <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="#" tabindex="-1">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark" href="#">3</a>
-                        </li>
-                    </ul>
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center">
+                        <ul class="pagination pagination-lg justify-content-end">
+                
+                            {% if page.has_previous %}
+                                <li class="page-item disabled">
+                                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0  " href="#"  tabindex="-1">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"  href="?page={{ page.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                
+                            {% for num in page.paginator.page_range %}
+                                <li class="page-item {% if num == page.number %}{% if num == 1 %}first-page{% endif %} active{% endif %}" >
+                                    <a class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endfor %}
+                
+                            {% if page.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="?page={{ page.next_page_number }}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark" href="?page={{ page.paginator.num_pages }}">Last</a>
+                                </li>
+                            {% endif %}
+                
+                        </ul>
+                    </div>
                 </div>
+                
                
             </div>
 
@@ -423,7 +453,7 @@ https://templatemo.com/tm-559-zay-shop
                                         </div>
                                     </div>
                                     <!--End Third slide-->
-
+                                    
                                 </div>
                                 <!--End Slides-->
                             </div>
