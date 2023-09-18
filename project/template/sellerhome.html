@@ -71,12 +71,23 @@ https://templatemo.com/tm-559-zay-shop
                          <li class="nav-item">
                             {% comment %} <a class="nav-link" href="{% url 'cust_profile' user.id %}">Profile</a> {% endcomment %}
                         </li>
+                        {% if user.is_seller  %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'add_product' %}">Add Products</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'seller_product_listing' %}">View Products</a>
                         </li>
+                        {% else %}
+                        <li class="text-white m-2 nav-item">
+                            Add Products
+                        </li>
+                        <li class=" text-white m-2 nav-item">
+                           View Products
+                        </li>
+                        {% endif %}
+                        
+                        
                     </ul>
                 </div>
                 <div class="navbar align-self-center d-flex">

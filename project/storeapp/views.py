@@ -9,6 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from .models import CustomUser, SellerDetails
+from django.db.models import Q
 
 
 
@@ -478,3 +479,18 @@ def search(request):
 # -------------------------------------------------admin---------------------------------------------------
 def index_admin(request):
     return render(request,'admin\indexadmin.html')
+
+
+def search_product(request,name):
+    print(name)
+
+    # Perform the search using a Q object to filter the Product model
+    results = Product.objects.filter(
+        Q(product_name__icontains=name) | Q(description__icontains=name)
+    )
+    print(results)
+
+    # Serialize the results to JSON
+    serialized_results = [{'id': product.id, 'name': product.product_name,'image':product.image.url} for product in results]
+    
+    return JsonResponse({'results': serialized_results})

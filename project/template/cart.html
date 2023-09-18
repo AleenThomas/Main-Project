@@ -217,9 +217,9 @@
                 <div class="row text-muted">{{ item.product.product_name }}</div>
               </div>
               <div class="col">
-                <a href="{% url 'decrease_item' item.id %}">-</a>
-                <a href="#" class="border">{{ item.quantity }}</a>
-                <a href="{% url 'increase_item' item.id %}">+</a>
+                <a class="text-decoration-none border" href="{% url 'decrease_item' item.id %}">-</a>
+                <a class="text-decoration-none" href="#" class="border">{{ item.quantity }}</a>
+                <a class="text-decoration-none border" href="{% url 'increase_item' item.id %}">+</a>
               </div> 
               <div class="col">₹ {{ item.product.price }}</div>
               <div class="col">
