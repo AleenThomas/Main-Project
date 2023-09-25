@@ -546,3 +546,41 @@ def search_product(request, name):
     
 def checkout(request):
     return render(request,'checkout.html')
+
+
+def update_product(request, product_id):
+    # Get the product object from the database using the product_id
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        # Retrieve form data from the request
+        product_name = request.POST.get('product_name')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+        quantity = request.POST.get('quantity')
+        price = request.POST.get('price')
+        brand_name = request.POST.get('brand_name')
+        stock = request.POST.get('stock')
+
+        # Update the product data
+        product.product_name = product_name
+        product.description = description
+        product.image = image
+        product.quantity = quantity
+        product.price = price
+        product.brand_name = brand_name
+        product.stock = stock
+
+        # Save the updated product data to the database
+        product.save()
+        return redirect('add_product')  # Redirect to the product detail page
+    else:
+        # If it's a GET request, render the form with the current product data
+        return render(request, 'editproduct.html', {'product': product})
+
+
+
+
+
+
+
