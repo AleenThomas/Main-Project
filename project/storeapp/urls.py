@@ -24,12 +24,14 @@ urlpatterns = [
     # path('update_cart/', views.update_cart, name='update_cart'),
     path('add_product/', views.add_product, name='add_product'),
     path('shop/', views.shop, name='shop'),
+    path('sellerindex/', views.sellerindex, name='sellerindex'),
+
     path('product_detail/<int:product_id>/', views.product_detail, name='product_detail'),
     path('contact/',views.contact,name='contact'),
     path('seller_product_listing/', views.seller_product_listing, name='seller_product_listing'),
     path('search/<str:name>', views.search_product, name='search_product'),
     # ----------------------------------admin--------------------------------------
-    path('index_admin/', views.index_admin, name='index_admin'),
+    # path('index_admin/', views.index_admin, name='index_admin'),
 
 
 

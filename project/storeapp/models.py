@@ -23,15 +23,33 @@ class Customer_Profile(models.Model):
 
 
 class Product(models.Model):
+    # Your existing fields
     product_name = models.CharField(max_length=255)
     description = models.TextField()
     image = models.ImageField(upload_to='products/', null=True, blank=True)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(default=100)
+    stock = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     date_added = models.DateField(default=timezone.now)
-    brand_name = models.CharField(max_length=255,default="")
-    seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True, blank=True) 
+    brand_name = models.CharField(max_length=255, default="")
+    seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
 
+    # Define choices for the status field
+    STATUS_CHOICES = [
+        ('In Stock', 'In Stock'),
+        ('Out of Stock', 'Out of Stock'),
+    ]
+    
+    # Add the status field
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='In Stock')
+
+    def save(self, *args, **kwargs):
+        # Update the status based on the stock value
+        if self.stock == 0:
+            self.status = 'Out of Stock'
+        else:
+            self.status = 'In Stock'
+        super(Product, self).save(*args, **kwargs)
     def __str__(self):
         return self.product_name
     

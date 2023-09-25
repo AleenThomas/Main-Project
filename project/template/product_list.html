@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="{% static 'css\bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css\templatemo.css' %}">
     <link rel="stylesheet" href="{% static 'css\custom.css' %}">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+O4Xcz5Ft6o7g5w1PPi2RD4m1fz5e5qlwP5P0o2Ev6l5f7a"
+    crossorigin="anonymous"
+/>
 
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
@@ -24,6 +30,40 @@ TemplateMo 559 Zay Shop
 https://templatemo.com/tm-559-zay-shop
 
 -->
+
+
+<style>
+   
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+    body{
+        font-family: 'Open Sans', sans-serif;
+        
+    }
+    .search{
+      
+      top:6px;
+      left:10px;
+    }
+    
+    .form-control{
+        
+        border:none;
+        padding-left:32px;
+    }
+    
+    .form-control:focus{
+        
+        border:none;
+        box-shadow:none;
+    }
+    
+    .green{
+        
+        color:green;
+    }
+    
+</style>
 </head>
 
 <body>
@@ -203,64 +243,109 @@ https://templatemo.com/tm-559-zay-shop
 
 
     <!-- Start Content -->
-    <div class="container py-5">
-        
-
+    <div class="container mt-5 px-2">
+    
+        <div class="mb-2 d-flex justify-content-between align-items-center">
             
-
-            
-                   
-                <div class="row">
-                    
-                    {% for product in seller_products %}
-                    <div class="col-md-4">
-                        <div class="card mb-4 product-wap rounded-0">
-                            
-                            <div class="card rounded-0">
-                                <img class="card-img rounded-0 img-fluid" src="{{ product.image.url }}" alt="{{ product.product_name }}">
-                                
-                            </div>
-                            <div class="card-body">
-                                <a href="shop-single.html" class="h3 text-decoration-none">{{ product.product_name }}</a>
-                                
-                               
-                                <p class="text-center mb-0">Price:${{ product.price }}</p>
-                                <p class="text-center mb-0">Quantity:{{ product.quantity }}</p>
-
-                                <p class="text-center mb-0">{{ product.description }}</p>
-
-                            </div>
-                            <div class="text-center mt-3">
-                                <a href="" class="btn btn-primary">Update</a>
-                                <a href="" class="btn btn-danger">Delete</a>
-                            </div>
-                        </div>
-                       
-                    </div>
-                  
-                    
-                {% endfor %}
-                <div div="row">
-                    <ul class="pagination pagination-lg justify-content-end">
-                        <li class="page-item disabled">
-                            <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="#" tabindex="-1">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark" href="#">3</a>
-                        </li>
-                    </ul>
-                </div>
-               
+            <div class="position-relative">
+                <span class="position-absolute search"><i class="fa fa-search"></i></span>
+                <input class="form-control w-100" placeholder="Search by order#, name...">
             </div>
+            
+            <div class="px-2">
+                
+                <span>Filters <i class="fa fa-angle-down"></i></span>
+                <i class="fa fa-ellipsis-h ms-3"></i>
+            </div>
+            
+        </div>
+        <div class="table-responsive">
+        <table class="table table-responsive table-borderless">
+            
+          <thead>
+            <tr class="bg-light">
+              {% comment %} <th scope="col" width="5%"><input class="form-check-input" type="checkbox"></th> {% endcomment %}
+              <th scope="col" width="5%">image</th>
+              <th scope="col" width="20%">product name</th>
+              <th scope="col" width="10%">price</th>
+              <th scope="col" width="20%">quantity</th>
+              <th scope="col" width="10%">Instock</th>
+              <th scope="col" width="20%">Date</th>
 
+              <th scope="col" class="text-end" width="30%"><span>Revenue</span></th>
+            </tr>
+          </thead>
+      <tbody>
+        {% for product in seller_products %}
+        <tr>
+          {% comment %} <th scope="row"><input class="form-check-input" type="checkbox"></th> {% endcomment %}
+          <td>
+            <img src="{{ product.image.url }}" alt="{{ product.product_name }}" class="img-thumbnail" style="max-width: 100px;">
+
+          </td>
+          <td>{{ product.product_name }}</td>
+          <td>
+            ₹{{ product.price }}</span></td>
+          <td><img src="" width="25"> {{ product.quantity }}</td>
+          <td>{{ product.stock }}</td>
+          <td>{{ product.date_added }}</td>
+
+          <td class="text-end">
+             {% comment %} <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button> {% endcomment %}
+            <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button></td>
+        </tr>
         
+        {% comment %} <tr>
+          <th scope="row"><input class="form-check-input" type="checkbox"></th>
+          <td>14</td>
+          <td>12 Oct, 21</td>
+          <td><i class="fa fa-dot-circle-o text-danger"></i><span class="ms-1">Failed</span></td>
+          <td><img src="https://i.imgur.com/nmnmfGv.png" width="25"> Tomo arvis</td>
+          <td>Altroz furry</td>
+          <td class="text-end"><span class="fw-bolder">$0.19</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
+        </tr>
+        
+        
+        <tr>
+          <th scope="row"><input class="form-check-input" type="checkbox"></th>
+          <td>17</td>
+          <td>1 Nov, 21</td>
+          <td><i class="fa fa-check-circle-o green"></i><span class="ms-1">Paid</span></td>
+          <td><img src="https://i.imgur.com/VKOeFyS.png" width="25"> Althan Travis</td>
+          <td>Apple Macbook air</td>
+          <td class="text-end"><span class="fw-bolder">$1.99</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
+        </tr>
+        
+        
+        <tr>
+          <th scope="row"><input class="form-check-input" type="checkbox"></th>
+          <td>90</td>
+          <td>19 Oct, 21</td>
+          <td><i class="fa fa-check-circle-o green"></i><span class="ms-1">Paid</span></td>
+          <td><img src="https://i.imgur.com/VKOeFyS.png" width="25"> Travis head</td>
+          <td>Apple Macbook Pro</td>
+          <td class="text-end"><span class="fw-bolder">$9.99</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
+        </tr>
+        
+        
+        <tr>
+          <th scope="row"><input class="form-check-input" type="checkbox"></th>
+          <td>12</td>
+          <td>1 Oct, 21</td>
+          <td><i class="fa fa-check-circle-o green"></i><span class="ms-1">Paid</span></td>
+          <td><img src="https://i.imgur.com/nmnmfGv.png" width="25"> Althan Travis</td>
+          <td>Wirecard for figma</td>
+          <td class="text-end"><span class="fw-bolder">$0.99</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
+        </tr> {% endcomment %}
+        {% endfor %}
+      </tbody>
+    </table>
+      
+      </div>
         
     </div>
-     
-
+      
     <!-- Start Brands -->
     <section class="bg-light py-5">
         <div class="container my-4">
@@ -423,6 +508,13 @@ https://templatemo.com/tm-559-zay-shop
     <!-- End Footer -->
 
     <!-- Start Script -->
+
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+    integrity="sha384-RX68I6Xw5f2Jt5V+hLaGc5RZn5txVNyz1tcAq2KU8/uhR5/zw5P0o2Ev6l5f7a"
+    crossorigin="anonymous"
+></script>
+
     <script src="{% static 'js\jquery-1.11.0.min.js' %}"></script>
     <script src="{% static 'js\jquery-migrate-1.2.1.min.js' %}"></script>
     <script src="{% static 'js\templatemo.js' %}"></script>

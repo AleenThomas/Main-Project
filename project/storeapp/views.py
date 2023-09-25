@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from .models import Customer_Profile
-from .forms import ProductForm
+# from .forms import ProductForm
 from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
@@ -28,6 +28,8 @@ def index(request):
     
 def contact(request):
     return render(request,'contact.html')
+def sellerindex(request):
+    return render(request,'sellerindex.html')
 # def reg_step(request):
 #     return render(request,'reg_step.html')
 
@@ -331,27 +333,65 @@ def seller_product_listing(request):
 
 
 
-
-
-
-@login_required(login_url='custom_login')  # Redirects to the login page if not logged in
+@login_required(login_url='custom_login')
 def add_product(request):
     if request.user.is_seller:
         if request.method == 'POST':
-            form = ProductForm(request.POST, request.FILES)
-            if form.is_valid():
-                product = form.save(commit=False)
-                product.seller = request.user  # Assign the logged-in seller to the product
-                product.save()
-                return redirect('index')  # Redirect to a page showing the list of products
-        else:
-            form = ProductForm()
+            # Process the form submission
+            product_name = request.POST.get('product_name')
+            description = request.POST.get('description')
+            image = request.FILES.get('image')
+            quantity = request.POST.get('quantity')
+            price = request.POST.get('price')
+            brand_name = request.POST.get('brand_name')
+            stock=request.POST.get('stock')
 
-        return render(request, 'add_product.html', {'form': form})
+            # Validate the form data here if needed
+            # You can use your ProductForm for validation
+
+            # Create and save the product
+            product = Product(
+                product_name=product_name,
+                description=description,
+                image=image,
+                quantity=quantity,
+                price=price,
+                brand_name=brand_name,
+                stock=stock,
+                seller=request.user  # Assign the logged-in seller to the product
+            )
+            product.save()
+            return redirect('index')  # Redirect to a page showing the list of products
+        else:
+            # Render the empty form on a GET request
+            return render(request, 'add_product.html')
     else:
         # If the logged-in user is not a seller, you can redirect them or show an error message
         # For example, you can redirect them to a page where they can register as a seller
-        return redirect('seller_register') 
+        return redirect('seller_register')
+
+
+
+
+
+# @login_required(login_url='custom_login')  # Redirects to the login page if not logged in
+# def add_product(request):
+#     if request.user.is_seller:
+#         if request.method == 'POST':
+#             form = ProductForm(request.POST, request.FILES)
+#             if form.is_valid():
+#                 product = form.save(commit=False)
+#                 product.seller = request.user  # Assign the logged-in seller to the product
+#                 product.save()
+#                 return redirect('index')  # Redirect to a page showing the list of products
+#         else:
+#             form = ProductForm()
+
+#         return render(request, 'add_product.html', {'form': form})
+#     else:
+#         # If the logged-in user is not a seller, you can redirect them or show an error message
+#         # For example, you can redirect them to a page where they can register as a seller
+#         return redirect('seller_register') 
 
 
 
@@ -468,33 +508,36 @@ def increase_item(request, item_id):
     return redirect('cart')
 
 
-def search(request):
-    query = request.GET.get('q')
-    if query:
-        results = Product.objects.filter(product_name__icontains=query)
-    else:
-        results = []
-
-    return render(request, 'search_results.html', {'results': results})
 
 
 
 
 # -------------------------------------------------admin---------------------------------------------------
-def index_admin(request):
-    return render(request,'admin\indexadmin.html')
+# def index_admin(request):
+#     return render(request,'admin\indexadmin.html')
 
 
-def search_product(request,name):
+from django.http import JsonResponse
+from .models import Product  # Make sure to import your Product model
+
+def search_product(request, name):
     print(name)
-
-    # Perform the search using a Q object to filter the Product model
-    results = Product.objects.filter(
-        Q(product_name__icontains=name) | Q(description__icontains=name)
-    )
-    print(results)
-
-    # Serialize the results to JSON
-    serialized_results = [{'id': product.id, 'name': product.product_name,'image':product.image.url} for product in results]
     
+    # Perform the search using a Q object to filter the Product model
+    results = Product.objects.filter(product_name__icontains=name)
+    
+    # Serialize the results to JSON
+    serialized_results = []
+    
+    if results.exists():  # Check if there are any results
+        for result in results:
+            serialized_results.append({
+                'id': result.id,
+                'name': result.product_name,
+                'image': result.image.url
+            })
+            print(result.id)
+    else:
+        print("No results found.")
+
     return JsonResponse({'results': serialized_results})

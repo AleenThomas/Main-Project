@@ -427,7 +427,7 @@
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
         if (!passwordInput.value.match(passwordRegex)) {
-            passwordError.textContent = 'Password must i';
+            passwordError.textContent = 'invalid password';
             passwordError.style.color = 'red';
             return false;
         } else {
