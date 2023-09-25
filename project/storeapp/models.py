@@ -21,17 +21,24 @@ class Customer_Profile(models.Model):
         return self.user.email
     
 
+# from django.db import models
+# from django.utils import timezone
+# from django.contrib.auth.models import User
 
 class Product(models.Model):
     # Your existing fields
-    product_name = models.CharField(max_length=255)
+    product_name = models.CharField(max_length=255,null=True)
     description = models.TextField()
     image = models.ImageField(upload_to='products/', null=True, blank=True)
-    quantity = models.PositiveIntegerField(default=100)
-    stock = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # Separate fields for quantity and its prefix
+    quantity_value = models.PositiveIntegerField(default=100,null=True)
+    quantity_prefix = models.CharField(max_length=10, choices=[('gms', 'gms'), ('kg', 'kg')], default='gms')
+    
+    stock = models.PositiveIntegerField(default=1,null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     date_added = models.DateField(default=timezone.now)
-    brand_name = models.CharField(max_length=255, default="")
+    brand_name = models.CharField(max_length=255, default="",null=True)
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
 
     # Define choices for the status field
@@ -50,8 +57,18 @@ class Product(models.Model):
         else:
             self.status = 'In Stock'
         super(Product, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.product_name
+
+    
+class CartItem(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.product_name}"
     
 class CartItem(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

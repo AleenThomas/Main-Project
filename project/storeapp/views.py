@@ -332,19 +332,19 @@ def seller_product_listing(request):
 
 
 
-
 @login_required(login_url='custom_login')
 def add_product(request):
     if request.user.is_seller:
         if request.method == 'POST':
-            # Process the form submission
+            # Retrieve form data from the request
             product_name = request.POST.get('product_name')
             description = request.POST.get('description')
             image = request.FILES.get('image')
-            quantity = request.POST.get('quantity')
+            quantity_value = request.POST.get('quantity')  # Updated field name
+            quantity_prefix = request.POST.get('quantity_prefix')  # Updated field name
             price = request.POST.get('price')
             brand_name = request.POST.get('brand_name')
-            stock=request.POST.get('stock')
+            stock = request.POST.get('stock')
 
             # Validate the form data here if needed
             # You can use your ProductForm for validation
@@ -354,14 +354,15 @@ def add_product(request):
                 product_name=product_name,
                 description=description,
                 image=image,
-                quantity=quantity,
+                quantity_value=quantity_value,  # Updated field name
+                quantity_prefix=quantity_prefix,  # Updated field name
                 price=price,
                 brand_name=brand_name,
                 stock=stock,
                 seller=request.user  # Assign the logged-in seller to the product
             )
             product.save()
-            return redirect('index')  # Redirect to a page showing the list of products
+            return redirect('seller_index')  # Redirect to a page showing the list of products
         else:
             # Render the empty form on a GET request
             return render(request, 'add_product.html')
@@ -541,3 +542,7 @@ def search_product(request, name):
         print("No results found.")
 
     return JsonResponse({'results': serialized_results})
+
+    
+def checkout(request):
+    return render(request,'checkout.html')

@@ -30,6 +30,8 @@ urlpatterns = [
     path('contact/',views.contact,name='contact'),
     path('seller_product_listing/', views.seller_product_listing, name='seller_product_listing'),
     path('search/<str:name>', views.search_product, name='search_product'),
+        path('checkout/',views.checkout,name='checkout'),
+
     # ----------------------------------admin--------------------------------------
     # path('index_admin/', views.index_admin, name='index_admin'),
 
