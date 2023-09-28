@@ -32,6 +32,13 @@ urlpatterns = [
     path('search/<str:name>', views.search_product, name='search_product'),
     path('checkout/',views.checkout,name='checkout'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
+    
+    
+    
+    path('homepage/', views.homepage, name='homepage'),
+    path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
+    # path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+
 
 
     # ----------------------------------admin--------------------------------------

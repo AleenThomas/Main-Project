@@ -1,4 +1,7 @@
-{% load static %}<!DOCTYPE html>
+{% load static %}
+{% comment %} {% load cart_tags %} {% endcomment %}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -103,7 +106,7 @@ https://templatemo.com/tm-559-zay-shop
                     </a>
                     <a class="nav-icon position-relative text-decoration-none" href="{% url 'cart' %}">
                         <i class="fa fa-fw fa-cart-arrow-down text-light mr-1"></i>
-                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"> {{ total_items }}</span> {% endcomment %}
+                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">  {% cart_item_count request.user %}</span>  {% endcomment %}
                     </a>
                     {% comment %} <a class="nav-icon position-relative text-decoration-none dropdown" href="#" data-bs-toggle="dropdown">
                     </a>

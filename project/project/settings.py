@@ -165,5 +165,10 @@ EMAIL_HOST_USER = 'grovegusto@gmail.com'
 EMAIL_HOST_PASSWORD = 'clwseongprhskfgv'  
 DEFAULT_FROM_EMAIL = 'grovegusto@gmail.com'
 
+SOCIALACCOUNT_LOGIN_ON_GET=True
+
+RAZOR_KEY_ID = 'rzp_test_BJDog7HC2EVqoV'
+RAZOR_KEY_SECRET = 'UkCzI96YihPspst8DdaCZHsz'
+
 
 
