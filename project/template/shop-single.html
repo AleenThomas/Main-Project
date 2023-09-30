@@ -160,7 +160,7 @@ https://templatemo.com/tm-559-zay-shop
             <div class="row">
                 <div class="col-lg-5 mt-5">
                     <div class="card">
-                        <img class="card-img img-fluid" src="{{ product.image.url }}" alt="Card image cap" id="product-detail" style="max-width: 50%; height: auto;">
+                        <img class="card-img img-fluid" src="{{ product.image.url }}" alt="Card image cap" id="product-detail" style="max-width: 100%; height: auto;">
                     </div>
                     
                     <div class="row">
@@ -247,10 +247,10 @@ https://templatemo.com/tm-559-zay-shop
                                 </div>
                                 <div class="row pb-3">
                                     <div class="col d-grid">
-                                        <button type="submit" class="btn btn-success btn-lg" name="submit" value="buy">Buy</button>
+                                        <button type="submit" class="btn btn-success btn-lg" name="submit" value="buy" style="width: 100%;">Buy</button>
                                     </div>
                                     <div class="col d-grid">
-                                       <a href="{% url 'add_to_cart' product.id %}"> <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard">Add To Cart</button></a>
+                                       <a href="{% url 'add_to_cart' product.id %}"> <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard" style="width: 100%;">Add To Cart</button></a>
                                     </div>
                                 </div>
                             </form>

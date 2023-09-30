@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        /* Define your PDF styling here */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .invoice-header {
+            text-align: center;
+        }
+        .invoice-header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .invoice-details {
+            margin-top: 30px;
+        }
+        .invoice-details p {
+            margin: 0;
+        }
+        .invoice-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-table th,
+        .invoice-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .invoice-table th {
+            background-color: #f2f2f2;
+        }
+        .invoice-total {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .invoice-total p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="invoice-header">
+        
+        </div>
+        <div class="invoice-header">
+            
+        </div>
+        <div class="invoice-details">
+            <p><strong>Invoice Number:</strong> {{ cart_id }}</p>
+            <p><strong>Name:</strong> {{ user_name }}</p>
+
+            <p><strong>Date:</strong> {{ date }}</p>
+
+            {% comment %} <p><strong>Due Date:</strong> {{ data.due_date }}</p> {% endcomment %}
+        </div>
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cart_item in cart_items %}
+                    <tr>
+                        <td>{{ cart_item.product.product_name }}</td>
+                        <td>{{ cart_item.quantity }}</td>
+                        <td>{{ cart_item.product.price }}</td>
+                        <td>{% widthratio cart_item.quantity 1 cart_item.product.price %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="invoice-total">
+            <p><strong>Total Amount:</strong> {{ total_cost }}</p>
+            <p><a href="{% url 'print_as_pdf' cart_id=cart_id %}">Generate PDF</a></p>
+
+        </div>
+    </div>
+</body>
+</html>

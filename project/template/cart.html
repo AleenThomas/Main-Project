@@ -11,7 +11,7 @@
   /* Add this CSS to your existing stylesheets or create a new stylesheet */
 
   body {
-      background: #ddd;
+      background: #fff;
       min-height: 100vh;
       vertical-align: middle;
       display: flex;
@@ -55,12 +55,12 @@
   }
   
   .summary {
-      background-color: #ddd;
-      border-top-right-radius: 1rem;
-      border-bottom-right-radius: 1rem;
-      padding: 4vh;
-      color: rgb(65, 65, 65);
-  }
+    background-color: rgb(2, 80, 2); /* Change background color */
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    padding: 4vh;
+    color: white; /* Change text color to white */
+}
   
   @media (max-width: 767px) {
       .summary {
@@ -198,7 +198,14 @@
     
   </head>
   <body>
+
+    
     {% block content %}
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-danger text-center" >{{ message }}</div>
+      {% endfor %}            
+    {% endif %}
     <div class="card">
       <div class="row">
         <div class="col-md-8 cart">
@@ -251,7 +258,7 @@
                   <div class="col">TOTAL PRICE</div>
                   <div class="col text-right">₹ {{ total_price }}</div>
               </div>
-              <a href="{% url 'homepage' %}">CHECKOUT</a>
+              <a href="{% url 'homepage' %}"><button class="btn">CHECKOUT</button></a>
           </div>
       </div>
   </div>

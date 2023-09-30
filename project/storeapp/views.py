@@ -11,6 +11,15 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 from decimal import Decimal
+from django.views.decorators.cache import never_cache
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
+from xhtml2pdf import pisa
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+# from .models import booknow, On_payment
 
 
 
@@ -294,7 +303,7 @@ def seller_index(request):
     return render(request,'sellerhome.html')
 
 
-    
+@never_cache    
 def shop(request):
     # Get products added by the suppliers
     supplier_products = Product.objects.all()  # You can add filters if needed
@@ -437,11 +446,14 @@ def customer_Profile(request):
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    cart_item, created = CartItem.objects.get_or_create(user=request.user, product_id=product.id)
-    
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
+    # cart_item = CartItem.objects.get_or_create(user=request.user, product_id=product.id)
+    if product.stock <= 0:
+        messages.warning(request, f"{product.product_name} is out of stock.")
+    else:
+        cart_item,created = CartItem.objects.get_or_create(user=request.user, product_id=product.id)
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
 
     return redirect('shop')
 
@@ -464,29 +476,7 @@ def remove_from_cart(request, product_id):
     cart_item.delete()
     return redirect('cart')
 
-# def update_cart(request):
-#     if request.method == 'POST':
-#         cart_item_id = request.POST.get('cart_item_id')
-#         action = request.POST.get('action')
 
-#         try:
-#             cart_item = CartItem.objects.get(id=cart_item_id)
-
-#             if action == 'increase':
-#                 cart_item.quantity += 1
-#                 cart_item.save()
-#             elif action == 'decrease':
-#                 if cart_item.quantity > 1:
-#                     cart_item.quantity -= 1
-#                     cart_item.save()
-#                 else:
-#                     cart_item.delete()
-#                     messages.info(request, "Item removed from the cart.")
-
-#         except CartItem.DoesNotExist:
-#             messages.warning(request, "Item does not exist in the cart.")
-    
-#     return redirect('cart')  # Redirect back to t
 
 
 def decrease_item(request, item_id):
@@ -495,6 +485,9 @@ def decrease_item(request, item_id):
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
             cart_item.save()
+            cart_item.product.stock+=1
+        else:
+            messages.warning(request, f"{cart_item.product.product_name} is out of stock.")
     except CartItem.DoesNotExist:
         pass  # Handle the case when the item does not exist in the cart
     return redirect('cart')  # Redirect back to the cart page after decreasing the item quantity
@@ -502,8 +495,14 @@ def decrease_item(request, item_id):
 def increase_item(request, item_id):
     try:
         cart_item = CartItem.objects.get(id=item_id)
-        cart_item.quantity += 1
-        cart_item.save()
+
+        if cart_item.product.stock > 0:
+            cart_item.quantity += 1
+            cart_item.save()
+            cart_item.product.stock -= 1
+            cart_item.product.save()
+        else:
+            messages.warning(request, f"{cart_item.product.product_name} is out of stock.")
     except CartItem.DoesNotExist:
         pass  # Handle the case when the item does not exist in the cart
     return redirect('cart')
@@ -610,6 +609,7 @@ razorpay_client = razorpay.Client(
 	auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
 
 
+
 def homepage(request):
     cart_items = CartItem.objects.filter(user=request.user)
     total_price = Decimal(sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items))
@@ -617,9 +617,8 @@ def homepage(request):
     currency = 'INR'
 
     # Set the 'amount' variable to 'total_price'
-    amount = int(total_price*100)
-    # amount=20000
-
+    amount = int(total_price * 100)
+    
     # Create a Razorpay Order
     razorpay_order = razorpay_client.order.create(dict(
         amount=amount,
@@ -631,19 +630,21 @@ def homepage(request):
     razorpay_order_id = razorpay_order['id']
     callback_url = '/paymenthandler/'
 
-    order = Order.objects.create(
+    # Create the order but don't save it yet
+    order = Order(
         user=request.user,
         total_price=total_price,
         razorpay_order_id=razorpay_order_id,
         payment_status=Order.PaymentStatusChoices.PENDING,
     )
 
-    # Add the products to the order
-    for cart_item in cart_items:
-        order.products.add(cart_item.product)
-
     # Save the order to generate an order ID
     order.save()
+
+    # Associate the cart items with the order
+    for cart_item in cart_items:
+        cart_item.order = order
+        cart_item.save()
 
     # Create a context dictionary with all the variables you want to pass to the template
     context = {
@@ -658,10 +659,6 @@ def homepage(request):
 
     return render(request, 'homepage.html', context=context)
 
-
-# we need to csrf_exempt this url as
-# POST request will be made by Razorpay
-# and it won't have the csrf token.
 @csrf_exempt
 def paymenthandler(request):
     if request.method == "POST":
@@ -675,8 +672,8 @@ def paymenthandler(request):
             'razorpay_payment_id': payment_id,
             'razorpay_signature': signature
         }
-        result = razorpay_client.utility.verify_payment_signature(
-            params_dict)
+        result = razorpay_client.utility.verify_payment_signature(params_dict)
+        
         if result is False:
             # Signature verification failed.
             return render(request, 'payment/paymentfail.html')
@@ -684,10 +681,7 @@ def paymenthandler(request):
             # Signature verification succeeded.
             # Retrieve the order from the database
             order = Order.objects.get(razorpay_order_id=razorpay_order_id)
-            cart_items = CartItem.objects.filter(user=request.user)
-
-            # Check if all the books in the order are in the user's cart
-                # Not all books are in the cart, add them to the library
+            
             # Capture the payment with the amount from the order
             amount = int(order.total_price * 100)  # Convert Decimal to paise
             razorpay_client.payment.capture(payment_id, amount)
@@ -696,8 +690,62 @@ def paymenthandler(request):
             order.payment_id = payment_id
             order.payment_status = Order.PaymentStatusChoices.SUCCESSFUL
             order.save()
-            
-            # Update the order with payment ID and change status to "Successful
 
-            # Redirect to a success page or return a success response
-            return redirect('/')
+            # Get the associated cart items for this order
+            cart_items = CartItem.objects.filter(order=order)
+            
+            if cart_items.exists():
+                # Get the cart_id from the first cart item
+                cart_id = cart_items.first().id
+
+                # Redirect to a success page with the cart_id
+                return HttpResponseRedirect(reverse('print_as_pdf', args=[cart_id]))
+            else:
+                # Cart items not found for the order
+                return HttpResponse('No cart items found for the order.')
+@login_required
+def print_as_pdf(request, cart_id):
+    try:
+        # Get the cart based on cart_id and make sure it belongs to the logged-in user
+        cart = CartItem.objects.get(id=cart_id, user=request.user, order__isnull=False)
+        print(cart_id)
+        # Ensure that the cart has a valid order associated with it
+        if cart.order is None:
+            raise CartItem.DoesNotExist
+
+        cart_items = CartItem.objects.filter(order=cart.order)
+        total_cost = Decimal(sum(item.product.price * item.quantity for item in cart_items))
+        total=[]
+        for i in cart_items:
+            
+            total_items=i.product.price * i.quantity
+            total.append(total_items)
+        # Get the user's name
+        user_name = request.user.name
+
+        # Render the HTML template to a string
+        context = {
+            'cart_id': cart_id,
+            'cart_items': cart_items,
+            'total_cost': total_cost,
+            'user_name': user_name,
+            
+        }
+       
+        html = render_to_string('print_invoice.html', context, request=request)
+
+        # Create a PDF response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="invoice_{cart_id}.pdf"'
+
+        # Generate the PDF file from the HTML content
+        pisa_status = pisa.CreatePDF(html, dest=response, link_callback=None)
+
+        if pisa_status.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+
+        return response
+    except CartItem.DoesNotExist:
+        # Handle the case where the cart doesn't exist, doesn't belong to the user, or has no order
+        return HttpResponse('Cart not found or does not belong to the user or has no valid order.')
+

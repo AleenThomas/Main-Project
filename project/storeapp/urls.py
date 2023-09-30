@@ -37,6 +37,7 @@ urlpatterns = [
     
     path('homepage/', views.homepage, name='homepage'),
     path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
+    path('print_as_pdf/<str:cart_id>/', views.print_as_pdf, name='print_as_pdf'),
     # path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
 
 
