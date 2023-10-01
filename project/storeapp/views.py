@@ -19,6 +19,8 @@ from django.contrib.auth.decorators import login_required
 from xhtml2pdf import pisa
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from datetime import datetime
+
 # from .models import booknow, On_payment
 
 
@@ -749,3 +751,50 @@ def print_as_pdf(request, cart_id):
         # Handle the case where the cart doesn't exist, doesn't belong to the user, or has no order
         return HttpResponse('Cart not found or does not belong to the user or has no valid order.')
 
+
+# def my_orders(request):
+#     # Assuming you have a user authentication system, get the current user
+#     user = request.user
+
+#     # Retrieve a list of orders for the current user
+#     orders = Order.objects.filter(user=user).order_by('-order_date')
+
+#     context = {
+#         'orders': orders, 
+#         # 'product_fields': ['product_name', 'quantity', 'image', 'total_price'],
+# # Pass the list of orders to the template
+#     }
+    
+
+
+#     return render(request, 'my_orders.html', context)
+
+
+def my_orders(request):
+    # Assuming you have a user authentication system, get the current user
+    user = request.user
+
+    # Get the current month and year
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
+    # Filter orders for the current month and year by default
+    orders = Order.objects.filter(
+        Q(user=user),
+        Q(order_date__month=current_month, order_date__year=current_year)
+    ).order_by('-order_date')
+
+    # If no orders are found for the current month, set a message
+    no_orders_message = None
+    if not orders:
+        no_orders_message = "No orders found for the current month."
+
+    context = {
+        'orders': orders,
+        'selected_month': f"{current_month}/{current_year}",
+        'no_orders_message': no_orders_message,
+    }
+
+    return render(request, 'my_orders.html', context)
+def add_address(request):
+    return render(request,'add_address.html')

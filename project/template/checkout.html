@@ -1,122 +1,212 @@
 {% load static %}
 <html>
-    <head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <head>
+    {% comment %} <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous"> {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<style>
 
-        <style>
+  body {
+    font-family: Arial;
+    font-size: 17px;
+    padding: 8px;
+}
 
+* {
+    box-sizing: border-box;
+}
 
-            .gradient-custom {
-                background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-                }
-                
-                .card-custom {
-                border-bottom-left-radius: 10% 50%;
-                border-top-left-radius: 10% 50%;
-                background-color: #f8f9fa ;
-                }
-                
-                
-                .input-custom {
-                background-color: white ;
-                }
-                
-                .white-text {
-                color: hsl(52, 0%, 98%);
-                font-weight: 100 ;
-                font-size: 14px;
-                }
-                
-                .back-button {
-                background-color: hsl(52, 0%, 98%);
-                font-weight: 700;
-                color: black ;
-                margin-top: 50px ;
-                }
-        </style>
-    </head>
-</html>
-<body>
+h2 {
+    font-size: 40px;
+    background: linear-gradient(to left, #660066 0%, #ff3300 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-    <div class="row mt-3 mx-3" style="margin-top:25px ;">
-        <div class="col-md-3">
-          <div style="margin-top: 50px; margin-left: 10px;" class="text-center">
-            <i id="animationDemo" data-mdb-animation="slide-right" data-mdb-toggle="animation"
-              data-mdb-animation-reset="true" data-mdb-animation-start="onScroll"
-              data-mdb-animation-on-scroll="repeat" class="fas fa-3x fa-shipping-fast text-white"></i>
-            <h3 class="mt-3 text-white">Welcome</h3>
-            <p class="white-text">You are 30 seconds away from compleating your order!</p>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-white btn-rounded back-button">Go back</button>
-          </div>
-      
-      
+.row {
+    display: -ms-flexbox;
+    /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap;
+    /* IE10 */
+    flex-wrap: wrap;
+    margin: 0 -16px;
+}
+
+.col-25 {
+    -ms-flex: 25%;
+    /* IE10 */
+    flex: 25%;
+}
+
+.col-50 {
+    -ms-flex: 50%;
+    /* IE10 */
+    flex: 50%;
+}
+
+.col-75 {
+    -ms-flex: 75%;
+    /* IE10 */
+    flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+    padding: 0 16px;
+}
+
+.container {
+    background-color: #f2f2f2;
+    padding: 5px 20px 15px 20px;
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+}
+
+input[type=text] {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+label {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.icon-container {
+    margin-bottom: 20px;
+    padding: 7px 0;
+    font-size: 24px;
+}
+
+.btn {
+    background: linear-gradient(to left, #99ccff 0%, #003399 100%);
+    color: black;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    width: 100%;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.btn:hover {
+    background: linear-gradient(to left, #003399 0%, #99ccff 100%);
+}
+
+a {
+    color: #2196F3;
+}
+
+hr {
+    border: 1px solid lightgrey;
+}
+
+span.price {
+    float: right;
+    color: grey;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 800px) {
+    .row {
+        flex-direction: column-reverse;
+    }
+
+    .col-25 {
+        margin-bottom: 20px;
+    }
+}
+</style>
+  </head>
+  <body>
+
+  
+
+<h2>Responsive Checkout Form</h2>
+<p>Please checkout and pay us, before you run away.</p>
+<div class="row">
+    <div class="col-75">
+        <div class="container">
+            <form action="/action_page.php">
+
+                <div class="row">
+                    <div class="col-50">
+                        <h3>Billing Address</h3>
+                        <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                        <input type="text" id="fname" name="firstname" placeholder="Ravi Raushan">
+                        <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                        <input type="text" id="email" name="email" placeholder="ravi@raushan.com">
+                        <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
+                        <input type="text" id="adr" name="address" placeholder="officers Colony">
+                        <label for="city"><i class="fa fa-institution"></i> City</label>
+                        <input type="text" id="city" name="city" placeholder="Ranchi">
+
+                        <div class="row">
+                            <div class="col-50">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state" placeholder="JH">
+                            </div>
+                            <div class="col-50">
+                                <label for="zip">Zip</label>
+                                <input type="text" id="zip" name="zip" placeholder="814111">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-50">
+                        <h3>Payment</h3>
+                        <label for="fname">Accepted Cards</label>
+                        <div class="icon-container">
+                            <i class="fa fa-cc-visa" style="color:navy;"></i>
+                            <i class="fa fa-cc-amex" style="color:blue;"></i>
+                            <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                            <i class="fa fa-cc-discover" style="color:orange;"></i>
+                        </div>
+                        <label for="cname">Name on Card</label>
+                        <input type="text" id="cname" name="cardname" placeholder="Ravi Raushan">
+                        <label for="ccnum">Credit card number</label>
+                        <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+                        <label for="expmonth">Exp Month</label>
+                        <input type="text" id="expmonth" name="expmonth" placeholder="September">
+                        <div class="row">
+                            <div class="col-50">
+                                <label for="expyear">Exp Year</label>
+                                <input type="text" id="expyear" name="expyear" placeholder="2033">
+                            </div>
+                            <div class="col-50">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" placeholder="111">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <label>
+                    <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
+                </label>
+                <input type="submit" value="Continue to checkout" class="btn">
+            </form>
         </div>
-        <div class="col-md-9 justify-content-center">
-          <div class="card card-custom pb-4">
-            <div class="card-body mt-0 mx-5">
-              <div class="text-center mb-3 pb-2 mt-3">
-                <h4 style="color: #495057 ;">Delivery Details</h4>
-              </div>
-      
-              <form class="mb-0">
-      
-                <div class="row mb-4">
-                  <div class="col">
-                    <div class="form-outline">
-                      <input type="text" id="form9Example1" class="form-control input-custom" />
-                      <label class="form-label" for="form9Example1">First name</label>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-outline">
-                      <input type="text" id="form9Example2" class="form-control input-custom" />
-                      <label class="form-label" for="form9Example2">Last name</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row mb-4">
-                  <div class="col">
-                    <div class="form-outline">
-                      <input type="text" id="form9Example3" class="form-control input-custom" />
-                      <label class="form-label" for="form9Example3">City</label>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-outline">
-                      <input type="text" id="form9Example4" class="form-control input-custom" />
-                      <label class="form-label" for="form9Example4">Zip</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row mb-4">
-                  <div class="col">
-                    <div class="form-outline">
-                      <input type="text" id="form9Example6" class="form-control input-custom" />
-                      <label class="form-label" for="form9Example6">Address</label>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-outline">
-                      <input type="email" id="typeEmail" class="form-control input-custom" />
-                      <label class="form-label" for="typeEmail">Email</label>
-                    </div>
-                  </div>
-                </div>
-      
-                <div class="float-end ">
-                  <!-- Submit button -->
-                  <a href="{% url "homepage" %}"><button type="submit" class="btn btn-primary btn-rounded"
-                    style="background-color: #0062CC ;">Place order</button></a>
-                </div>
-      
-              </form>
-            </div>
-          </div>
+    </div>
+    <div class="col-25">
+        <div class="container">
+            <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i> <b>4</b></span></h4>
+            <p><a href="#">Nike Shoes </a> <span class="price">₹2000</span></p>
+            <p><a href="#">Jio Phone</a> <span class="price">₹1000</span></p>
+            <p><a href="#">Iphone 13 pro max</a> <span class="price">₹20000</span></p>
+            <p><a href="#">Tomato</a> <span class="price">₹400</span></p>
+            <hr>
+            <p>Total <span class="price" style="color:black"><b>₹23400</b></span></p>
         </div>
-      </div>
+    </div>
+</div>
+{% comment %} <script src="	https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script> {% endcomment %}
 </body>
+</html>

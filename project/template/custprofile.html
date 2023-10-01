@@ -117,9 +117,9 @@
             <p class="mb-0"><b>Hello!</b></p>
         </div>
         <div class="list-group mt-3 flex-grow-1">
-            <a href="#" class="list-group-item list-group-item-action mb-2">My Addresses</a>
+            <a href="{% url "add_address" %}" class="list-group-item list-group-item-action mb-2">My Addresses</a>
             <a href="#" class="list-group-item list-group-item-action mb-2">My Gifts</a>
-            <a href="#" class="list-group-item list-group-item-action mb-2">Payments</a>
+            <a href="{% url "my_orders" %}" class="list-group-item list-group-item-action mb-2">My Orders</a>
             <!-- Add more sidebar items as needed -->
         </div>
     </div>
