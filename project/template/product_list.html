@@ -244,107 +244,56 @@ https://templatemo.com/tm-559-zay-shop
 
     <!-- Start Content -->
     <div class="container mt-5 px-2">
-    
         <div class="mb-2 d-flex justify-content-between align-items-center">
-            
             <div class="position-relative">
                 <span class="position-absolute search"><i class="fa fa-search"></i></span>
-                <input class="form-control w-100" placeholder="Search by order#, name...">
+                <input type="text" id="search-input" class="form-control w-100" placeholder="Search by name...">
             </div>
-            
             <div class="px-2">
-                
                 <span>Filters <i class="fa fa-angle-down"></i></span>
                 <i class="fa fa-ellipsis-h ms-3"></i>
+                <select id="filter-options" class="form-control">
+                    <option value="all">All</option>
+                    <option value="low-to-high">Stock Low to High</option>
+                    <option value="date-asc">Date Ascending</option>
+                    <option value="date-desc">Date Descending</option>
+                </select>
             </div>
-            
         </div>
         <div class="table-responsive">
-        <table class="table table-responsive table-borderless">
-            
-          <thead>
-            <tr class="bg-light">
-              {% comment %} <th scope="col" width="5%"><input class="form-check-input" type="checkbox"></th> {% endcomment %}
-              <th scope="col" width="5%">image</th>
-              <th scope="col" width="20%">product name</th>
-              <th scope="col" width="10%">price</th>
-              <th scope="col" width="20%">quantity</th>
-              <th scope="col" width="10%">Instock</th>
-              <th scope="col" width="20%">Date</th>
-
-              <th scope="col" class="text-end" width="30%"><span>Revenue</span></th>
-            </tr>
-          </thead>
-      <tbody>
-        {% for product in seller_products %}
-        <tr>
-          {% comment %} <th scope="row"><input class="form-check-input" type="checkbox"></th> {% endcomment %}
-          <td>
-            <img src="{{ product.image.url }}" alt="{{ product.product_name }}" class="img-thumbnail" style="max-width: 100px;">
-
-          </td>
-          <td>{{ product.product_name }}</td>
-          <td>
-            ₹{{ product.price }}</span></td>
-          <td><img src="" width="25"> {{ product.quantity_value }}</td>
-          <td>{{ product.stock }}</td>
-          <td>{{ product.date_added }}</td>
-
-          <td class="text-end">
-             {% comment %} <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button> {% endcomment %}
-            <a href={% url "update_product" product.id %}><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
-           {% comment %} <a href={% url "delete_product" product.id %}> <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button></td></a> {% endcomment %}
-        </tr>
-        
-        {% comment %} <tr>
-          <th scope="row"><input class="form-check-input" type="checkbox"></th>
-          <td>14</td>
-          <td>12 Oct, 21</td>
-          <td><i class="fa fa-dot-circle-o text-danger"></i><span class="ms-1">Failed</span></td>
-          <td><img src="https://i.imgur.com/nmnmfGv.png" width="25"> Tomo arvis</td>
-          <td>Altroz furry</td>
-          <td class="text-end"><span class="fw-bolder">$0.19</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
-        </tr>
-        
-        
-        <tr>
-          <th scope="row"><input class="form-check-input" type="checkbox"></th>
-          <td>17</td>
-          <td>1 Nov, 21</td>
-          <td><i class="fa fa-check-circle-o green"></i><span class="ms-1">Paid</span></td>
-          <td><img src="https://i.imgur.com/VKOeFyS.png" width="25"> Althan Travis</td>
-          <td>Apple Macbook air</td>
-          <td class="text-end"><span class="fw-bolder">$1.99</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
-        </tr>
-        
-        
-        <tr>
-          <th scope="row"><input class="form-check-input" type="checkbox"></th>
-          <td>90</td>
-          <td>19 Oct, 21</td>
-          <td><i class="fa fa-check-circle-o green"></i><span class="ms-1">Paid</span></td>
-          <td><img src="https://i.imgur.com/VKOeFyS.png" width="25"> Travis head</td>
-          <td>Apple Macbook Pro</td>
-          <td class="text-end"><span class="fw-bolder">$9.99</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
-        </tr>
-        
-        
-        <tr>
-          <th scope="row"><input class="form-check-input" type="checkbox"></th>
-          <td>12</td>
-          <td>1 Oct, 21</td>
-          <td><i class="fa fa-check-circle-o green"></i><span class="ms-1">Paid</span></td>
-          <td><img src="https://i.imgur.com/nmnmfGv.png" width="25"> Althan Travis</td>
-          <td>Wirecard for figma</td>
-          <td class="text-end"><span class="fw-bolder">$0.99</span> <i class="fa fa-ellipsis-h  ms-2"></i></td>
-        </tr> {% endcomment %}
-        {% endfor %}
-      </tbody>
-    </table>
-      
-      </div>
-        
+            <table class="table table-responsive table-borderless">
+                <thead>
+                    <tr class="bg-light">
+                        <th scope="col" width="5%">image</th>
+                        <th scope="col" width="20%">product name</th>
+                        <th scope="col" width="10%">price</th>
+                        <th scope="col" width="20%">quantity</th>
+                        <th scope="col" width="10%">Instock</th>
+                        <th scope="col" width="20%">Date</th>
+                        <th scope="col" class="text-end" width="30%"><span>Revenue</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in seller_products %}
+                    <tr>
+                        <td>
+                            <img src="{{ product.image.url }}" alt="{{ product.product_name }}" class="img-thumbnail" style="max-width: 100px;">
+                        </td>
+                        <td class="product-name">{{ product.product_name }}</td>
+                        <td class="price">₹{{ product.price }}</td>
+                        <td class="quantity"> {{ product.quantity_value }}/{{product.quantity_prefix}}</td>
+                        <td class="stock">{{ product.stock }}</td>
+                        <td class="date">{{ product.date_added }}</td>
+                        <td class="text-end">
+                            <a href={% url "update_product" product.id %}><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+    
       
     <!-- Start Brands -->
     <section class="bg-light py-5">
@@ -512,14 +461,84 @@ https://templatemo.com/tm-559-zay-shop
     <script
     src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
     integrity="sha384-RX68I6Xw5f2Jt5V+hLaGc5RZn5txVNyz1tcAq2KU8/uhR5/zw5P0o2Ev6l5f7a"
-    crossorigin="anonymous"
-></script>
+    crossorigin="anonymous"></script>
 
     <script src="{% static 'js\jquery-1.11.0.min.js' %}"></script>
     <script src="{% static 'js\jquery-migrate-1.2.1.min.js' %}"></script>
     <script src="{% static 'js\templatemo.js' %}"></script>
     <script src="{% static 'js\templatemo.js' %}"></script>
     <script src="{% static 'js\custom.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.10/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.10/js/jquery.dataTables.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#search-input').on('input', function () {
+                const query = $(this).val().toLowerCase();
+                $('tbody tr').each(function () {
+                    const productName = $(this).find('td:eq(1)').text().toLowerCase(); // Adjust the column index (1-based) for product name
+                    if (productName.includes(query)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+        </script>
+        <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterOptions = document.getElementById('filter-options');
+            const tableRows = document.querySelectorAll('tbody tr');
+        
+            filterOptions.addEventListener('change', function () {
+                const selectedOption = filterOptions.value;
+        
+                if (selectedOption === 'low-to-high') {
+                    // Sort table rows by stock (low to high)
+                    const sortedRows = Array.from(tableRows).sort((a, b) => {
+                        const stockA = parseInt(a.querySelector('.stock').textContent, 10);
+                        const stockB = parseInt(b.querySelector('.stock').textContent, 10);
+                        return stockA - stockB;
+                    });
+        
+                    // Replace the table rows with the sorted rows
+                    tableRows.forEach((row) => row.remove());
+                    sortedRows.forEach((row) => document.querySelector('tbody').appendChild(row));
+                } else if (selectedOption === 'date-asc') {
+                    // Sort table rows by date (ascending)
+                    const sortedRows = Array.from(tableRows).sort((a, b) => {
+                        const dateA = new Date(a.querySelector('.date').textContent);
+                        const dateB = new Date(b.querySelector('.date').textContent);
+                        return dateA - dateB;
+                    });
+        
+                    // Replace the table rows with the sorted rows
+                    tableRows.forEach((row) => row.remove());
+                    sortedRows.forEach((row) => document.querySelector('tbody').appendChild(row));
+                } else if (selectedOption === 'date-desc') {
+                    // Sort table rows by date (descending)
+                    const sortedRows = Array.from(tableRows).sort((a, b) => {
+                        const dateA = new Date(a.querySelector('.date').textContent);
+                        const dateB = new Date(b.querySelector('.date').textContent);
+                        return dateB - dateA;
+                    });
+        
+                    // Replace the table rows with the sorted rows
+                    tableRows.forEach((row) => row.remove());
+                    sortedRows.forEach((row) => document.querySelector('tbody').appendChild(row));
+                } else {
+                    // Reset to the default order (All)
+                    tableRows.forEach((row) => document.querySelector('tbody').appendChild(row));
+                }
+            });
+        });
+            
+        
     <!-- End Script -->
 </body>
 

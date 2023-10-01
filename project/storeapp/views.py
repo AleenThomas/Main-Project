@@ -461,7 +461,7 @@ def add_to_cart(request, product_id):
 
 @login_required
 def cart(request):
-    cart_items = CartItem.objects.filter(user=request.user)
+    cart_items = CartItem.objects.filter(user=request.user, is_active=True)
     total_price = sum(item.product.price * item.quantity for item in cart_items)
     total_items = sum(item.quantity for item in cart_items)
     context = {
@@ -613,7 +613,7 @@ razorpay_client = razorpay.Client(
 
 
 def homepage(request):
-    cart_items = CartItem.objects.filter(user=request.user)
+    cart_items = CartItem.objects.filter(user=request.user,is_active=True)
     total_price = Decimal(sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items))
     
     currency = 'INR'
@@ -699,12 +699,14 @@ def paymenthandler(request):
             if cart_items.exists():
                 # Get the cart_id from the first cart item
                 cart_id = cart_items.first().id
+                cart_items.update(is_active=False)
 
                 # Redirect to a success page with the cart_id
                 return HttpResponseRedirect(reverse('print_as_pdf', args=[cart_id]))
             else:
                 # Cart items not found for the order
                 return HttpResponse('No cart items found for the order.')
+    
 @login_required
 def print_as_pdf(request, cart_id):
     try:
@@ -768,33 +770,35 @@ def print_as_pdf(request, cart_id):
 
 
 #     return render(request, 'my_orders.html', context)
-
-
+@login_required
 def my_orders(request):
     # Assuming you have a user authentication system, get the current user
     user = request.user
-
-    # Get the current month and year
     current_month = datetime.now().month
     current_year = datetime.now().year
 
-    # Filter orders for the current month and year by default
-    orders = Order.objects.filter(
-        Q(user=user),
-        Q(order_date__month=current_month, order_date__year=current_year)
-    ).order_by('-order_date')
+    # Get the selected month and year from the form, or use the current month by default
+    selected_month = request.GET.get('selected_month', datetime.now().strftime('%Y-%m'))
 
-    # If no orders are found for the current month, set a message
-    no_orders_message = None
-    if not orders:
-        no_orders_message = "No orders found for the current month."
+    # Convert the selected_month string to a datetime object
+    selected_date = datetime.strptime(selected_month, '%Y-%m')
+
+    # Retrieve a list of orders for the current user and the selected month
+    orders = Order.objects.filter(user=user, order_date__year=selected_date.year, order_date__month=selected_date.month).order_by('-order_date')
 
     context = {
-        'orders': orders,
-        'selected_month': f"{current_month}/{current_year}",
-        'no_orders_message': no_orders_message,
+        'orders': orders, 
+        'selected_month': f"{current_month}/{current_year}",        
+        'product_fields': ['product_name', 'quantity', 'image_url', 'total_price'],
     }
 
+    # Check if there are no orders for the selected month and display a message
+    if not orders:
+        context['no_orders_message'] = 'No orders found for the selected month.'
+
     return render(request, 'my_orders.html', context)
+
+
 def add_address(request):
     return render(request,'add_address.html')
+

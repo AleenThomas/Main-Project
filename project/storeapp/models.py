@@ -159,8 +159,9 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
 
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.product_name}"
+        return f"{self.quantity} x {self.product.product_name} ({'Active' if self.is_active else 'Inactive'})"
 

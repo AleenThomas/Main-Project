@@ -2,55 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Address</title>
-    <!-- Include Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include Bootstrap CSS or any other CSS frameworks you're using -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Add Address</h1>
-        <form action="#" method="POST">
-            <div class="form-group">
-                <label for="full_name">Full Name</label>
-                <input type="text" class="form-control" id="full_name" name="full_name" required>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="mb-4">Add Address</h1>
+                <form action="#" method="POST">
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" required>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="form-group">
+                        <label for="phone_number">Phone Number</label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                    </div>
+
+                    <!-- Address Line 1 -->
+                    <div class="form-group">
+                        <label for="address_line1">Address Line 1</label>
+                        <input type="text" class="form-control" id="address_line1" name="address_line1" required>
+                    </div>
+
+                    <!-- Address Line 2 (Optional) -->
+                    <div class="form-group">
+                        <label for="address_line2">Address Line 2 (Optional)</label>
+                        <input type="text" class="form-control" id="address_line2" name="address_line2">
+                    </div>
+
+                    <!-- City -->
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" name="city" required>
+                    </div>
+
+                    <!-- State -->
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" class="form-control" id="state" name="state" required>
+                    </div>
+
+                    <!-- Zip Code -->
+                    <div class="form-group">
+                        <label for="zip_code">Zip Code</label>
+                        <input type="text" class="form-control" id="zip_code" name="zip_code" required>
+                    </div>
+
+                    <!-- Country -->
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" class="form-control" id="country" name="country" required>
+                    </div>
+
+                    <!-- Save Address Button -->
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary">Save Address</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="address_line1">Address Line 1</label>
-                <input type="text" class="form-control" id="address_line1" name="address_line1" required>
-            </div>
-            <div class="form-group">
-                <label for="address_line2">Address Line 2</label>
-                <input type="text" class="form-control" id="address_line2" name="address_line2">
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="city">City</label>
-                    <input type="text" class="form-control" id="city" name="city" required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="state">State</label>
-                    <input type="text" class="form-control" id="state" name="state" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="zip_code">ZIP Code</label>
-                <input type="text" class="form-control" id="zip_code" name="zip_code" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" class="form-control" id="phone" name="phone" required>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Add Address</button>
-            </div>
-        </form>
+        </div>
     </div>
 
     <!-- Include Bootstrap JS (optional) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
