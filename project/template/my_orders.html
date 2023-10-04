@@ -146,17 +146,53 @@
 
 
 
-
-    {% block content %}
-  
-    {% comment %} <p> {{ selected_month }}</p> {% endcomment %}
-
-    <!-- Check if there are no orders and display the message -->
-    {% if no_orders_message %}
-    <div class="alert alert-danger" role="alert">
-        {{ no_orders_message }}
+    <div class="container mt-5">
+        <!-- Check if there are no orders and display the message -->
+        {% if no_orders_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ no_orders_message }}
+        </div>
+        {% else %}
+        
+            <div class="row">
+                {% for order in orders %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Order ID: {{ order.id }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Order Date: {{ order.order_date }}</h5>
+                            <ul class="list-group">
+                                {% for product in order.products.all %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <img src="{{ MEDIA_URL }}{{ product.image.url }}" alt="{{ product.product_name }}" class="img-fluid">
+                                        </div>
+                                        <div class="col-md-5">
+                                            {{ product.product_name }} (Qty: 1)
+                                        </div>
+                                        <div class="col-md-4 text-right">
+                                            ₹ {{ product.price }}
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Total Amount: ₹ {{ order.total_price }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {% endif %}
     </div>
-    {% else %}
+    
 
 
 
@@ -166,9 +202,16 @@
 
 
 
+
+
+
+
+
+
+{% comment %} 
     <div class="container mt-5">
         {% comment %} <h1 class="mb-4">Order History</h1> {% endcomment %}
-        <div class="row">
+        {% comment %} <div class="row">
             {% for order in orders %}
             <div class="col-md-6 mb-4">
                 <div class="card">
@@ -183,6 +226,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <img src="{{ MEDIA_URL }}{{ item.image.url }}" alt="{{ item.product_name }}" class="img-fluid">
+                                        <script>console.log("Hello")</script>
                                     </div>
                                     <div class="col-md-5">
                                         {{ item.product_name }} (Qty: {{ item.quantity_value }})
@@ -197,20 +241,21 @@
                     </div>
                     <div class="card-footer text-muted">
                         Total Amount: ${{ order.total_price }}
-                    </div>
+                    </div> {% endcomment %}
+                    {% comment %} <a href="{% url 'print_as_pdf' cart_id %}" class="btn btn-primary">Print Invoice</a> {% endcomment %}
+
                     
-                </div>
+                {% comment %} </div>
             </div>
             {% endfor %}
         </div>
         {% endif %}
 
-    </div>
+    </div> {% endcomment %} 
 
 
-    <div class="container card mb-4" style="max-width: 600px;">
+    {% comment %} <div class="container card mb-4" style="max-width: 600px;">
         <div class="card-body">
-            {% comment %} <h5 class="card-title">Search by Month</h5> {% endcomment %}
             <form method="GET" action="">
                 <div class="form-group">
                     <label for="selected_month">Order placed in</label>
@@ -221,12 +266,26 @@
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
+    </div> {% endcomment %}
+
+    <div class="container card mb-4" style="max-width: 600px;">
+        <div class="card-body">
+            <h5 class="card-title">Search by Date Range</h5>
+            <form method="GET" action="">
+                <div class="form-group">
+                    <label for="start_date">Start Date</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date">
+                </div>
+                <div class="form-group">
+                    <label for="end_date">End Date</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date">
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
     </div>
 
-
-
-    {% endblock %}
-
+    
 
     <!-- Your scripts and other HTML content -->
 

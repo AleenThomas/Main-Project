@@ -29,7 +29,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Add a New Product</h1>
+        {% comment %} <h1 class="mb-4">Add a New Product</h1> {% endcomment %}
         <form method="post" enctype="multipart/form-data" action="{% url 'add_product' %}">
             {% csrf_token %}
             <div class="row">
@@ -78,7 +78,12 @@
                     <label for="stock" class="form-label">Stock:</label>
                     <input type="number" class="form-control" id="stock" name="stock" required>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label for="batch_no" class="form-label">Batch ID:</label>
+                    <input type="text" class="form-control" id="batch_no" name="batch_no" required>
+                </div>
             </div>
+           
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>

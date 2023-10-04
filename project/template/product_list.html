@@ -264,18 +264,22 @@ https://templatemo.com/tm-559-zay-shop
             <table class="table table-responsive table-borderless">
                 <thead>
                     <tr class="bg-light">
+                        <th scope="col" width="10%">Batch Id</th>
+
                         <th scope="col" width="5%">image</th>
                         <th scope="col" width="20%">product name</th>
                         <th scope="col" width="10%">price</th>
-                        <th scope="col" width="20%">quantity</th>
-                        <th scope="col" width="10%">Instock</th>
-                        <th scope="col" width="20%">Date</th>
-                        <th scope="col" class="text-end" width="30%"><span>Revenue</span></th>
+                        <th scope="col" width="10%">quantity</th>
+                        <th scope="col" width="15%">Instock</th>
+                        <th scope="col" width="15%">Date</th>
+                        <th scope="col" class="text-end" width="30%"><span></span></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for product in seller_products %}
                     <tr>
+                        <td class="product-name">{{ product.batch_no }}</td>
+
                         <td>
                             <img src="{{ product.image.url }}" alt="{{ product.product_name }}" class="img-thumbnail" style="max-width: 100px;">
                         </td>
@@ -539,7 +543,7 @@ https://templatemo.com/tm-559-zay-shop
         });
             
         
-    <!-- End Script -->
+    </script>
 </body>
 
 </html>

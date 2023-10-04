@@ -40,6 +40,7 @@ class Product(models.Model):
     date_added = models.DateField(default=timezone.now)
     brand_name = models.CharField(max_length=255, default="",null=True)
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    batch_no=models.CharField(max_length=10,default="",null=True)
 
     # Define choices for the status field
     STATUS_CHOICES = [
@@ -143,12 +144,14 @@ class Order(models.Model):
             FAILED = 'failed', 'Failed'
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)  # Assuming you have a Product model
+    products = models.ManyToManyField(Product)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    order_date = models.DateTimeField(auto_now_add=True)
+    order_date = models.DateTimeField(auto_now_add=True,null=True)
     razorpay_order_id = models.CharField(max_length=255, default=None)
     payment_status = models.CharField(
     max_length=20, choices=PaymentStatusChoices.choices, default=PaymentStatusChoices.PENDING)
+    # date_added = models.DateField(default=timezone.now)
+
     # cart = models.ForeignKey(CartItem, on_delete=models.SET_NULL, null=True, blank=True)
 
     def _str_(self):

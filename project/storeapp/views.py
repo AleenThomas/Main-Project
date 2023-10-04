@@ -101,22 +101,23 @@ def seller_reg_step(request):
         print(step)
         # Check which step the form data is coming from
         if step == '1':
-            print("one")
-            # Step 1 Data
-            name = request.POST.get('name')
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            gstn = request.POST.get('gstn')
+            email = request.user.email  # Get the email from the logged-in user
+            gstn = request.POST.get('gstn')  # GSTN from the form
 
             # Check for existing user with the same email
             if CustomUser.objects.filter(email=email).exists():
-                messages.error(request, "Email already exists.")
-            else:
-                # Create a new user and set the password
-                user = CustomUser(name=name, email=email, gstn=gstn)
-                user.password = make_password(password)  # Hash the password
-                user.is_seller = True  # Mark as a seller
+                user = CustomUser.objects.get(email=email)
+                user.is_seller = True  # Set the user as a seller
                 user.save()
+
+                # Check if the user already has seller details
+                seller_details, created = SellerDetails.objects.get_or_create(user=user)
+
+                # Update the seller details
+                seller_details.gstn = gstn
+                seller_details.save()
+
+                messages.success(request, "Step 1 completed successfully.")
 
                 # Store the user ID in the session for future steps
                 request.session['user_id'] = user.id
@@ -352,7 +353,7 @@ def add_product(request):
             description = request.POST.get('description')
             image = request.FILES.get('image')
             quantity_value = request.POST.get('quantity')  # Updated field name
-            quantity_prefix = request.POST.get('quantity_prefix')  # Updated field name
+            quantity_prefix = request.POST.get('quantity-prefix')  # Updated field name
             price = request.POST.get('price')
             brand_name = request.POST.get('brand_name')
             stock = request.POST.get('stock')
@@ -454,7 +455,13 @@ def add_to_cart(request, product_id):
     else:
         cart_item,created = CartItem.objects.get_or_create(user=request.user, product_id=product.id)
         if not created:
+            cart_item.is_active = True  # Set is_active to True when adding a new item to the cart
+
             cart_item.quantity += 1
+            cart_item.save()
+        else:
+            
+            cart_item.is_active = True  # Set is_active to True when adding a new item to the cart
             cart_item.save()
 
     return redirect('shop')
@@ -475,6 +482,7 @@ def cart(request):
 def remove_from_cart(request, product_id):
     cart_item = get_object_or_404(CartItem, user=request.user, id=product_id)
     print(f"Received product_id: {product_id}")  #Fixed the typo here
+    cart_item.is_active = False
     cart_item.delete()
     return redirect('cart')
 
@@ -548,36 +556,75 @@ def search_product(request, name):
 def checkout(request):
     return render(request,'checkout.html')
 
-
+@never_cache
 def update_product(request, product_id):
     # Get the product object from the database using the product_id
     product = get_object_or_404(Product, id=product_id)
 
     if request.method == 'POST':
-        # Retrieve form data from the request
-        product_name = request.POST.get('product_name')
-        description = request.POST.get('description')
-        image = request.FILES.get('image')
-        quantity = request.POST.get('quantity')
-        price = request.POST.get('price')
-        brand_name = request.POST.get('brand_name')
-        stock = request.POST.get('stock')
+        # Handle the form submission for updating the product
+        product_name = request.POST.get('product_name', product.product_name)
+        description = request.POST.get('description', product.description)
+        image = request.FILES.get('image', product.image)
+        quantity = request.POST.get('quantity', product.quantity_value)
+        price = request.POST.get('price', product.price)
+        brand_name = request.POST.get('brand_name', product.brand_name)
+        stock = request.POST.get('stock', product.stock)
 
-        # Update the product data
-        product.product_name = product_name
-        product.description = description
-        product.image = image
-        product.quantity = quantity
-        product.price = price
-        product.brand_name = brand_name
-        product.stock = stock
+        # Update the product data only if new values are provided
+        if product_name != product.product_name:
+            product.product_name = product_name
+        if description != product.description:
+            product.description = description
+        if image:
+            product.image = image
+        if quantity != product.quantity_value:
+            product.quantity_value = quantity
+        if price != product.price:
+            product.price = price
+        if brand_name != product.brand_name:
+            product.brand_name = brand_name
+        if stock != product.stock:
+            product.stock = stock
 
         # Save the updated product data to the database
         product.save()
-        return redirect('add_product')  # Redirect to the product detail page
+        
+        # Redirect to the product detail page for the updated product
+        return redirect('seller_product_listing')  # Change 'product_detail' to your desired URL name
     else:
         # If it's a GET request, render the form with the current product data
         return render(request, 'editproduct.html', {'product': product})
+
+# def update_product(request, product_id):
+#     # Get the product object from the database using the product_id
+#     product = get_object_or_404(Product, id=product_id)
+
+#     if request.method == 'POST':
+#         # Retrieve form data from the request
+#         product_name = request.POST.get('product_name')
+#         description = request.POST.get('description')
+#         image = request.FILES.get('image')
+#         quantity = request.POST.get('quantity')
+#         price = request.POST.get('price')
+#         brand_name = request.POST.get('brand_name')
+#         stock = request.POST.get('stock')
+
+#         # Update the product data
+#         product.product_name = product_name
+#         product.description = description
+#         product.image = image
+#         product.quantity = quantity
+#         product.price = price
+#         product.brand_name = brand_name
+#         product.stock = stock
+
+#         # Save the updated product data to the database
+#         product.save()
+#         return redirect('add_product')  # Redirect to the product detail page
+#     else:
+#         # If it's a GET request, render the form with the current product data
+#         return render(request, 'editproduct.html', {'product': product})
 
 
 # def delete_product(request, product_id):
@@ -697,9 +744,14 @@ def paymenthandler(request):
             cart_items = CartItem.objects.filter(order=order)
             
             if cart_items.exists():
+                for cart_item in cart_items:
+                    product = cart_item.product
+                    product.stock -= cart_item.quantity
+                    product.save()
                 # Get the cart_id from the first cart item
                 cart_id = cart_items.first().id
                 cart_items.update(is_active=False)
+                # cart_items.update(quantity=0)
 
                 # Redirect to a success page with the cart_id
                 return HttpResponseRedirect(reverse('print_as_pdf', args=[cart_id]))
@@ -712,7 +764,7 @@ def print_as_pdf(request, cart_id):
     try:
         # Get the cart based on cart_id and make sure it belongs to the logged-in user
         cart = CartItem.objects.get(id=cart_id, user=request.user, order__isnull=False)
-        print(cart_id)
+        # print(cart_id)
         # Ensure that the cart has a valid order associated with it
         if cart.order is None:
             raise CartItem.DoesNotExist
@@ -726,6 +778,7 @@ def print_as_pdf(request, cart_id):
             total.append(total_items)
         # Get the user's name
         user_name = request.user.name
+        date_order=datetime.now()
 
         # Render the HTML template to a string
         context = {
@@ -733,9 +786,10 @@ def print_as_pdf(request, cart_id):
             'cart_items': cart_items,
             'total_cost': total_cost,
             'user_name': user_name,
+            'date_order':date_order,
             
         }
-       
+        # cart_items.update(quantity=0, is_active=False)
         html = render_to_string('print_invoice.html', context, request=request)
 
         # Create a PDF response
@@ -747,6 +801,7 @@ def print_as_pdf(request, cart_id):
 
         if pisa_status.err:
             return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        cart_items.update(is_active=False,quantity=0)
 
         return response
     except CartItem.DoesNotExist:
@@ -754,47 +809,83 @@ def print_as_pdf(request, cart_id):
         return HttpResponse('Cart not found or does not belong to the user or has no valid order.')
 
 
+
+
+
+
+# @login_required
 # def my_orders(request):
 #     # Assuming you have a user authentication system, get the current user
 #     user = request.user
+#     current_month = datetime.now().month
+#     current_year = datetime.now().year
 
-#     # Retrieve a list of orders for the current user
-#     orders = Order.objects.filter(user=user).order_by('-order_date')
+#     # Get the selected month and year from the form, or use the current month by default
+#     selected_month = request.GET.get('selected_month', datetime.now().strftime('%Y-%m'))
 
+#     # Convert the selected_month string to a datetime object
+#     selected_date = datetime.strptime(selected_month, '%Y-%m')
+
+#     # Retrieve a list of orders for the current user and the selected month
+#     orders = Order.objects.filter(user=user, order_date__year=selected_date.year, order_date__month=selected_date.month).order_by('-order_date')
+#     print(orders)
+#     for order in orders:
+#         products = order.products.all()
+#         print(products)
+#     print(['product_name', 'quantity', 'image_url', 'total_price'])
 #     context = {
 #         'orders': orders, 
-#         # 'product_fields': ['product_name', 'quantity', 'image', 'total_price'],
-# # Pass the list of orders to the template
+#         'selected_month': f"{current_month}/{current_year}",        
+#         'product_fields': ['product_name', 'quantity', 'image_url', 'total_price'],
 #     }
-    
 
+#     # Check if there are no orders for the selected month and display a message
+#     if not orders:
+#         context['no_orders_message'] = 'No orders found for the selected month.'
 
 #     return render(request, 'my_orders.html', context)
+
+
+
 @login_required
 def my_orders(request):
     # Assuming you have a user authentication system, get the current user
     user = request.user
-    current_month = datetime.now().month
-    current_year = datetime.now().year
+    
+    # Get the selected start_date and end_date from the form or request parameters
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
 
-    # Get the selected month and year from the form, or use the current month by default
-    selected_month = request.GET.get('selected_month', datetime.now().strftime('%Y-%m'))
+    # If the start_date and end_date parameters are not provided, use the current month's date range
+    if not start_date_str or not end_date_str:
+        today = datetime.now()
+        start_date = today.replace(day=1)  # First day of the current month
+        end_date = today.replace(day=1, month=today.month + 1)  # First day of the next month
 
-    # Convert the selected_month string to a datetime object
-    selected_date = datetime.strptime(selected_month, '%Y-%m')
+        # Format dates as strings in the 'YYYY-MM-DD' format
+        start_date_str = start_date.strftime('%Y-%m-%d')
+        end_date_str = end_date.strftime('%Y-%m-%d')
 
-    # Retrieve a list of orders for the current user and the selected month
-    orders = Order.objects.filter(user=user, order_date__year=selected_date.year, order_date__month=selected_date.month).order_by('-order_date')
+    else:
+        # Convert the start_date and end_date strings to datetime objects
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+
+    # Retrieve a list of orders for the current user within the specified date range
+    orders = Order.objects.filter(user=user, order_date__range=(start_date, end_date)).order_by('-order_date')
+    
+    # Rest of your code...
 
     context = {
-        'orders': orders, 
-        'selected_month': f"{current_month}/{current_year}",        
-        'product_fields': ['product_name', 'quantity', 'image_url', 'total_price'],
+        'orders': orders,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        # ...other context data...
     }
 
-    # Check if there are no orders for the selected month and display a message
+    # Check if there are no orders for the selected date range and display a message
     if not orders:
-        context['no_orders_message'] = 'No orders found for the selected month.'
+        context['no_orders_message'] = 'No orders found for the selected date range.'
 
     return render(request, 'my_orders.html', context)
 

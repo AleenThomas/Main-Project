@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,16 +55,19 @@
 <body>
     <div class="container">
         <div class="invoice-header">
-        
+        {% comment %} <img src="{% static 'img/gusto (2).png' %}" alt="Company Logo" width="150" height="auto"> {% endcomment %}
+
+        <h1>GustoGrove</h1>
         </div>
         <div class="invoice-header">
             
         </div>
         <div class="invoice-details">
+            
             <p><strong>Invoice Number:</strong> {{ cart_id }}</p>
             <p><strong>Name:</strong> {{ user_name }}</p>
 
-            <p><strong>Date:</strong> {{ date }}</p>
+            <p><strong>Date:</strong> {{ date_order }}</p>
 
             {% comment %} <p><strong>Due Date:</strong> {{ data.due_date }}</p> {% endcomment %}
         </div>
