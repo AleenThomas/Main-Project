@@ -20,6 +20,7 @@ from xhtml2pdf import pisa
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from datetime import datetime
+from django.db.models import Count
 
 # from .models import booknow, On_payment
 
@@ -39,8 +40,8 @@ def index(request):
     
 def contact(request):
     return render(request,'contact.html')
-def sellerindex(request):
-    return render(request,'sellerindex.html')
+# def sellerindex(request):
+#     return render(request,'sellerindex.html')
 # def reg_step(request):
 #     return render(request,'reg_step.html')
 
@@ -303,7 +304,7 @@ def seller_reg_step(request):
 
 
 def seller_index(request):
-    return render(request,'sellerhome.html')
+    return render(request,'sellerindex.html')
 
 
 @never_cache    
@@ -694,7 +695,7 @@ def homepage(request):
     for cart_item in cart_items:
         cart_item.order = order
         cart_item.save()
-
+    order.save()
     # Create a context dictionary with all the variables you want to pass to the template
     context = {
         'cart_items': cart_items,
@@ -722,7 +723,7 @@ def paymenthandler(request):
             'razorpay_signature': signature
         }
         result = razorpay_client.utility.verify_payment_signature(params_dict)
-        
+
         if result is False:
             # Signature verification failed.
             return render(request, 'payment/paymentfail.html')
@@ -730,7 +731,7 @@ def paymenthandler(request):
             # Signature verification succeeded.
             # Retrieve the order from the database
             order = Order.objects.get(razorpay_order_id=razorpay_order_id)
-            
+
             # Capture the payment with the amount from the order
             amount = int(order.total_price * 100)  # Convert Decimal to paise
             razorpay_client.payment.capture(payment_id, amount)
@@ -742,22 +743,26 @@ def paymenthandler(request):
 
             # Get the associated cart items for this order
             cart_items = CartItem.objects.filter(order=order)
-            
+
             if cart_items.exists():
                 for cart_item in cart_items:
                     product = cart_item.product
                     product.stock -= cart_item.quantity
                     product.save()
+                    
+                    # Add the purchased product to the order
+                    order.products.add(product)  # Associate the product with the order
+
                 # Get the cart_id from the first cart item
                 cart_id = cart_items.first().id
                 cart_items.update(is_active=False)
-                # cart_items.update(quantity=0)
-
+                
                 # Redirect to a success page with the cart_id
                 return HttpResponseRedirect(reverse('print_as_pdf', args=[cart_id]))
             else:
                 # Cart items not found for the order
                 return HttpResponse('No cart items found for the order.')
+
     
 @login_required
 def print_as_pdf(request, cart_id):
@@ -802,6 +807,7 @@ def print_as_pdf(request, cart_id):
         if pisa_status.err:
             return HttpResponse('We had some errors <pre>' + html + '</pre>')
         cart_items.update(is_active=False,quantity=0)
+        
 
         return response
     except CartItem.DoesNotExist:
@@ -893,3 +899,121 @@ def my_orders(request):
 def add_address(request):
     return render(request,'add_address.html')
 
+
+
+@login_required
+
+def seller_orders(request):
+    if request.user.is_seller:
+        current_seller = request.user
+        seller_products = Product.objects.filter(seller=current_seller)
+        product_sales = []
+
+        for product in seller_products:
+            product_sales.append({
+                'product': product,
+                'total_sold': Order.objects.filter(products=product).count(),
+                'unique_customers': Order.objects.filter(products=product).values('user').distinct().count()
+            })
+
+        context = {
+            'product_sales': product_sales
+        }
+
+        return render(request, 'seller_orders.html', context)
+    else:
+        return redirect('seller_register')
+    
+    
+    
+# def homepage(request):
+#     cart_items = CartItem.objects.filter(user=request.user)
+#     total_price = Decimal(sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items))
+    
+#     currency = 'INR'
+
+#     # Set the 'amount' variable to 'total_price'
+#     amount = int(total_price*100)
+#     # amount=20000
+
+#     # Create a Razorpay Order
+#     razorpay_order = razorpay_client.order.create(dict(
+#         amount=amount,
+#         currency=currency,
+#         payment_capture='0'
+#     ))
+
+#     # Order id of the newly created order
+#     razorpay_order_id = razorpay_order['id']
+#     callback_url = '/paymenthandler/'
+
+#     order = Order.objects.create(
+#         user=request.user,
+#         total_price=total_price,
+#         razorpay_order_id=razorpay_order_id,
+#         payment_status=Order.PaymentStatusChoices.PENDING,
+#     )
+
+#     # Add the products to the order
+#     for cart_item in cart_items:
+#         order.products.add(cart_item.product)
+
+#     # Save the order to generate an order ID
+#     order.save()
+
+#     # Create a context dictionary with all the variables you want to pass to the template
+#     context = {
+#         'cart_items': cart_items,
+#         'total_price': total_price,
+#         'razorpay_order_id': razorpay_order_id,
+#         'razorpay_merchant_key': settings.RAZOR_KEY_ID,
+#         'razorpay_amount': amount,  # Set to 'total_price'
+#         'currency': currency,
+#         'callback_url': callback_url,
+#     }
+
+#     return render(request, 'homepage.html', context=context)
+
+
+# # we need to csrf_exempt this url as
+# # POST request will be made by Razorpay
+# # and it won't have the csrf token.
+# @csrf_exempt
+# def paymenthandler(request):
+#     if request.method == "POST":
+#         payment_id = request.POST.get('razorpay_payment_id', '')
+#         razorpay_order_id = request.POST.get('razorpay_order_id', '')
+#         signature = request.POST.get('razorpay_signature', '')
+
+#         # Verify the payment signature.
+#         params_dict = {
+#             'razorpay_order_id': razorpay_order_id,
+#             'razorpay_payment_id': payment_id,
+#             'razorpay_signature': signature
+#         }
+#         result = razorpay_client.utility.verify_payment_signature(
+#             params_dict)
+#         if result is False:
+#             # Signature verification failed.
+#             return render(request, 'payment/paymentfail.html')
+#         else:
+#             # Signature verification succeeded.
+#             # Retrieve the order from the database
+#             order = Order.objects.get(razorpay_order_id=razorpay_order_id)
+#             cart_items = CartItem.objects.filter(user=request.user)
+
+#             # Check if all the books in the order are in the user's cart
+#                 # Not all books are in the cart, add them to the library
+#             # Capture the payment with the amount from the order
+#             amount = int(order.total_price * 100)  # Convert Decimal to paise
+#             razorpay_client.payment.capture(payment_id, amount)
+
+#             # Update the order with payment ID and change status to "Successful"
+#             order.payment_id = payment_id
+#             order.payment_status = Order.PaymentStatusChoices.SUCCESSFUL
+#             order.save()
+            
+#             # Update the order with payment ID and change status to "Successful
+
+#             # Redirect to a success page or return a success response
+#             return redirect('/')

@@ -69,7 +69,6 @@ https://templatemo.com/tm-559-zay-shop
                             <a class="nav-link" href="{% url 'seller_index' %}">Home</a>
                         </li>
                          <li class="nav-item">
-                            {% comment %} <a class="nav-link" href="{% url 'cust_profile' user.id %}">Profile</a> {% endcomment %}
                         </li>
                         {% if user.is_seller  %}
                         <li class="nav-item">
@@ -108,13 +107,11 @@ https://templatemo.com/tm-559-zay-shop
                     </a>
                    
                     <div class="dropdown-menu dropdown-menu-end always-show-dropdown" style="min-width: 200px;" aria-labelledby="userDropdown">
-                        {% comment %} <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register</a> {% endcomment %}
                         <a class="dropdown-item" href="{% url 'custom_login' %}" style="color:rgb(2, 48, 2);">Login</a>
                         <a class="dropdown-item" href="{% url 'seller_reg_step' %}" style="color:rgb(2, 48, 2);">Register as Seller</a>
 
 
                     </div>
-                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span> {% endcomment %}
                     
                     {% if user.is_authenticated %}
                     <h4 class=" text-light" >{{user.name}}<h4>
@@ -203,8 +200,7 @@ https://templatemo.com/tm-559-zay-shop
                         <li><a class="text-decoration-none" href="#">Clove</a></li>
                         <li><a class="text-decoration-none" href="#">Gift Hamper</a></li>
                         <li><a class="text-decoration-none" href="#">Spice Combos</a></li>
-                        {% comment %} <li><a class="text-decoration-none" href="#"></a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Shoes</a></li> {% endcomment %}
+                       
                     </ul>
                 </div>
 

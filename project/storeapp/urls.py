@@ -24,7 +24,7 @@ urlpatterns = [
     # path('update_cart/', views.update_cart, name='update_cart'),
     path('add_product/', views.add_product, name='add_product'),
     path('shop/', views.shop, name='shop'),
-    path('sellerindex/', views.sellerindex, name='sellerindex'),
+    # path('sellerindex/', views.sellerindex, name='sellerindex'),
 
     path('product_detail/<int:product_id>/', views.product_detail, name='product_detail'),
     path('contact/',views.contact,name='contact'),
@@ -32,6 +32,7 @@ urlpatterns = [
     path('search/<str:name>', views.search_product, name='search_product'),
     path('checkout/',views.checkout,name='checkout'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
+    path('seller_orders/', views.seller_orders, name='seller_orders'),
     
     
     

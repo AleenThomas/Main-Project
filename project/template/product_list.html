@@ -251,7 +251,7 @@ https://templatemo.com/tm-559-zay-shop
             </div>
             <div class="px-2">
                 <span>Filters <i class="fa fa-angle-down"></i></span>
-                <i class="fa fa-ellipsis-h ms-3"></i>
+                
                 <select id="filter-options" class="form-control">
                     <option value="all">All</option>
                     <option value="low-to-high">Stock Low to High</option>
@@ -264,30 +264,34 @@ https://templatemo.com/tm-559-zay-shop
             <table class="table table-responsive table-borderless">
                 <thead>
                     <tr class="bg-light">
-                        <th scope="col" width="10%">Batch Id</th>
 
                         <th scope="col" width="5%">image</th>
+
                         <th scope="col" width="20%">product name</th>
                         <th scope="col" width="10%">price</th>
                         <th scope="col" width="10%">quantity</th>
                         <th scope="col" width="15%">Instock</th>
                         <th scope="col" width="15%">Date</th>
+                        <th scope="col" width="10%">Batch Id</th>
+
                         <th scope="col" class="text-end" width="30%"><span></span></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for product in seller_products %}
                     <tr>
-                        <td class="product-name">{{ product.batch_no }}</td>
 
                         <td>
                             <img src="{{ product.image.url }}" alt="{{ product.product_name }}" class="img-thumbnail" style="max-width: 100px;">
                         </td>
+
                         <td class="product-name">{{ product.product_name }}</td>
                         <td class="price">₹{{ product.price }}</td>
                         <td class="quantity"> {{ product.quantity_value }}/{{product.quantity_prefix}}</td>
                         <td class="stock">{{ product.stock }}</td>
                         <td class="date">{{ product.date_added }}</td>
+                        <td class="product-name">{{ product.batch_no }}</td>
+
                         <td class="text-end">
                             <a href={% url "update_product" product.id %}><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
                         </td>

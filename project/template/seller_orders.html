@@ -1,6 +1,5 @@
-<!--Main Navigation-->
 <html>
-    <head>
+<head>
 
 
         <!-- Add Bootstrap CSS -->
@@ -17,7 +16,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
-
+     
         <style>
 
             body {
@@ -93,19 +92,19 @@
              ><i class="fas fa-lock fa-fw me-3"></i><span>Profile</span></a
             >
           <a
-             href="#"
+             href="{% url "seller_product_listing" %}"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-chart-line fa-fw me-3"></i
             ><span>View Product</span></a
             >
           <a
-             href="{% url "seller_product_listing" %}"
+             href=""
              class="list-group-item list-group-item-action py-2 ripple"
              >
             <i class="fas fa-chart-pie fa-fw me-3"></i><span>SEO</span>
           </a>
           <a
-             href="{% url "seller_orders" %}"
+             href="{% url 'seller_orders' %}"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-chart-bar fa-fw me-3"></i><span>Orders</span></a
             >
@@ -200,168 +199,116 @@
   <!--Main Navigation-->
   
   <!--Main layout-->
-   <main style="margin-top: 58px">
-    <div class="container pt-4">
-      
-      <section>
+  <main style="margin-top: 58px">
+    {% comment %} <div class="container mt-5">
         <div class="row">
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div class="align-self-center">
-                    <i class="fas fa-pencil-alt text-info fa-3x"></i>
-                  </div>
-                  <div class="text-end">
-                    <h3>278</h3>
-                    <p class="mb-0">New Posts</p>
-                  </div>
+            <div class="col-md-4 mb-4">
+                <!-- Card display for each product -->
+                {% for sale in product_sales %}
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ sale.product.product_name }}</h5>
+                        <p class="card-text">Total Sold: {{ sale.total_sold }}</p>
+                        <p class="card-text">Unique Customers: {{ sale.unique_customers }}</p>
+                    </div>
                 </div>
-              </div>
+                {% endfor %}
+            </div> {% endcomment %}
+            <div class="col-md-8">
+                <!-- Sales statistics graph -->
+                <canvas id="salesChart" width="400" height="200"></canvas>
             </div>
-          </div>
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div class="align-self-center">
-                    <i class="far fa-comment-alt text-warning fa-3x"></i>
-                  </div>
-                  <div class="text-end">
-                    <h3>156</h3>
-                    <p class="mb-0">New Comments</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div class="align-self-center">
-                    <i class="fas fa-chart-line text-success fa-3x"></i>
-                  </div>
-                  <div class="text-end">
-                    <h3>64.89 %</h3>
-                    <p class="mb-0">Bounce Rate</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div class="align-self-center">
-                    <i class="fas fa-map-marker-alt text-danger fa-3x"></i>
-                  </div>
-                  <div class="text-end">
-                    <h3>423</h3>
-                    <p class="mb-0">Total Visits</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </section>
-      
-      <!--Section: Minimal statistics cards-->
-  
-      <!--Section: Statistics with subtitles-->
-      <section>
-        <div class="row">
-          <div class="col-xl-6 col-md-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between p-md-1">
-                  <div class="d-flex flex-row">
-                    <div class="align-self-center">
-                      <i class="fas fa-pencil-alt text-info fa-3x me-4"></i>
-                    </div>
-                    <div>
-                      <h4>Total Posts</h4>
-                      <p class="mb-0">Monthly blog posts</p>
-                    </div>
-                  </div>
-                  <div class="align-self-center">
-                    <h2 class="h1 mb-0">18,000</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-6 col-md-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between p-md-1">
-                  <div class="d-flex flex-row">
-                    <div class="align-self-center">
-                      <i
-                         class="far fa-comment-alt text-warning fa-3x me-4"
-                         ></i>
-                    </div>
-                    <div>
-                      <h4>Total Comments</h4>
-                      <p class="mb-0">Monthly blog posts</p>
-                    </div>
-                  </div>
-                  <div class="align-self-center">
-                    <h2 class="h1 mb-0">84,695</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xl-6 col-md-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between p-md-1">
-                  <div class="d-flex flex-row">
-                    <div class="align-self-center">
-                      <h2 class="h1 mb-0 me-4">$76,456.00</h2>
-                    </div>
-                    <div>
-                      <h4>Total Sales</h4>
-                      <p class="mb-0">Monthly Sales Amount</p>
-                    </div>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="far fa-heart text-danger fa-3x"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-6 col-md-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between p-md-1">
-                  <div class="d-flex flex-row">
-                    <div class="align-self-center">
-                      <h2 class="h1 mb-0 me-4">$36,000.00</h2>
-                    </div>
-                    <div>
-                      <h4>Total Cost</h4>
-                      <p class="mb-0">Monthly Cost</p>
-                    </div>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="fas fa-wallet text-success fa-3x"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!--Section: Statistics with subtitles-->
     </div>
-  </main>
+</main>
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- JavaScript code for Chart.js -->
+    <script>
+        // Retrieve product sales data from your server-side code and store it in a variable
+        var productSalesData = [
+            {% for sale in product_sales %}
+            {
+                product_name: "{{ sale.product.product_name }}",
+                total_sold: {{ sale.total_sold }},
+                unique_customers: {{ sale.unique_customers }}
+            },
+            {% endfor %}
+        ];
+    
+        var productNames = productSalesData.map(function(item) {
+            return item.product_name;
+        });
+    
+        var totalSoldValues = productSalesData.map(function(item) {
+            return item.total_sold;
+        });
+    
+        var uniqueCustomersValues = productSalesData.map(function(item) {
+            return item.unique_customers;
+        });
+    
+        var ctx = document.getElementById('salesChart').getContext('2d');
+    
+        var salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: productNames,
+                datasets: [
+                    {
+                        label: 'Total Sold',
+                        data: totalSoldValues,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Unique Customers',
+                        data: uniqueCustomersValues,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true, // Make the chart responsive
+                maintainAspectRatio: false, // Prevent automatic aspect ratio adjustment
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Product Name'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        },
+                        ticks: {
+                            stepSize: 1 // Display integers on the Y-axis
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true, // Display the legend
+                        position: 'top' // Position the legend at the top
+                    },
+                    title: {
+                        display: true,
+                        text: 'Product Sales Statistics' // Chart title
+                    }
+                }
+            }
+        });
+    </script>
+    
+ 
   <script>
     $(document).ready(function () {
       // Initialize Bootstrap's JavaScript components
