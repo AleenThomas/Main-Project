@@ -41,6 +41,8 @@ urlpatterns = [
     path('print_as_pdf/<int:cart_id>/', views.print_as_pdf, name='print_as_pdf'),
     path('my_orders/',views.my_orders,name='my_orders'),
     path('add_address/',views.add_address,name='add_address'),
+    path('monthly_sales/',views.monthly_sales,name='monthly_sales'),
+
 
     # path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
 

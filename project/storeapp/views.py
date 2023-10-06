@@ -21,7 +21,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from datetime import datetime
 from django.db.models import Count
-
+from django.db.models.functions import TruncMonth
+from django.db.models import Sum
+from django.utils import timezone
 # from .models import booknow, On_payment
 
 
@@ -302,9 +304,51 @@ def seller_reg_step(request):
 
 
 
-
+@never_cache
 def seller_index(request):
-    return render(request,'sellerindex.html')
+    if request.user.is_seller:
+        current_seller = request.user
+        seller_products = Product.objects.filter(seller=current_seller)
+        
+        # Calculate total amount, unique customers, and total orders for each product
+        product_data = []
+        total_orders_all = 0
+        unique_customers_all = 0
+        total_amount_all = 0
+
+        for product in seller_products:
+            total_orders = Order.objects.filter(products=product).count()
+            unique_customers = Order.objects.filter(products=product).values('user').distinct().count()
+            total_amount = total_orders * product.price  # Assuming price is per unit
+            
+            total_orders_all += total_orders
+            unique_customers_all += unique_customers
+            total_amount_all += total_amount
+
+            product_data.append({
+                'product': product,
+                'total_orders': total_orders,
+                'unique_customers': unique_customers,
+                'total_amount': total_amount
+            })
+
+        context = {
+            'seller_products': seller_products,
+            'product_data': product_data,
+            'total_orders_all': total_orders_all,
+            'unique_customers_all': unique_customers_all,
+            'total_amount_all': total_amount_all,
+            'total_amount':total_amount,
+            'unique_customers': unique_customers,
+            'total_orders': total_orders,
+
+
+        }
+
+        return render(request, 'sellerindex.html', context)
+    else:
+        return redirect('seller_reg_step')
+
 
 
 @never_cache    
@@ -901,8 +945,32 @@ def add_address(request):
 
 
 
-@login_required
+# @login_required
 
+# def seller_orders(request):
+#     if request.user.is_seller:
+#         current_seller = request.user
+#         seller_products = Product.objects.filter(seller=current_seller)
+#         product_sales = []
+
+#         for product in seller_products:
+#             product_sales.append({
+#                 'product': product,
+#                 'total_sold': Order.objects.filter(products=product).count(),
+#                 'unique_customers': Order.objects.filter(products=product).values('user').distinct().count()
+#             })
+
+#         context = {
+#             'product_sales': product_sales
+#         }
+
+#         return render(request, 'seller_orders.html', context)
+#     else:
+#         return redirect('seller_register')
+    
+    
+    
+@login_required
 def seller_orders(request):
     if request.user.is_seller:
         current_seller = request.user
@@ -910,110 +978,53 @@ def seller_orders(request):
         product_sales = []
 
         for product in seller_products:
+            orders = Order.objects.filter(products=product)
+            total_amount = sum(order.total_price for order in orders)
             product_sales.append({
                 'product': product,
-                'total_sold': Order.objects.filter(products=product).count(),
-                'unique_customers': Order.objects.filter(products=product).values('user').distinct().count()
+                'total_sold': len(orders),
+                'total_amount': total_amount,
+                'unique_customers': orders.values('user').distinct().count()
+            })
+
+        context = {
+            'product_sales': product_sales
+        }
+        print(total_amount)
+        return render(request, 'seller_orders.html', context)
+    else:
+        return redirect('seller_register')
+
+
+
+@login_required
+def monthly_sales(request):
+    if request.user.is_seller:
+        current_month = timezone.now().month
+        current_year = timezone.now().year
+        seller_products = Product.objects.filter(seller=request.user)
+        product_sales = []
+
+        for product in seller_products:
+            monthly_sales = Order.objects.filter(
+                products=product,
+                order_date__month=current_month,
+                order_date__year=current_year
+            ).aggregate(
+                total_sold=Count('id'),
+                total_amount=Sum('total_price')
+            )
+
+            product_sales.append({
+                'product': product,
+                'total_sold': monthly_sales['total_sold'],
+                'total_amount': monthly_sales['total_amount'] or 0
             })
 
         context = {
             'product_sales': product_sales
         }
 
-        return render(request, 'seller_orders.html', context)
+        return render(request, 'sales_month.html', context)
     else:
         return redirect('seller_register')
-    
-    
-    
-# def homepage(request):
-#     cart_items = CartItem.objects.filter(user=request.user)
-#     total_price = Decimal(sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items))
-    
-#     currency = 'INR'
-
-#     # Set the 'amount' variable to 'total_price'
-#     amount = int(total_price*100)
-#     # amount=20000
-
-#     # Create a Razorpay Order
-#     razorpay_order = razorpay_client.order.create(dict(
-#         amount=amount,
-#         currency=currency,
-#         payment_capture='0'
-#     ))
-
-#     # Order id of the newly created order
-#     razorpay_order_id = razorpay_order['id']
-#     callback_url = '/paymenthandler/'
-
-#     order = Order.objects.create(
-#         user=request.user,
-#         total_price=total_price,
-#         razorpay_order_id=razorpay_order_id,
-#         payment_status=Order.PaymentStatusChoices.PENDING,
-#     )
-
-#     # Add the products to the order
-#     for cart_item in cart_items:
-#         order.products.add(cart_item.product)
-
-#     # Save the order to generate an order ID
-#     order.save()
-
-#     # Create a context dictionary with all the variables you want to pass to the template
-#     context = {
-#         'cart_items': cart_items,
-#         'total_price': total_price,
-#         'razorpay_order_id': razorpay_order_id,
-#         'razorpay_merchant_key': settings.RAZOR_KEY_ID,
-#         'razorpay_amount': amount,  # Set to 'total_price'
-#         'currency': currency,
-#         'callback_url': callback_url,
-#     }
-
-#     return render(request, 'homepage.html', context=context)
-
-
-# # we need to csrf_exempt this url as
-# # POST request will be made by Razorpay
-# # and it won't have the csrf token.
-# @csrf_exempt
-# def paymenthandler(request):
-#     if request.method == "POST":
-#         payment_id = request.POST.get('razorpay_payment_id', '')
-#         razorpay_order_id = request.POST.get('razorpay_order_id', '')
-#         signature = request.POST.get('razorpay_signature', '')
-
-#         # Verify the payment signature.
-#         params_dict = {
-#             'razorpay_order_id': razorpay_order_id,
-#             'razorpay_payment_id': payment_id,
-#             'razorpay_signature': signature
-#         }
-#         result = razorpay_client.utility.verify_payment_signature(
-#             params_dict)
-#         if result is False:
-#             # Signature verification failed.
-#             return render(request, 'payment/paymentfail.html')
-#         else:
-#             # Signature verification succeeded.
-#             # Retrieve the order from the database
-#             order = Order.objects.get(razorpay_order_id=razorpay_order_id)
-#             cart_items = CartItem.objects.filter(user=request.user)
-
-#             # Check if all the books in the order are in the user's cart
-#                 # Not all books are in the cart, add them to the library
-#             # Capture the payment with the amount from the order
-#             amount = int(order.total_price * 100)  # Convert Decimal to paise
-#             razorpay_client.payment.capture(payment_id, amount)
-
-#             # Update the order with payment ID and change status to "Successful"
-#             order.payment_id = payment_id
-#             order.payment_status = Order.PaymentStatusChoices.SUCCESSFUL
-#             order.save()
-            
-#             # Update the order with payment ID and change status to "Successful
-
-#             # Redirect to a success page or return a success response
-#             return redirect('/')

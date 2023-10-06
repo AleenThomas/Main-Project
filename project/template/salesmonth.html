@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Sales Chart</title>
+
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Monthly Sales Chart</h1>
+
+    <!-- Create a canvas element for the line chart -->
+    <canvas id="salesChart" width="800" height="400"></canvas>
+    <script>
+        // Sales data for the product (replace with your actual data)
+        var salesData = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [
+                {
+                    label: "Total Sold",
+                    data: [10, 15, 20, 12, 25, 30, 28, 22, 18, 16, 14, 19],
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0, 0, 255, 0.2)",
+                },
+                {
+                    label: "Unique Customers",
+                    data: [8, 12, 15, 10, 20, 22, 20, 18, 14, 12, 10, 13],
+                    borderColor: "green",
+                    backgroundColor: "rgba(0, 255, 0, 0.2)",
+                },
+            ],
+        };
+
+        // Get the canvas element
+        var ctx = document.getElementById("monthlySalesChart").getContext("2d");
+
+        // Create a line chart
+        var monthlySalesChart = new Chart(ctx, {
+            type: "line",
+            data: salesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Month",
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Value",
+                        },
+                        ticks: {
+                            stepSize: 5,
+                        },
+                    },
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: "top",
+                    },
+                    title: {
+                        display: true,
+                        text: "Monthly Sales Data",
+                    },
+                },
+            },
+        });
+    </script>
+</body>
+</html>

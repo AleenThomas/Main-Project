@@ -1,252 +1,227 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
 <head>
-    <title>Gustogrove Shop - Product Listing Page</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
-
-    <link rel="stylesheet" href="{% static 'css\bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css\templatemo.css' %}">
-    <link rel="stylesheet" href="{% static 'css\custom.css' %}">
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    integrity="sha384-KyZXEAg3QhqLMpG8r+O4Xcz5Ft6o7g5w1PPi2RD4m1fz5e5qlwP5P0o2Ev6l5f7a"
-    crossorigin="anonymous"
-/>
-
-    <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="{% static 'css\fontawesome.min.css' %}">
-<!--
-    
-TemplateMo 559 Zay Shop
-
-https://templatemo.com/tm-559-zay-shop
-
--->
 
 
-<style>
-   
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+        <!-- Add Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    body{
-        font-family: 'Open Sans', sans-serif;
-        
-    }
-    .search{
+<!-- Add Bootstrap JavaScript and jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+     
+        <style>
+
+            body {
+                background-color: #fbfbfb;
+              }
+              @media (min-width: 991.98px) {
+                main {
+                  padding-left: 240px;
+                }
+              }
+              
+              /* Sidebar */
+              .sidebar {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                padding: 58px 0 0; /* Height of navbar */
+                box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+                width: 240px;
+                z-index: 600;
+              }
+              
+              @media (max-width: 991.98px) {
+                .sidebar {
+                  width: 100%;
+                }
+              }
+              .sidebar .active {
+                border-radius: 5px;
+                box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+              }
+              
+              .sidebar-sticky {
+                position: relative;
+                top: 0;
+                height: calc(100vh - 48px);
+                padding-top: 0.5rem;
+                overflow-x: hidden;
+                overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+              }
+
+        </style>
+    </head>
+
+
+<header>
+    <!-- Sidebar -->
+    <nav
+         id="sidebarMenu"
+         class="collapse d-lg-block sidebar collapse bg-white"
+         >
+      <div class="position-sticky">
+        <div class="list-group list-group-flush mx-3 mt-4">
+          <a
+             href="{% url "seller_index" %}"
+             class="list-group-item list-group-item-action py-2 ripple"
+             aria-current="true"
+             >
+            <i class="fas fa-tachometer-alt fa-fw me-3"></i
+              ><span>Main dashboard</span>
+          </a>
+          <a
+             href="{% url "add_product" %}"
+             class="list-group-item list-group-item-action py-2 ripple active"
+             >
+            <i class="fas fa-chart-area fa-fw me-3"></i
+              ><span>Add Product</span>
+          </a>
+          <a
+             href="#"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-lock fa-fw me-3"></i><span>Profile</span></a
+            >
+          <a
+             href="{% url "seller_product_listing" %}"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-chart-line fa-fw me-3"></i
+            ><span>View Product</span></a
+            >
+          <a
+             href=""
+             class="list-group-item list-group-item-action py-2 ripple"
+             >
+            <i class="fas fa-chart-pie fa-fw me-3"></i><span>SEO</span>
+          </a>
+          <a
+             href="{% url 'seller_orders' %}"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-chart-bar fa-fw me-3"></i><span>Orders</span></a
+            >
+          <a
+             href=""
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-globe fa-fw me-3"></i
+            ><span>International</span></a
+            >
+          <a
+             href="#"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-building fa-fw me-3"></i
+            ><span>Partners</span></a
+            >
+          <a
+             href="#"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-calendar fa-fw me-3"></i
+            ><span>Calendar</span></a
+            >
+          <a
+             href="#"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
+            >
+          <a
+             href="#"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-money-bill fa-fw me-3"></i><span>Sales</span></a
+            >
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+  
+    <!-- Navbar -->
+    <nav class="my-custom-navbar navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container ps-5 ms-5">
+          <!-- Brand -->
+          <a class="navbar-brand" href="#">My Project</a>
       
-      top:6px;
-      left:10px;
-    }
-    
-    .form-control{
-        
-        border:none;
-        padding-left:32px;
-    }
-    
-    .form-control:focus{
-        
-        border:none;
-        box-shadow:none;
-    }
-    
-    .green{
-        
-        color:green;
-    }
-    
-</style>
-</head>
-
-<body>
-    <!-- Start Top Nav -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
-        <div class="container text-light">
-            <div class="w-100 d-flex justify-content-between">
-                <div>
-                    <i class="fa fa-envelope mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
-                    <i class="fa fa-phone mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
-                </div>
-                <div>
-                    <a class="text-light" href="https://fb.com/templatemo" target="_blank" rel="sponsored"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://twitter.com/" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <!-- Close Top Nav -->
-
-
-
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div class="logo">
-                <a class="navbar-brand" href="{% url 'seller_index' %}">
-                    <img src="{% static 'img/gusto (2).png' %}" alt="Site Logo" class="img-fluid w-auto h-100" style="max-height: 100px;">
-                </a>
-            </div>
-           
-
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+          <!-- Search form -->
+          <form class="form-inline my-2 my-lg-0">
+            <input
+              class="form-control mr-sm-2 ps-5 ms-5"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+              Search
             </button>
-
-            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
-                <div class="flex-fill">
-                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'seller_index' %}">Home</a>
-                        </li>
-                         <li class="nav-item">
-                            {% comment %} <a class="nav-link" href="{% url 'cust_profile' user.id %}">Profile</a> {% endcomment %}
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'add_product' %}">Add Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'seller_product_listing' %}">View Products</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="navbar align-self-center d-flex">
-                    <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
-                            <div class="input-group-text">
-                                <i class="fa fa-fw fa-search "></i>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-                        <i class="fa fa-fw fa-search text-light mr-2"></i>
-                    </a>
-                   
-                    <a class="nav-icon position-relative text-decoration-none dropdown" href="#" data-bs-toggle="dropdown">
-                        <i class="fa fa-fw fa-user text-light mr-1"></i>
-                    </a>
-                   
-                    <div class="dropdown-menu dropdown-menu-end always-show-dropdown" style="min-width: 200px;" aria-labelledby="userDropdown">
-                        {% comment %} <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register</a> {% endcomment %}
-                        <a class="dropdown-item" href="{% url 'custom_login' %}" style="color:rgb(2, 48, 2);">Login</a>
-                        <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register as Seller</a>
-
-
-                    </div>
-                        {% comment %} <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span> {% endcomment %}
-                    
-                    {% if user.is_authenticated %}
-                    <h4 class=" text-light" >{{user.name}}<h4>
-                        <div style="margin-left: 5px;" class="mt-2">
-                            <a class="nav-icon position-relative text-decoration-none" href="{% url 'logout' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logout">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                                </svg>
-                            </a>
-                           
-                    {% endif %}
-                        </div>
-                        
-                        
-                   
-                </div>
-            </div>
-
+          </form>
+      
+          <!-- Right links -->
+          <ul class="navbar-nav ml-auto">
+            <!-- Notification icon -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-bell"></i>
+                <span class="badge badge-danger">1</span>
+              </a>
+            </li>
+      
+            <!-- User dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="userDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="fas fa-user"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{% url "seller_product_listing" %}">Register</a>
+                <a class="dropdown-item" href="{% url "custom_login" %}">Login</a>
+                <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
+              </div>
+            </li>
+          </ul>
         </div>
-    </nav>
-    <!-- Header -->
-    {% comment %} <nav class="navbar navbar-expand-lg navbar-light shadow">
-        <div class="container d-flex justify-content-between align-items-center">
+      </nav>
+      
+      
+      
+  </header>
+  <!--Main Navigation-->
+  
+  <!--Main layout-->
+  <main style="margin-top: 58px">
+    
 
-            <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
-                
-            </a>
-
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
-                <div class="flex-fill">
-                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'shop' %}">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="navbar align-self-center d-flex">
-                    <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
-                            <div class="input-group-text">
-                                <i class="fa fa-fw fa-search"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-                        <i class="fa fa-fw fa-search text-dark mr-2"></i>
-                    </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
-                    </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
-                    </a>
-                </div>
-            </div>
-
-        </div>
-    </nav> {% endcomment %}
-    <!-- Close Header -->
-
-    <!-- Modal -->
-    <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="w-100 pt-1 mb-5 text-right">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="" method="get" class="modal-content modal-body border-0 p-0">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
-                    <button type="submit" class="input-group-text bg-success text-light">
-                        <i class="fa fa-fw fa-search text-white"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-
-    <!-- Start Content -->
+    
     <div class="container mt-5 px-2">
         <div class="mb-2 d-flex justify-content-between align-items-center">
             <div class="position-relative">
-                <span class="position-absolute search"><i class="fa fa-search"></i></span>
+                <span class="position-absolute search"></span>
                 <input type="text" id="search-input" class="form-control w-100" placeholder="Search by name...">
             </div>
             <div class="px-2">
@@ -301,182 +276,14 @@ https://templatemo.com/tm-559-zay-shop
             </table>
         </div>
     </div>
-    
-      
-    <!-- Start Brands -->
-    <section class="bg-light py-5">
-        <div class="container my-4">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">My Products</h1>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        Lorem ipsum dolor sit amet.
-                    </p>
-                    
-                </div>
-                <div class="col-lg-9 m-auto tempaltemo-carousel">
-                    <div class="row d-flex flex-row">
-                        <!--Controls-->
-                        <div class="col-1 align-self-center">
-                            <a class="h1" href="#multi-item-example" role="button" data-bs-slide="prev">
-                                <i class="text-light fas fa-chevron-left"></i>
-                            </a>
-                        </div>
-                        <!--End Controls-->
-
-                        <!--Carousel Wrapper-->
-                        <div class="col">
-                            <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example" data-bs-ride="carousel">
-                                <!--Slides-->
-                                <div class="carousel-inner product-links-wap" role="listbox">
-
-                                    <!--First slide-->
-                                    <div class="carousel-item active">
-                                        <div class="row">
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_01.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_02.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_03.png" alt="Brand Logo"></a>
-                                            </div>
-                                            <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_04.png" alt="Brand Logo"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--End First slide-->
-
-                                  
-                        <!--End Carousel Wrapper-->
-
-                        <!--Controls-->
-                        <div class="col-1 align-self-center">
-                            <a class="h1" href="#multi-item-example" role="button" data-bs-slide="next">
-                                <i class="text-light fas fa-chevron-right"></i>
-                            </a>
-                        </div>
-                        <!--End Controls-->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--End Brands-->
-
-
-    <!-- Start Footer -->
-    <footer class="bg-dark" id="tempaltemo_footer">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-success border-bottom pb-3 border-light logo">GustoGrove</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li>
-                            <i class="fas fa-map-marker-alt fa-fw"></i>
-                            123 Consectetur at ligula 10660
-                        </li>
-                        <li>
-                            <i class="fa fa-phone fa-fw"></i>
-                            <a class="text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope fa-fw"></i>
-                            <a class="text-decoration-none" href="mailto:info@company.com">gustogrove@gmail.com</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light">Products</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Cardamom</a></li>
-                        <li><a class="text-decoration-none" href="#">pepper</a></li>
-                        <li><a class="text-decoration-none" href="#">Clove</a></li>
-                        <li><a class="text-decoration-none" href="#">Gift Hamper</a></li>
-                        <li><a class="text-decoration-none" href="#">Spice Combos</a></li>
-                        {% comment %} <li><a class="text-decoration-none" href="#"></a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Shoes</a></li> {% endcomment %}
-                    </ul>
-                </div>
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light">Further Info</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Home</a></li>
-                        <li><a class="text-decoration-none" href="#">About Us</a></li>
-                        <li><a class="text-decoration-none" href="#">Shop Locations</a></li>
-                        <li><a class="text-decoration-none" href="#">FAQs</a></li>
-                        <li><a class="text-decoration-none" href="#">Contact</a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="row text-light mb-4">
-                <div class="col-12 mb-3">
-                    <div class="w-100 my-3 border-top border-light"></div>
-                </div>
-                <div class="col-auto me-auto">
-                    <ul class="list-inline text-left footer-icons">
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="http://facebook.com/"><i class="fab fa-facebook-f fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://www.instagram.com/"><i class="fab fa-instagram fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://twitter.com/"><i class="fab fa-twitter fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://www.linkedin.com/"><i class="fab fa-linkedin fa-lg fa-fw"></i></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-auto">
-                    <label class="sr-only" for="subscribeEmail">Email address</label>
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address">
-                        <div class="input-group-text btn-success text-light">Subscribe</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="w-100 bg-black py-3">
-            <div class="container">
-                <div class="row pt-2">
-                    <div class="col-12">
-                        <p class="text-left text-light">
-                            Copyright &copy; 2021 Company Name 
-                            <a rel="sponsored" href="https://templatemo.com" target="_blank"></a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </footer>
-
-    <!-- End Footer -->
-
-    <!-- Start Script -->
-
+</main>
+    <!-- Add Chart.js library -->
+   
     <script
     src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
     integrity="sha384-RX68I6Xw5f2Jt5V+hLaGc5RZn5txVNyz1tcAq2KU8/uhR5/zw5P0o2Ev6l5f7a"
     crossorigin="anonymous"></script>
 
-    <script src="{% static 'js\jquery-1.11.0.min.js' %}"></script>
-    <script src="{% static 'js\jquery-migrate-1.2.1.min.js' %}"></script>
-    <script src="{% static 'js\templatemo.js' %}"></script>
-    <script src="{% static 'js\templatemo.js' %}"></script>
-    <script src="{% static 'js\custom.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.10/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.10/js/jquery.dataTables.js"></script>
@@ -548,6 +355,14 @@ https://templatemo.com/tm-559-zay-shop
             
         
     </script>
-</body>
+ 
+  <script>
+    $(document).ready(function () {
+      // Initialize Bootstrap's JavaScript components
+      $('[data-toggle="dropdown"]').dropdown();
+    });
+  </script>
 
-</html>
+  <!--Main layout-->
+
+  </html>
