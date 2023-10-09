@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+# from storeapp.models import Notification
 class CustomUser(AbstractUser):
     username = None
     USERNAME_FIELD  = 'email'
@@ -10,7 +11,15 @@ class CustomUser(AbstractUser):
     is_customer = models.BooleanField(default=False)
     is_seller = models.BooleanField(default=False)
     gstn = models.CharField(max_length=15, blank=True, null=True)  # GSTN field
+    
+    
+    
+    
 
     REQUIRED_FIELDS = []
+    
+    
+    def unread_notification_count(self):
+        return Notification.objects.filter(user=self, read=False).count()
     def __str__(self):
         return self.name

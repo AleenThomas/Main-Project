@@ -33,15 +33,20 @@ urlpatterns = [
     path('checkout/',views.checkout,name='checkout'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
     path('seller_orders/', views.seller_orders, name='seller_orders'),
-    
-    
-    
+
     path('homepage/', views.homepage, name='homepage'),
     path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
     path('print_as_pdf/<int:cart_id>/', views.print_as_pdf, name='print_as_pdf'),
     path('my_orders/',views.my_orders,name='my_orders'),
     path('add_address/',views.add_address,name='add_address'),
     path('monthly_sales/',views.monthly_sales,name='monthly_sales'),
+    
+    path('low-stock-notification/<int:seller_id>/', views.low_stock_notification, name='low_stock_notification'),
+    path('show_notification/<int:seller_id>',views.showNotification,name="show_notification"),
+    path('mark_notifications_as_read/',views.mark_notifications_as_read,name="mark_notifications_as_read")
+
+    # path('notifications/', views.notification_list, name='notification_list'),
+    # path('notifications/mark_as_read/', views.mark_notifications_as_read, name='mark_notifications_as_read'),
 
 
     # path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
@@ -50,11 +55,4 @@ urlpatterns = [
 
     # ----------------------------------admin--------------------------------------
     # path('index_admin/', views.index_admin, name='index_admin'),
-
-
-
-
-
-
-   
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

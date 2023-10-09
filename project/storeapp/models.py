@@ -167,4 +167,10 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.product_name} ({'Active' if self.is_active else 'Inactive'})"
+class Notification(models.Model):
+    seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 

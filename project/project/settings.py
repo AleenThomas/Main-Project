@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'notifications',
 
 ]
 SITE_ID = 1
@@ -171,5 +172,7 @@ SOCIALACCOUNT_LOGIN_ON_GET=True
 RAZOR_KEY_ID = 'rzp_test_BJDog7HC2EVqoV'
 RAZOR_KEY_SECRET = 'UkCzI96YihPspst8DdaCZHsz'
 
-
+NOTIFICATIONS_USE_JSONFIELD = True
+NOTIFICATIONS_NOTIFICATION_MODEL = "notifications.Notification"
+NOTIFICATIONS_SOFT_DELETE = True
 

@@ -34,7 +34,7 @@
         };
 
         // Get the canvas element
-        var ctx = document.getElementById("monthlySalesChart").getContext("2d");
+        var ctx = document.getElementById("salesChart").getContext("2d");
 
         // Create a line chart
         var monthlySalesChart = new Chart(ctx, {
@@ -72,7 +72,15 @@
                         text: "Monthly Sales Data",
                     },
                 },
+                animation: {
+                    duration: 0, // Set animation duration to 0 milliseconds (disabling animation)
+                },
             },
+        });
+
+        // Prevent canvas interactions from submitting a form
+        document.getElementById("salesChart").addEventListener("click", function (event) {
+            event.preventDefault();
         });
     </script>
 </body>

@@ -124,7 +124,8 @@ def custom_login(request):
                 if user.is_customer:
                     return redirect('index')  # Redirect to customer index page
                 elif user.is_seller:
-                    return redirect('seller_index')
+                    low_stock_notification_url = reverse('low_stock_notification', args=[user.id])
+                    return redirect(low_stock_notification_url)
             else:
                 error_message = "Invalid login credentials."
                 return render(request, 'custlogin.html', {'error_message': error_message})

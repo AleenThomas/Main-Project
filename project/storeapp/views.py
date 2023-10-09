@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from .models import Customer_Profile
 # from .forms import ProductForm
-from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order
+from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
@@ -24,6 +24,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from django.db.models import Sum
 from django.utils import timezone
+
 # from .models import booknow, On_payment
 
 
@@ -309,7 +310,8 @@ def seller_index(request):
     if request.user.is_seller:
         current_seller = request.user
         seller_products = Product.objects.filter(seller=current_seller)
-        
+        notification=Notification.objects.filter(seller_id=current_seller.id,read=False).count()
+
         # Calculate total amount, unique customers, and total orders for each product
         product_data = []
         total_orders_all = 0
@@ -341,6 +343,8 @@ def seller_index(request):
             'total_amount':total_amount,
             'unique_customers': unique_customers,
             'total_orders': total_orders,
+            'notification':notification
+
 
 
         }
@@ -541,8 +545,7 @@ def decrease_item(request, item_id):
             cart_item.quantity -= 1
             cart_item.save()
             cart_item.product.stock+=1
-        else:
-            messages.warning(request, f"{cart_item.product.product_name} is out of stock.")
+       
     except CartItem.DoesNotExist:
         pass  # Handle the case when the item does not exist in the cart
     return redirect('cart')  # Redirect back to the cart page after decreasing the item quantity
@@ -554,8 +557,8 @@ def increase_item(request, item_id):
         if cart_item.product.stock > 0:
             cart_item.quantity += 1
             cart_item.save()
-            cart_item.product.stock -= 1
             cart_item.product.save()
+            cart_item.product.stock -= 1
         else:
             messages.warning(request, f"{cart_item.product.product_name} is out of stock.")
     except CartItem.DoesNotExist:
@@ -986,11 +989,11 @@ def seller_orders(request):
                 'total_amount': total_amount,
                 'unique_customers': orders.values('user').distinct().count()
             })
-
         context = {
             'product_sales': product_sales
         }
-        print(total_amount)
+    
+
         return render(request, 'seller_orders.html', context)
     else:
         return redirect('seller_register')
@@ -1025,6 +1028,38 @@ def monthly_sales(request):
             'product_sales': product_sales
         }
 
-        return render(request, 'sales_month.html', context)
+        return render(request, 'salesmonth.html', context)
     else:
         return redirect('seller_register')
+    
+
+
+
+
+
+
+
+
+# Example: Creating a notification when a product's stock is low
+
+@login_required
+def low_stock_notification(request, seller_id):
+    products=Product.objects.filter(seller_id=seller_id)
+    for i in products:
+        if i.stock<5:
+            stock=Notification(
+                seller_id=seller_id,
+                message="The product "+i.product_name+" is on low stock with "+str(i.stock),
+            )
+            stock.save()
+    return redirect("seller_index")
+@login_required
+def showNotification(request,seller_id):
+    notifications=Notification.objects.filter(seller_id=seller_id)
+    return render(request,"notification_list.html",{'notifications':notifications})
+@login_required
+def mark_notifications_as_read(request):
+    noti=Notification.objects.get(seller_id=request.user.id)
+    noti.read=True
+    noti.save()
+    return redirect('seller_index')
