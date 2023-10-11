@@ -1059,7 +1059,6 @@ def showNotification(request,seller_id):
     return render(request,"notification_list.html",{'notifications':notifications})
 @login_required
 def mark_notifications_as_read(request):
-    noti=Notification.objects.get(seller_id=request.user.id)
-    noti.read=True
-    noti.save()
+    noti=Notification.objects.filter(seller_id=request.user.id,read=False)
+    noti.delete()
     return redirect('seller_index')
