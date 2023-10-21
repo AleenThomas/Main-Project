@@ -172,5 +172,9 @@ class Notification(models.Model):
     message = models.TextField()
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+class PredictionImage(models.Model):
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='products/', null=True, blank=True)
+    prediction=models.CharField(max_length=120,null=True)
 
 

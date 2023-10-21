@@ -43,7 +43,11 @@ urlpatterns = [
     
     path('low-stock-notification/<int:seller_id>/', views.low_stock_notification, name='low_stock_notification'),
     path('show_notification/<int:seller_id>',views.showNotification,name="show_notification"),
-    path('mark_notifications_as_read/',views.mark_notifications_as_read,name="mark_notifications_as_read")
+    path('mark_notifications_as_read/',views.mark_notifications_as_read,name="mark_notifications_as_read"),
+    path('quality/',views.quality,name="quality"),
+    path('predict/', views.predict, name='predict'),
+    path('upload_image/', views.upload_image, name='upload_image'),
+    path('result/', views.result, name='result'),
 
     # path('notifications/', views.notification_list, name='notification_list'),
     # path('notifications/mark_as_read/', views.mark_notifications_as_read, name='mark_notifications_as_read'),

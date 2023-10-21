@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predict</title>
+</head>
+<body>
+    <h1>Select a Model</h1>
+    <form method="post" action="{% url 'upload_image' %}">
+        {% csrf_token %}
+        <button type="submit" name="model" value="coffee">Coffee</button>
+        <button type="submit" name="model" value="cardamom">Cardamom</button>
+        
+    </form>
+</body>
+</html>

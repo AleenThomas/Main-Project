@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from .models import Customer_Profile
 # from .forms import ProductForm
-from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification
+from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification,PredictionImage
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
@@ -1062,3 +1062,147 @@ def mark_notifications_as_read(request):
     noti=Notification.objects.filter(seller_id=request.user.id,read=False)
     noti.delete()
     return redirect('seller_index')
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+import numpy as np
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import io
+def quality(request):
+    if request.method == 'POST':
+        img = request.FILES.get('image')
+        img2 = request.FILES.get('image')
+        print(img)
+        
+        # Check if the uploaded file is an image (you may want to add additional validation)
+        if img.content_type.startswith('image'):
+            model = load_model("models/Coffee.h5")
+            
+            # Read image data from the InMemoryUploadedFile
+            img_data = img.read()
+            
+            # Load the image from the image data
+            img = image.load_img(io.BytesIO(img_data), target_size=(224, 224))
+            img = image.img_to_array(img)
+            img = np.expand_dims(img, axis=0)
+            img = img / 255.0  # Normalize the image
+            print(img)
+            predict = model.predict(img)
+            predicted_class_index = np.argmax(predict)
+            print("Helllllllloooooooooo",predicted_class_index)
+            class_names = ["Dark", "Green", "Light", "Medium"]  # Update with your actual class names
+            predicted_class = class_names[predicted_class_index]
+            pred=PredictionImage(
+                user_id=request.user.id,
+                image=img2,
+                prediction=predicted_class
+            )
+            pred.save()
+            return render(request, "quality_check.html",{'prediction':predicted_class,'img':pred.image})
+        else:
+            print("The uploaded file is not an image.")
+    
+    return render(request, "quality_check.html")
+# def quality(request):
+#     if request.method == 'POST':
+#         img = request.FILES.get('image')
+#         img2 = request.FILES.get('image')
+#         print(img)
+        
+#         # Check if the uploaded file is an image (you may want to add additional validation)
+#         if img.content_type.startswith('image'):
+#             model = load_model("models/Cardamon_1.h5")
+            
+#             # Read image data from the InMemoryUploadedFile
+#             img_data = img.read()
+            
+#             # Load the image from the image data
+#             img = image.load_img(io.BytesIO(img_data), target_size=(224, 224))
+#             img = image.img_to_array(img)
+#             img = np.expand_dims(img, axis=0)
+#             img = img / 255.0  # Normalize the image
+#             print(img)
+#             predict = model.predict(img)
+#             predicted_class_index = np.argmax(predict)
+#             print("Helllllllloooooooooo",predicted_class_index)
+#             class_names = ["Good", "Bad", "Average"]  # Update with your actual class names
+#             predicted_class = class_names[predicted_class_index]
+#             pred=PredictionImage(
+#                 user_id=request.user.id,
+#                 image=img2,
+#                 prediction=predicted_class
+#             )
+#             pred.save()
+#             return render(request, "quality_check.html",{'prediction':predicted_class,'img':pred.image})
+#         else:
+#             print("The uploaded file is not an image.")
+    
+#     return render(request, "quality_check.html")
+
+
+class_names_coffee = ["Dark", "Green", "Light", "Medium"]
+class_names_cardamom = ["Good", "Bad", "Average"]
+
+def predict(request):
+    model_path = None  # Define model_path here, initialized as None
+    class_names = None  # Initialize class_names as None
+
+    if request.method == 'POST':
+        selected_model = request.POST.get('model')
+
+        if selected_model == "coffee":
+            model_path = "models/Coffee.h5"
+            class_names = class_names_coffee
+        elif selected_model == "cardamom":
+            model_path = "models/Cardamon_1.h5"
+            class_names = class_names_cardamom
+
+        selected_model = load_model(model_path)
+
+        return render(request, 'upload_image.html', {'model': selected_model, 'class_names': class_names, 'model_path': model_path})
+
+    return render(request, 'predict.html')
+from PIL import Image
+def upload_image(request):
+    if request.method == 'POST':
+        uploaded_image = request.FILES.get('image')
+        model = request.POST.get('model')
+        model_path = request.POST.get('model_path')  # Get model_path from the request.POST dictionary
+        class_names = []
+        if uploaded_image:
+            # Check if the uploaded file is an image (you may want to add additional validation)
+            if uploaded_image.content_type.startswith('image'):
+                if model == "coffee":
+                    class_names = class_names_coffee
+                elif model == "cardamom":
+                    class_names = class_names_cardamom
+
+                model = load_model(model_path)
+
+                # Load the image from the uploaded file
+                img = Image.open(uploaded_image)
+                img = img.resize((224, 224))  # Resize to the model's input size
+                img = np.array(img)
+                img = img / 255.0  # Normalize the image
+
+                img = np.expand_dims(img, axis=0)
+
+                predict = model.predict(img)
+                predicted_class_index = np.argmax(predict)
+                predicted_class = class_names[predicted_class_index]
+
+                # Save the image to your database if needed
+                pred = PredictionImage(
+                    user_id=request.user.id,  # You can modify this based on your user model
+                    image=uploaded_image,
+                    prediction=predicted_class
+                )
+                pred.save()
+
+                return render(request, 'result.html', {'predicted_class': predicted_class, 'image_url': uploaded_image.url})
+
+    return render(request, 'upload_image.html')
+
+def result(request):
+    # Assuming you want to pass some data to the result page
+    return render(request, 'result.html')
