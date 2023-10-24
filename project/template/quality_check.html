@@ -99,11 +99,11 @@
             <i class="fas fa-chart-area fa-fw me-3"></i
               ><span>Add Product</span>
           </a>
-          <a
+          {% comment %} <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-lock fa-fw me-3"></i><span>Profile</span></a
-            >
+            > {% endcomment %}
           <a
              href="{% url "seller_product_listing" %}"
              class="list-group-item list-group-item-action py-2 ripple"
@@ -144,11 +144,11 @@
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
             > {% endcomment %}
-          <a
+          {% comment %} <a
              href="{% url "monthly_sales" %}"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-money-bill fa-fw me-3"></i><span>Sales</span></a
-            >
+            > {% endcomment %}
             <a
              href="{% url "quality" %}"
              class="list-group-item list-group-item-action py-2 ripple"
@@ -157,14 +157,14 @@
             <i class="fas fa-tachometer-alt fa-fw me-3"></i
               ><span>Quality</span>
           </a>
-          <a
+          {% comment %} <a
              href="{% url "predict" %}"
              class="list-group-item list-group-item-action py-2 ripple"
              aria-current="true"
              >
             <i class="fas fa-tachometer-alt fa-fw me-3"></i
               ><span>Check</span>
-          </a>
+          </a> {% endcomment %}
         </div>
       </div>
     </nav>
@@ -232,7 +232,7 @@
     <div class="container pt-4">
       
         <div class="container">
-            <h1 class="mt-5">Image Classification</h1>
+            <h1 class="mt-5">Quality Check</h1>
     
             <form method="post" enctype="multipart/form-data" class="mt-4">
                 {% csrf_token %}
