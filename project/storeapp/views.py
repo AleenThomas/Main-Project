@@ -43,11 +43,14 @@ def index(request):
     
 def contact(request):
     return render(request,'contact.html')
+def loginredirect(request):
+    return render(request,'login_redirect.html')
 # def sellerindex(request):
 #     return render(request,'sellerindex.html')
 # def reg_step(request):
 #     return render(request,'reg_step.html')
 
+@login_required(login_url='loginredirect')
 
 def wishlist_view(request):
     if request.user.is_authenticated:
@@ -57,14 +60,14 @@ def wishlist_view(request):
     else:
         return render(request, 'login_required.html')
 
-@login_required
+@login_required(login_url='loginredirect')
 def add_to_wishlist(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     wishlist.products.add(product)
     return JsonResponse({'message': 'Product added to wishlist'})
 
-@login_required
+@login_required(login_url='loginredirect')
 def remove_from_wishlist(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     wishlist = get_object_or_404(Wishlist, user=request.user)
@@ -375,7 +378,7 @@ def product_detail(request, product_id):
 
 
 
-@login_required(login_url='custom_login')
+@login_required(login_url='loginredirect')
 def seller_product_listing(request):
     if request.user.is_seller:
         current_seller = request.user
@@ -393,7 +396,7 @@ def seller_product_listing(request):
 
 
 
-@login_required(login_url='custom_login')
+@login_required(login_url='loginredirect')
 def add_product(request):
     if request.user.is_seller:
         if request.method == 'POST':
@@ -471,7 +474,7 @@ def add_product(request):
 
 
 
-@login_required(login_url='custom_login')
+@login_required(login_url='loginredirect')
 def customer_Profile(request):
     user_profile, created = Customer_Profile.objects.get_or_create(customer=request.user)
 
@@ -495,7 +498,7 @@ def customer_Profile(request):
     return render(request,'custprofile.html', context)
 
 
-@login_required
+@login_required(login_url='loginredirect')
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     # cart_item = CartItem.objects.get_or_create(user=request.user, product_id=product.id)
@@ -515,7 +518,7 @@ def add_to_cart(request, product_id):
 
     return redirect('shop')
 
-@login_required
+@login_required(login_url='loginredirect')
 def cart(request):
     cart_items = CartItem.objects.filter(user=request.user, is_active=True)
     total_price = sum(item.product.price * item.quantity for item in cart_items)
@@ -811,7 +814,7 @@ def paymenthandler(request):
                 return HttpResponse('No cart items found for the order.')
 
     
-@login_required
+@login_required(login_url='loginredirect')
 def print_as_pdf(request, cart_id):
     try:
         # Get the cart based on cart_id and make sure it belongs to the logged-in user
