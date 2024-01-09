@@ -208,9 +208,9 @@
       <div class="alert alert-danger text-center" >{{ message }}</div>
       {% endfor %}            
     {% endif %}
-    {% if total_items > 5 %}
+    {% comment %} {% if total_items > 5 %}
         <div class="alert alert-danger text-center">You have more than 5 items in your cart. Please consider checking out soon.</div>
-    {% endif %}
+    {% endif %} {% endcomment %}
       <div class="row">
         <div class="col-md-8 cart">
           <div class="title">

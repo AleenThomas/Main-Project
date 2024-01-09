@@ -1,12 +1,9 @@
 from django.db import models
 from django.utils import timezone
 
-
-
 # Create your models here.
 # from.models import CustomUser
 # from django.contrib.auth import get_user_model
-
 # User = get_user_model()
 from userapp.models import CustomUser
 from django.contrib.auth.models import AbstractUser
@@ -80,7 +77,6 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return self.user.username + "'s Wishlist"
-
 
 
 # # class Customer(models.Model):

@@ -34,7 +34,7 @@ class Hosttest(TestCase):
         # Find and fill in the password field
         password = driver.find_element(By.CSS_SELECTOR, "input[name='password'][id='your_pass']")
         password.send_keys("Ria@12")
-        print("Test passed -wishlist")
+        print("Test passed ")
         # Wait for a few seconds to ensure the form is ready
         time.sleep(2)
 
@@ -55,7 +55,12 @@ class Hosttest(TestCase):
         time.sleep(2)
         cart_view=driver.find_element(By.CSS_SELECTOR,"i.fa.fa-fw.fa-cart-arrow-down.text-light.mr-1")
         cart_view.click()
-        print("Test passed - cart")
+
+        if "http://127.0.0.1:8000/" in driver.current_url:
+            print("Test Passed-cart")
+        else:
+            print("Test Failed-wishlist")
+        self.assertIn("http://127.0.0.1:8000/", driver.current_url)
         time.sleep(2)
         cart_exit=driver.find_element(By.CSS_SELECTOR,"a[href='/shop/']")
         cart_exit.click()

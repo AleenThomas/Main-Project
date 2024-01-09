@@ -9,6 +9,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+from django.views.decorators.cache import never_cache
+
 # from storeapp.models import UserProfile
 from django.contrib.auth import authenticate, login as auth_login
 # Create your views here.
@@ -112,7 +114,7 @@ def seller_register(request):
 
 
 
-
+@never_cache
 def custom_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')

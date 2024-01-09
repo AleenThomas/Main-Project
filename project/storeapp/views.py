@@ -43,6 +43,7 @@ def index(request):
     
 def contact(request):
     return render(request,'contact.html')
+@never_cache
 def loginredirect(request):
     return render(request,'login_redirect.html')
 # def sellerindex(request):
@@ -51,7 +52,7 @@ def loginredirect(request):
 #     return render(request,'reg_step.html')
 
 @login_required(login_url='loginredirect')
-
+@never_cache
 def wishlist_view(request):
     if request.user.is_authenticated:
         wishlist = Wishlist.objects.get_or_create(user=request.user)[0]
@@ -100,7 +101,7 @@ def update_wishlist_quantity(request, product_id, new_quantity):
 
 
 
-
+@never_cache
 def seller_reg_step(request):
     if request.method == 'POST':
         step = request.POST.get('step')
@@ -372,6 +373,7 @@ def shop(request):
     return render(request, 'shop.html', context)
 
 # @login_required
+
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     return render(request, 'shop-single.html', {'product': product})
@@ -562,6 +564,7 @@ def increase_item(request, item_id):
             cart_item.save()
             cart_item.product.save()
             cart_item.product.stock -= 1
+
         else:
             messages.warning(request, f"{cart_item.product.product_name} is out of stock.")
     except CartItem.DoesNotExist:
