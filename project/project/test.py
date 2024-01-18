@@ -34,7 +34,7 @@ class Hosttest(TestCase):
         # Find and fill in the password field
         password = driver.find_element(By.CSS_SELECTOR, "input[name='password'][id='your_pass']")
         password.send_keys("Ria@12")
-
+        print("Test passed -wishlist")
         # Wait for a few seconds to ensure the form is ready
         time.sleep(2)
 
@@ -50,11 +50,12 @@ class Hosttest(TestCase):
         shop=driver.find_element(By.CSS_SELECTOR,"a.nav-link[href='/shop/']")
         shop.click()
         time.sleep(2)
-        cart=driver.find_element(By.CSS_SELECTOR,"a.btn.btn-success.text-white[href='/add_to_cart/3/']")
+        cart=driver.find_element(By.CSS_SELECTOR,"a.btn.btn-success.text-white.mt-2")
         cart.click()
         time.sleep(2)
         cart_view=driver.find_element(By.CSS_SELECTOR,"i.fa.fa-fw.fa-cart-arrow-down.text-light.mr-1")
         cart_view.click()
+        print("Test passed - cart")
         time.sleep(2)
         cart_exit=driver.find_element(By.CSS_SELECTOR,"a[href='/shop']:contains('←')")
         cart_exit.click()
@@ -68,6 +69,7 @@ class Hosttest(TestCase):
         wish_view=driver.find_element(By.CSS_SELECTOR,"a.btn.btn-success i.fas.fa-heart")
         wish_view.click()
         time.sleep(2)
+        
 
         
 

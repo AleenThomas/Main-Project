@@ -74,6 +74,11 @@
                 overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
               }
 
+              .list-group :hover{
+                background-color:#66c2ff; /* Set the background color to blue */
+                padding: 0; /* Optionally, adjust padding as needed */
+              }
+             
         </style>
     </head>
 
@@ -96,7 +101,7 @@
           </a>
           <a
              href="{% url "add_product" %}"
-             class="list-group-item list-group-item-action py-2 ripple active"
+             class="list-group-item list-group-item-action py-2 ripple "
              >
             <i class="fas fa-chart-area fa-fw me-3"></i
               ><span>Add Product</span>

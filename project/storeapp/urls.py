@@ -48,6 +48,8 @@ urlpatterns = [
     path('predict/', views.predict, name='predict'),
     path('upload_image/', views.upload_image, name='upload_image'),
     path('result/', views.result, name='result'),
+    path('sales_report/', views.sales_report, name='sales_report'),
+
 
     # path('notifications/', views.notification_list, name='notification_list'),
     # path('notifications/mark_as_read/', views.mark_notifications_as_read, name='mark_notifications_as_read'),
@@ -59,4 +61,12 @@ urlpatterns = [
 
     # ----------------------------------admin--------------------------------------
     # path('index_admin/', views.index_admin, name='index_admin'),
+    
+    
+    
+    
+    
+    #-----------------MAIN----------------------------
+    # path('customer_ProductView/<int:product_id>/',views.customer_ProductView,name='customer_ProductView'),
+    path('add_review/<int:product_id>/', views.add_review, name='add_review'),
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

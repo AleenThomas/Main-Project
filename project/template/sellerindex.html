@@ -63,6 +63,11 @@
                 overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
               }
 
+              .list-group :hover{
+                background-color:#66c2ff; /* Set the background color to blue */
+                padding: 0; /* Optionally, adjust padding as needed */
+              }
+
         </style>
     </head>
 
@@ -94,7 +99,7 @@
           </a>
           <a
              href="{% url "add_product" %}"
-             class="list-group-item list-group-item-action py-2 ripple active"
+             class="list-group-item list-group-item-action py-2 ripple "
              >
             <i class="fas fa-chart-area fa-fw me-3"></i
               ><span>Add Product</span>
@@ -121,12 +126,12 @@
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-chart-bar fa-fw me-3"></i><span>Orders</span></a
             >
-          {% comment %} <a
-             href=""
+          <a
+             href="{% url "sales_report" %}"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-globe fa-fw me-3"></i
-            ><span>International</span></a
-            > {% endcomment %}
+            ><span>Sales Report</span></a
+            > 
           {% comment %} <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
@@ -218,7 +223,11 @@
               <a class="dropdown-item" href="{% url "seller_product_listing" %}">Register</a>
               <a class="dropdown-item" href="{% url "custom_login" %}">Login</a>
               <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
+              {% if user.is_authenticated %}
+                    <h6 class=" text-dark" >{{user.name}}<h6>
+              {% endif %}
             </div>
+            
           </li>
         </ul>
       </div>

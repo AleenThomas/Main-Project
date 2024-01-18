@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from .models import Customer_Profile
 # from .forms import ProductForm
-from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification,PredictionImage
+from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification,PredictionImage,CustomerReview
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
@@ -354,6 +354,7 @@ def seller_index(request):
         return redirect('seller_reg_step')
 
 
+from django.db.models import Avg
 
 @never_cache    
 def shop(request):
@@ -362,16 +363,26 @@ def shop(request):
     paginator = Paginator(supplier_products, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    average_rating = supplier_products.aggregate(Avg('average_rating')).get('average_rating', 0)
+    
     context = {
         'supplier_products': supplier_products,
-        'page':page
+        'page':page,
+        'average_rating': average_rating,
+        
+        
+        
     }
     return render(request, 'shop.html', context)
 
 # @login_required
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
-    return render(request, 'shop-single.html', {'product': product})
+    reviews = CustomerReview.objects.filter(product=product)
+    print(reviews)
+
+    return render(request, 'shop-single.html', {'product': product,'reviews': reviews
+})
 
 
 
@@ -1206,3 +1217,49 @@ def upload_image(request):
 def result(request):
     # Assuming you want to pass some data to the result page
     return render(request, 'result.html')
+# @login_required(login_url='user_login')
+# def customer_ProductView(request, product_id):
+#     product = get_object_or_404(Product, pk=product_id)
+#     # product_category = product.product_category
+#     # product_subcategory = product.product_subcategory
+
+#     # Fetch related products and reviews
+#     related_products = Product.objects.filter(
+#         product_category=product_category,
+#         status__in=['in_stock', 'out_of_stock']
+#     ).exclude(pk=product_id)[:4]
+
+#     reviews = CustomerReview.objects.filter(product=product)
+
+#     context = {
+#         'product': product,
+#         'product_category': product_category,
+#         'product_subcategory': product_subcategory,
+#         'related_products': related_products,
+#         'reviews': reviews,
+#     }
+
+#     return render(request, 'customer_ProductView.html', context)
+
+@login_required
+def add_review(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    
+    if request.method == 'POST':
+        rating = int(request.POST.get('rating'))
+        comment = request.POST.get('comment')
+
+        # Check if the user has already reviewed the product
+        existing_review = CustomerReview.objects.filter(product=product, user=request.user).exists()
+
+        if not existing_review:
+            # Create a new review
+            review = CustomerReview.objects.create(product=product, user=request.user, rating=rating, comment=comment)
+            return redirect('product_detail', product_id=product_id)
+        else:
+            return JsonResponse({'success': False, 'message': 'You have already reviewed this product.'})
+
+    return redirect('product_detail', product_id=product_id)
+def sales_report(request):
+    
+    return render(request,'sales-report.html')

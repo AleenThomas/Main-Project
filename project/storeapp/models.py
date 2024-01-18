@@ -41,6 +41,7 @@ class Product(models.Model):
     brand_name = models.CharField(max_length=255, default="",null=True)
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     batch_no=models.CharField(max_length=10,default="",null=True)
+    average_rating = models.FloatField(default=0.0)
 
     # Define choices for the status field
     STATUS_CHOICES = [
@@ -176,5 +177,20 @@ class PredictionImage(models.Model):
     user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/', null=True, blank=True)
     prediction=models.CharField(max_length=120,null=True)
+    
+    
+from django.db.models import Avg
+class CustomerReview(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update the average rating of the associated product
+        self.product.average_rating = CustomerReview.objects.filter(product=self.product).aggregate(Avg('rating'))['rating__avg'] or 0
+        self.product.save()
 
 

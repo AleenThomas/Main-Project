@@ -1,0 +1,480 @@
+{% load static %}
+<!--Main Navigation-->
+<html>
+
+<head>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script defer
+        src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+        integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+        crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/progressbar.js@1.0.0/dist/progressbar.min.css">
+
+
+    <style>
+        body {
+            background-color: #fbfbfb;
+        }
+
+        @media (min-width: 991.98px) {
+            main {
+                padding-left: 240px;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 58px 0 0;
+            /* Height of navbar */
+            box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+            width: 240px;
+            z-index: 600;
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        .sidebar .active {
+            border-radius: 5px;
+            box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+        }
+
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: 0.5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+            /* Scrollable contents if viewport is shorter than content. */
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Additional Styles for Controls */
+        .controls {
+            display: inline-block;
+            padding: 8px;
+            margin-right: 8px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .veControl {
+            display: inline-block;
+            padding: 8px;
+            margin-right: 8px;
+            cursor: pointer;
+            background-color: #2ecc71;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #container {
+            display: table;
+            width: 1200px;
+            background: #202b33;
+            margin: 60px auto;
+            border-radius: 4px;
+            overflow: hidden;
+          }
+        #content {
+            width: calc(100% - 240px);
+            height: 100%;
+            padding: 25px;
+            display: table-cell;
+          }
+          #titleBar {
+            height: 36px;
+            margin-bottom: 30px;
+          }
+          #profilePic {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #999;
+            float: right;
+            margin-top: -8px;
+            margin-left: 14px;
+            overflow: hidden;
+          }
+          #profilePic img {
+            width: 100%;
+          }
+    .controls {
+      display: block;
+      width: 70px;
+      height: 20px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 10px;
+      font-weight: 300;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 20px;
+      float: right;
+      border-radius: 20px;
+    }
+    .activeControl {
+      background: rgba(255, 255, 255, 0.9);
+      color: #202b33;
+      font-weight: 600;
+    }
+    #salesData {
+      margin-bottom: 60px;
+    }
+    #totalSales {
+      height: 120px;
+      position: relative;
+      margin-top: 24px;
+      margin-bottom: 50px;
+    }
+    #totalSales .col {
+      float: left;
+      width: 33.33%;
+      height: 100%;
+    }
+    #totalSales .col .progressTitle {
+      float: left;
+      margin-left: 20px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.4);
+    }
+    .progressBar {
+      float: left;
+      height: 120px;
+      width: 120px;
+      font-size: 40px;
+      text-align: center;
+      line-height: 120px;
+    }
+    
+    /* Icons */
+    .notification {
+      display: block;
+      width: 20px;
+      height: 20px;
+      color: #202b33;
+      font-weight: 600;
+      line-height: 20px;
+      text-align: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .6);
+      position: absolute;
+      top: 0; bottom: 0; right: 2%;
+      margin: auto;
+    }
+    .colorIcon {
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      position: absolute;
+      top: 0; bottom: 0; right: 2%;
+      margin: auto;
+    }
+    .plus {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      color: #202b33;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 8px;
+      padding: 4px;
+      margin-right: 6px;
+      border: 2px solid rgba(255, 255, 255, .2);
+      border-radius: 50%;
+      color: rgba(255, 255, 255, .2);
+    }
+    .red {
+      background: #ec1561;
+    }
+    .orange {
+      background: #ff9939;
+    }
+    .green {
+      background: #2bab51;
+    }
+    
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <!-- Sidebar -->
+        <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'img/gusto (2).png' %}" height="20" alt="" loading="lazy" />
+            </a>
+            <div class="position-sticky">
+                <div class="list-group list-group-flush mx-3 mt-4">
+                    <!-- Your existing sidebar links go here -->
+                    <a href="{% url "seller_index" %}"
+                        class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+                        <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Main dashboard</span>
+                    </a>
+                    <a href="{% url "add_product" %}" class="list-group-item list-group-item-action py-2 ripple active">
+                        <i class="fas fa-chart-area fa-fw me-3"></i><span>Add Product</span>
+                    </a>
+                    <!-- Add a link for Sales Report -->
+                    <a href="{% url "sales_report" %}" class="list-group-item list-group-item-action py-2 ripple">
+                        <i class="fas fa-globe fa-fw me-3"></i><span>Sales Report</span>
+                    </a>
+                    <!-- Add other links as needed -->
+                </div>
+            </div>
+        </nav>
+        <!-- Sidebar -->
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="content">
+                <div class="contentTop">
+                    <div class="clearFix"></div>
+                </div>
+
+                <div id="mainChart" class="mainChart">
+                    <span class="veControl">Weekly</span>
+                    <span class="controls">Monthly</span>
+
+                    <canvas id="salesData"></canvas>
+                    <h2>Total Sales</h2>
+
+                    <div class="clearFix"></div>
+
+                    <div id="totalSales">
+                        <div class="col">
+                            <div id="creditSales" class="progressBar"></div>
+                            <h3>$36,059</h3>
+                            <span class="progressTitle">Credit Sales</span>
+                        </div>
+                        <div class="col">
+                            <div id="channelSales" class="progressBar"></div>
+                            <h3>$24,834</h3>
+                            <span class="progressTitle">Channel Sales</span>
+                        </div>
+                        <div class="col">
+                            <div id="directSales" class="progressBar"></div>
+                            <h3>$15,650</h3>
+                            <span class="progressTitle">Direct Sales</span>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>November Sales</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+
+                        <tr>
+                            <td>Dallas Oak Dining Chair</td>
+                            <td>20</td>
+                            <td>$1,342</td>
+                        </tr>
+
+                        <tr>
+                            <td>Benmore Glass Coffee Table</td>
+                            <td>18</td>
+                            <td>$1,550</td>
+                        </tr>
+
+                        <tr>
+                            <td>Aoraki Leather Sofa</td>
+                            <td>15</td>
+                            <td>$4,170</td>
+                        </tr>
+
+                        <tr>
+                            <td>Bali Outdoor Wicker Chair</td>
+                            <td>25</td>
+                            <td>$2,974</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Include Bootstrap JavaScript and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Your existing Chart.js code goes here
+        // ...
+
+        // Example sales data for the chart
+        var salesData = {
+            labels: ['Dallas Oak Dining Chair', 'Benmore Glass Coffee Table', 'Aoraki Leather Sofa', 'Bali Outdoor Wicker Chair'],
+            datasets: [{
+                label: 'Sales',
+                data: [20, 18, 15, 25],
+                backgroundColor: ['rgba(255, 99, 132, 1)', 'rgba(255, 205, 86, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 159, 64, 1)'],
+                borderWidth: 1
+            }]
+        };
+
+        // Get the chart context
+        var ctx = document.getElementById('salesData').getContext('2d');
+
+        // Create the chart
+        var salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: salesData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
+
+    <script src="https://rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/progressbar.js"></script>
+
+
+
+    <script>
+        var salesData = {
+            labels: ['Dallas Oak Dining Chair', 'Benmore Glass Coffee Table', 'Aoraki Leather Sofa', 'Bali Outdoor Wicker Chair'],
+            datasets: [{
+                label: 'Sales',
+                data: [20, 18, 15, 25],
+                backgroundColor: ['rgba(255, 99, 132, 1)', 'rgba(255, 205, 86, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 159, 64, 1)'],
+                borderWidth: 1
+            }]
+        };
+    
+        // Get the chart context
+        var ctx = document.getElementById('salesData').getContext('2d');
+    
+        // Create the chart
+        var salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: salesData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    
+        //Credit Sales
+        var creditSales = new ProgressBar.Circle('#creditSales', {
+            color: '#e81760',
+            strokeWidth: 3,
+            trailWidth: 3,
+            duration: 1500,
+            text: {
+                value: '0%'
+            },
+            step: function (state, bar) {
+                bar.setText((bar.value() * 100).toFixed(0) + "%");
+            }
+        });
+        var channelSales = new ProgressBar.Circle('#channelSales', {
+            color: '#e88e3c',
+            strokeWidth: 3,
+            trailWidth: 3,
+            duration: 1500,
+            text: {
+                value: '0%'
+            },
+            step: function (state, bar) {
+                bar.setText((bar.value() * 100).toFixed(0) + "%");
+            }
+        });
+        var directSales = new ProgressBar.Circle('#directSales', {
+            color: '#2bab51',
+            strokeWidth: 3,
+            trailWidth: 3,
+            duration: 1500,
+            text: {
+                value: '0%'
+            },
+            step: function (state, bar) {
+                bar.setText((bar.value() * 100).toFixed(0) + "%");
+            }
+        });
+        creditSales.animate(0.8);
+        channelSales.animate(0.64);
+        directSales.animate(0.34);
+    </script>
+</body>
+
+</html>

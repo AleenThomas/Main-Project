@@ -21,6 +21,30 @@
     <!-- Slick -->
     <link rel="stylesheet" type="text/css" href="{% static 'css\slick.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css\slick-theme.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+
+
+
+
+
+
+
+    <style>
+        /* Add this to your existing CSS file or create a new one */
+
+        .star-rating {
+            display: inline-block;
+            font-size: 24px;
+            color: #ffd700; /* Yellow color for filled stars */
+        }
+
+        .star-rating i {
+            cursor: pointer;
+        }
+
+    </style>
 <!--
     
 TemplateMo 559 Zay Shop
@@ -79,6 +103,9 @@ https://templatemo.com/tm-559-zay-shop
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'shop' %}">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">Review</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'add_product' %}">Contact</a>
@@ -261,6 +288,65 @@ https://templatemo.com/tm-559-zay-shop
             </div>
         </div>
     </section>
+
+
+
+
+
+
+
+    <!-- Your existing HTML code -->
+
+
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="fw-bolder mb-4">Customer Reviews</h2>
+            <!-- Update the form for new reviews -->
+            <form method="post" action="{% url 'add_review' product_id=product.id %}">
+                {% csrf_token %}
+                <!-- Rating field as stars -->
+                <div class="mb-3">
+                    <label for="inputRating" class="form-label">Your Rating:</label>
+                    <div class="star-rating">
+                        <input type="hidden" id="inputRating" name="rating" value="0">
+                        <i class="far fa-star" onclick="setRating(1)"></i>
+                        <i class="far fa-star" onclick="setRating(2)"></i>
+                        <i class="far fa-star" onclick="setRating(3)"></i>
+                        <i class="far fa-star" onclick="setRating(4)"></i>
+                        <i class="far fa-star" onclick="setRating(5)"></i>
+                    </div>
+                </div>
+                <!-- Comment field -->
+                <div class="mb-3">
+                    <label for="inputComment" class="form-label">Your Comment:</label>
+                    <textarea class="form-control" id="inputComment" name="comment" rows="3" required></textarea>
+                </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+    
+            <!-- Add space above the heading -->
+            <div class="mt-4"></div>
+            <div class="customer-reviews-box border p-4">
+                <!-- Display existing reviews -->
+            {% for review in reviews %}
+                <div>
+                    <p><strong>{{ review.user.email }}</strong> - {{ review.created_at|date:"F d, Y" }}</p>
+                    <p>Rating: 
+                        {% for _ in ""|ljust:review.rating %}
+                            <i class="fas fa-star text-warning"></i>
+                        {% endfor %}
+                        
+                    </p>
+                    <p>{{ review.comment }}</p>
+                </div>
+            {% endfor %}
+    
+            </div>
+        </div>
+    </section>
+<!-- Your existing HTML code continues -->
+
     <!-- Close Content -->
 
     <!-- Start Article -->
@@ -896,7 +982,39 @@ https://templatemo.com/tm-559-zay-shop
             ]
         });
     </script>
+
+
+    <script>
+        function setRating(starValue) {
+            // Get the hidden rating input
+            const ratingInput = document.getElementById("inputRating");
+        
+            // Toggle the selection when the same star is clicked twice
+            if (ratingInput.value == starValue) {
+                ratingInput.value = 0; // Reset the rating if clicked twice
+            } else {
+                ratingInput.value = starValue; // Set the rating value
+            }
+        
+            // Update the styling of the stars based on the selected value
+            const starIcons = document.querySelectorAll('.star-rating i');
+        
+            starIcons.forEach((starIcon, index) => {
+                if (index + 1 <= ratingInput.value) {
+                    // Add the filled class for selected stars
+                    starIcon.classList.remove('far');
+                    starIcon.classList.add('fas');
+                } else {
+                    // Remove the filled class for unselected stars
+                    starIcon.classList.remove('fas');
+                    starIcon.classList.add('far');
+                }
+            });
+        }
+        
+      </script>
     <!-- End Slider Script -->
+    <script src="{% static 'js/rating.js' %}"></script>
 
 </body>
 

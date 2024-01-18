@@ -328,7 +328,24 @@ https://templatemo.com/tm-559-zay-shop
                                 </div>
                             </div>
                             <div class="card-body">
-                                <a href="shop-single.html" class="h3 text-decoration-none">{{ product.product_name }}</a>
+                                <a href="shop-single.html" class="h3 text-decoration-none">{{ product.product_name }}</a><br>
+                                {% comment %} {% if product.average_rating == 0.0 %}
+    <p>No ratings</p>
+{% else %}
+{% with range_list=range(product.average_rating|floatformat:0|add:0|make_list) %}
+    <script>
+        console.log({{ range_list|safe }});
+    </script>
+
+    {% for i in range_list %}
+        <script>
+            console.log("{{ i }}");
+        </script>
+        <i class="fas fa-star text-warning"></i>
+    {% endfor %}
+{% endwith %}
+{% endif %} {% endcomment %}
+
                                 {% comment %} <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
                                     <li>M/L/X/XL</li>
                                     <li class="pt-2">
@@ -339,15 +356,19 @@ https://templatemo.com/tm-559-zay-shop
                                         <span class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
                                     </li>
                                 </ul> {% endcomment %}
-                                <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                    <li>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-muted fa fa-star"></i>
-                                        <i class="text-muted fa fa-star"></i>
-                                    </li>
-                                </ul>
+                                {% comment %} <ul class="list-unstyled d-flex justify-content-center mb-1">
+                                    {% for _ in range(average_rating|default:0) %}
+                                        <li>
+                                            <i class="text-warning fa fa-star"></i>
+                                        </li>
+                                    {% endfor %}
+                                    {% for _ in range(5 - average_rating|default:0) %}
+                                        <li>
+                                            <i class="text-muted fa fa-star"></i>
+                                        </li>
+                                    {% endfor %}
+                                </ul> {% endcomment %}
+                                
                                 <p class="text-center mb-0">₹{{ product.price }}</p>
                             </div>
                         </div>

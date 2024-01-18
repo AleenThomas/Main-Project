@@ -63,6 +63,11 @@
                 overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
               }
 
+              .list-group :hover{
+                background-color:#66c2ff; /* Set the background color to blue */
+                padding: 0; /* Optionally, adjust padding as needed */
+              }
+
         </style>
     </head>
 
@@ -94,7 +99,7 @@
           </a>
           <a
              href="{% url "add_product" %}"
-             class="list-group-item list-group-item-action py-2 ripple active"
+             class="list-group-item list-group-item-action py-2 ripple "
              >
             <i class="fas fa-chart-area fa-fw me-3"></i
               ><span>Add Product</span>
@@ -240,11 +245,11 @@
                     <label for="image" class="form-label">Select an Image</label>
                     <input type="file" class="form-control" id="image" name="image" accept="image/*">
                 </div>
-                <button type="submit" class="btn btn-primary">Predict</button>
+                <button type="submit" class="btn btn-primary">Check</button>
             </form>
     
             {% if prediction %}
-                <h2 class="mt-4">Prediction: {{prediction}}</h2>
+                <h2 class="mt-4">Coffee bean roast level : {{prediction}}</h2>
                 <img src="{{ img.url }}" alt="Predicted Image" class="img-fluid mt-3">
             {% endif %}
         </div>
