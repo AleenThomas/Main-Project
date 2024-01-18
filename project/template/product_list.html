@@ -106,18 +106,23 @@
             <i class="fas fa-chart-area fa-fw me-3"></i
               ><span>Add Product</span>
           </a>
-          <a
+          {% comment %} <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-lock fa-fw me-3"></i><span>Profile</span></a
-            >
+            > {% endcomment %}
           <a
              href="{% url "seller_product_listing" %}"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-chart-line fa-fw me-3"></i
             ><span>View Product</span></a
             >
-          <a
+            <a
+             href="{% url "seller_orders" %}"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-chart-bar fa-fw me-3"></i><span>Orders</span></a
+            >
+          {% comment %} <a
              href=""
              class="list-group-item list-group-item-action py-2 ripple"
              >
@@ -155,7 +160,15 @@
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-money-bill fa-fw me-3"></i><span>Sales</span></a
-            >
+            > {% endcomment %}
+            <a
+             href="{% url "quality" %}"
+             class="list-group-item list-group-item-action py-2 ripple"
+             aria-current="true"
+             >
+            <i class="fas fa-tachometer-alt fa-fw me-3"></i
+              ><span>Quality</span>
+          </a>
         </div>
       </div>
     </nav>
@@ -186,7 +199,7 @@
             <li class="nav-item">
               <a class="nav-link" href="#">
                 <i class="fas fa-bell"></i>
-                <span class="badge badge-danger">1</span>
+                <span class="badge badge-danger"></span>
               </a>
             </li>
       
@@ -252,7 +265,7 @@
                         <th scope="col" width="10%">quantity</th>
                         <th scope="col" width="15%">Instock</th>
                         <th scope="col" width="15%">Date</th>
-                        <th scope="col" width="10%">Batch Id</th>
+                        {% comment %} <th scope="col" width="10%">Batch Id</th> {% endcomment %}
 
                         <th scope="col" class="text-end" width="30%"><span></span></th>
                     </tr>
@@ -270,7 +283,7 @@
                         <td class="quantity"> {{ product.quantity_value }}/{{product.quantity_prefix}}</td>
                         <td class="stock">{{ product.stock }}</td>
                         <td class="date">{{ product.date_added }}</td>
-                        <td class="product-name">{{ product.batch_no }}</td>
+                        {% comment %} <td class="product-name">{{ product.batch_no }}</td> {% endcomment %}
 
                         <td class="text-end">
                             <a href={% url "update_product" product.id %}><button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>

@@ -18,7 +18,9 @@
         <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
      
         <style>
-
+          .error-message {
+            color: red;
+        }
             body {
                 background-color: #fbfbfb;
               }
@@ -135,7 +137,7 @@
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-money-bill fa-fw me-3"></i><span>Sales</span></a
-            > {% endcomment %}
+            >
         </div>
       </div>
     </nav>
@@ -166,7 +168,7 @@
             <li class="nav-item">
               <a class="nav-link" href="#">
                 <i class="fas fa-bell"></i>
-                <span class="badge badge-danger">1</span>
+                <span class="badge badge-danger"></span>
               </a>
             </li>
       
@@ -187,6 +189,9 @@
                 <a class="dropdown-item" href="{% url "seller_product_listing" %}">Register</a>
                 <a class="dropdown-item" href="{% url "custom_login" %}">Login</a>
                 <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
+                {% if user.is_authenticated %}
+                    <h6 class=" text-dark" >{{user.name}}<h6>
+              {% endif %}
               </div>
             </li>
           </ul>
@@ -206,16 +211,19 @@
                 <div class="col-md-6 mb-3">
                     <label for="product_name" class="form-label">Product Name:</label>
                     <input type="text" class="form-control" id="product_name" name="product_name" required>
+                    <div class="error-message" id="product_name_error"></div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="description" class="form-label">Description:</label>
                     <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                    <div class="error-message" id="product_name_error"></div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="image" class="form-label">Image:</label>
                     <input type="file" class="form-control" id="image" name="image" accept=".jpg, .jpeg, .png" required>
+                    <div class="error-message" id="image_error"></div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="quantity4" class="form-label">Quantity:</label>
@@ -225,6 +233,7 @@
                             <option value="kg">kg</option>
                         </select>
                         <input type="text" class="form-control" id="quantity" name="quantity" required>
+                        <div class="error-message" id="quantity_error"></div>
                     </div>
                 </div>
             </div>
@@ -236,22 +245,26 @@
                             <i class="fas fa-rupee-sign"></i>
                         </span>
                         <input type="text" class="form-control" id="price" name="price" required>
+                        <div class="error-message" id="price_error"></div>
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="brand_name" class="form-label">Brand Name:</label>
                     <input type="text" class="form-control" id="brand_name" name="brand_name" required>
+                    <div class="error-message" id="brand_name_error"></div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="stock" class="form-label">Stock:</label>
                     <input type="number" class="form-control" id="stock" name="stock" required>
+                    <div class="error-message" id="stock_error"></div>
                 </div>
-                <div class="col-md-6 mb-3">
+                {% comment %} <div class="col-md-6 mb-3">
                     <label for="batch_no" class="form-label">Batch ID:</label>
                     <input type="text" class="form-control" id="batch_no" name="batch_no" required>
-                </div>
+                    <div class="error-message" id="product_name_error"></div>
+                </div> {% endcomment %}
             </div>
            
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -260,5 +273,113 @@
 </main>
     <!-- Include Bootstrap 5 JavaScript and jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const productNameInput = document.getElementById("product_name");
+          const productNameError = document.getElementById("product_name_error");
+          const imageInput = document.getElementById("image");
+          const imageError = document.getElementById("image_error");
+          const priceInput = document.getElementById("price");
+          const priceError = document.getElementById("price_error");
+          const quantityInput = document.getElementById("quantity");
+          const quantityError = document.getElementById("quantity_error");
+          const stockInput = document.getElementById("stock");
+          const stockError = document.getElementById("stock_error");
+          const brandNameInput = document.getElementById("brand_name");
+          const brandNameError = document.getElementById("brand_name_error");
+
+          productNameInput.addEventListener("input", function() {
+              validateProductName();
+          });
+
+          imageInput.addEventListener("input", function() {
+              validateImageExtension();
+          });
+
+          priceInput.addEventListener("input", function() {
+              validatePrice();
+          });
+
+          quantityInput.addEventListener("input", function() {
+              validateQuantity();
+          });
+
+          stockInput.addEventListener("input", function() {
+              validateStock();
+          });
+
+          brandNameInput.addEventListener("input", function() {
+              validateBrandName();
+          });
+
+          function showErrorMessage(inputElement, errorElement, message) {
+              errorElement.textContent = message;
+              errorElement.style.display = "block";
+          }
+
+          function clearErrorMessage(errorElement) {
+              errorElement.textContent = "";
+              errorElement.style.display = "none";
+          }
+
+          function validateProductName() {
+              // Product Name validation (letters and numbers, not only spaces)
+              const productNameRegex = /^(?!^\s*$)[A-Za-z0-9\s]+$/;
+              if (!productNameRegex.test(productNameInput.value)) {
+                  showErrorMessage(productNameInput, productNameError, "Product Name should include letters and numbers.");
+              } else {
+                  clearErrorMessage(productNameError);
+              }
+          }
+
+          function validateImageExtension() {
+              // Image file extension validation (jpg and png only)
+              const imageExtensionRegex = /\.(jpg|jpeg|png)$/i;
+              if (!imageExtensionRegex.test(imageInput.value)) {
+                  showErrorMessage(imageInput, imageError, "Image file should have a .jpg, .jpeg, or .png extension.");
+              } else {
+                  clearErrorMessage(imageError);
+              }
+          }
+
+          function validatePrice() {
+              // Price validation (number greater than zero)
+              if (isNaN(priceInput.value) || parseFloat(priceInput.value) <= 0) {
+                  showErrorMessage(priceInput, priceError, "Price should be a number greater than zero.");
+              } else {
+                  clearErrorMessage(priceError);
+              }
+          }
+
+          function validateQuantity() {
+              // Quantity validation (number greater than zero, integers only)
+              if (isNaN(quantityInput.value) || parseFloat(quantityInput.value) <= 0 || !Number.isInteger(parseFloat(quantityInput.value))) {
+                  showErrorMessage(quantityInput, quantityError, "Quantity should be a number greater than zero and an integer.");
+              } else {
+                  clearErrorMessage(quantityError);
+              }
+          }
+
+          function validateStock() {
+              // Stock validation (number greater than zero)
+              if (isNaN(stockInput.value) || parseFloat(stockInput.value) <= 0) {
+                  showErrorMessage(stockInput, stockError, "Stock should be a number greater than zero.");
+              } else {
+                  clearErrorMessage(stockError);
+              }
+          }
+
+          function validateBrandName() {
+              // Brand Name validation (letters, not only spaces)
+              const brandNameRegex = /^(?!^\s*$)[A-Za-z\s]+$/;
+              if (!brandNameRegex.test(brandNameInput.value)) {
+                  showErrorMessage(brandNameInput, brandNameError, "Brand Name should consist of letters and spaces.");
+              } else {
+                  clearErrorMessage(brandNameError);
+              }
+          }
+      });
+  </script>
 </body>
 </html>

@@ -48,8 +48,6 @@ urlpatterns = [
     path('predict/', views.predict, name='predict'),
     path('upload_image/', views.upload_image, name='upload_image'),
     path('result/', views.result, name='result'),
-    path('sales_report/', views.sales_report, name='sales_report'),
-
 
     # path('notifications/', views.notification_list, name='notification_list'),
     # path('notifications/mark_as_read/', views.mark_notifications_as_read, name='mark_notifications_as_read'),

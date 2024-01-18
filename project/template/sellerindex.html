@@ -2,9 +2,6 @@
 <!--Main Navigation-->
 <html>
     <head>
-
-
-
       <!-- Include jQuery -->
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -78,7 +75,7 @@
          id="sidebarMenu"
          class="collapse d-lg-block sidebar collapse bg-white"
          >
-         <a class="navbar-brand" href="#">
+         {% comment %} <a class="navbar-brand" href="#">
             <img
                  src="{% static 'img/gusto (2).png' %}"
                  height="20"
@@ -86,7 +83,7 @@
                  alt=""
                  loading="lazy"
                  />
-          </a>
+          </a> {% endcomment %}
       <div class="position-sticky">
         <div class="list-group list-group-flush mx-3 mt-4">
           <a
@@ -104,11 +101,11 @@
             <i class="fas fa-chart-area fa-fw me-3"></i
               ><span>Add Product</span>
           </a>
-          <a
+          {% comment %} <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-lock fa-fw me-3"></i><span>Profile</span></a
-            >
+            > {% endcomment %}
           <a
              href="{% url "seller_product_listing" %}"
              class="list-group-item list-group-item-action py-2 ripple"
@@ -149,11 +146,11 @@
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
             > {% endcomment %}
-          <a
+          {% comment %} <a
              href="{% url "monthly_sales" %}"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-money-bill fa-fw me-3"></i><span>Sales</span></a
-            >
+            > {% endcomment %}
             <a
              href="{% url "quality" %}"
              class="list-group-item list-group-item-action py-2 ripple"
@@ -162,14 +159,14 @@
             <i class="fas fa-tachometer-alt fa-fw me-3"></i
               ><span>Quality</span>
           </a>
-          <a
+          {% comment %} <a
              href="{% url "predict" %}"
              class="list-group-item list-group-item-action py-2 ripple"
              aria-current="true"
              >
             <i class="fas fa-tachometer-alt fa-fw me-3"></i
               ><span>Check</span>
-          </a>
+          </a> {% endcomment %}
         </div>
       </div>
     </nav>
@@ -384,7 +381,7 @@
                         <div class="d-flex justify-content-between p-md-1">
                             <div class="d-flex flex-row">
                                 <div class="align-self-center">
-                                    <h2 class="h1 mb-0 me-4">$36,000.00</h2>
+                                    <h2 class="h1 mb-0 me-4">₹36,000.00</h2>
                                 </div>
                                 <div>
                                     <h4>Total Cost</h4>
@@ -418,3 +415,4 @@
   <!--Main layout-->
 
   </html>
+  
