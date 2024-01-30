@@ -18,12 +18,19 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="{% static 'assets/css/fontawesome.min.css' %}">
 
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+    />
+
     <!-- Slick -->
     <link rel="stylesheet" type="text/css" href="{% static 'css\slick.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css\slick-theme.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
+    {% comment %} <script src="{% static 'js/blog.js' %}"></script> {% endcomment %}
 
 
 
@@ -44,6 +51,47 @@
             cursor: pointer;
         }
 
+
+
+
+
+
+
+
+        .share-btn-container {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+          }
+        
+          .share-btn-container a {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+          }
+        
+          .share-btn-container i {
+            font-size: 24px;
+          }
+        
+          .share-btn-container:hover {
+            display: block;
+          }
+
+
+          .error-message {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 <!--
     
@@ -188,6 +236,42 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="col-lg-5 mt-5">
                     <div class="card">
                         <img class="card-img img-fluid" src="{{ product.image.url }}" alt="Card image cap" id="product-detail" style="max-width: 100%; height: auto;">
+
+
+
+                        <!-- Share icon overlay -->
+                        <div class="share-icon-overlay position-absolute top-0 end-0 p-3" >
+                            <!-- Add your share icon image or icon font here -->
+                            <!-- Example with Font Awesome -->
+                            <i class="fas fa-share" style="color: #333; font-size: 24px;"></i>
+
+
+                            <div class="share-btn-container">
+                                <a href="#" class="facebook-btn">
+                                  <i class="fab fa-facebook"></i>
+                                </a>
+                            
+                                <a href="#" class="twitter-btn">
+                                  <i class="fab fa-twitter"></i>
+                                </a>
+                            
+                                <a href="#" class="pinterest-btn">
+                                  <i class="fab fa-pinterest"></i>
+                                </a>
+                            
+                                <a href="#" class="linkedin-btn">
+                                  <i class="fab fa-linkedin"></i>
+                                </a>
+                            
+                                <a href="#" class="whatsapp-btn">
+                                  <i class="fab fa-whatsapp"></i>
+                                </a>
+                              </div>
+
+
+                        </div>
+                        
+                        
                     </div>
                     
                     <div class="row">
@@ -297,9 +381,16 @@ https://templatemo.com/tm-559-zay-shop
 
     <!-- Your existing HTML code -->
 
-
+   
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <span id="email-error" class="error-message">{{ message }}</span>
+                {% endfor %}
+            </ul>
+        {% endif %}
             <h2 class="fw-bolder mb-4">Customer Reviews</h2>
             <!-- Update the form for new reviews -->
             <form method="post" action="{% url 'add_review' product_id=product.id %}">
@@ -1013,8 +1104,84 @@ https://templatemo.com/tm-559-zay-shop
         }
         
       </script>
+
+
+
+
+
+
+
+
+
+      <script>
+
+
+
+        
+        //script for displaying the container for social media
+        document.addEventListener('DOMContentLoaded', function () {
+          var shareIcon = document.querySelector('.share-icon-overlay');
+          var shareBtnContainer = document.querySelector('.share-btn-container');
+      
+          shareIcon.addEventListener('mouseover', function () {
+            shareBtnContainer.style.display = 'block';
+          });
+      
+          shareIcon.addEventListener('mouseout', function () {
+            shareBtnContainer.style.display = 'none';
+          });
+        });
+
+
+    
+const facebookBtn = document.querySelector(".facebook-btn");
+const twitterBtn = document.querySelector(".twitter-btn");
+const pinterestBtn = document.querySelector(".pinterest-btn");
+const linkedinBtn = document.querySelector(".linkedin-btn");
+const whatsappBtn = document.querySelector(".whatsapp-btn");
+
+function init() {
+
+  const productImage = document.querySelector("#product-detail");
+
+    let postUrl = encodeURI(window.location.href);
+    
+    let postTitle = encodeURI("Check out this product!");
+    let postImg = encodeURI(productImage.src);
+
+  facebookBtn.setAttribute(
+    "href",
+    `https://www.facebook.com/sharer.php?u=${postUrl}`
+  );
+
+  twitterBtn.setAttribute(
+    "href",
+    `https://twitter.com/share?url=${postUrl}&text=${postTitle}`
+  );
+
+  pinterestBtn.setAttribute(
+    "href",
+    `https://pinterest.com/pin/create/bookmarklet/?media=${postImg}&url=${postUrl}&description=${postTitle}`
+  );
+
+  linkedinBtn.setAttribute(
+    "href",
+    `https://www.linkedin.com/shareArticle?url=${postUrl}&title=${postTitle}`
+  );
+
+  whatsappBtn.setAttribute(
+    "href",
+    `https://api.whatsapp.com/send?text=${postTitle}%0A${postUrl}`
+
+    );
+}
+
+init();
+
+      </script>
     <!-- End Slider Script -->
     <script src="{% static 'js/rating.js' %}"></script>
+    
 
 </body>
 

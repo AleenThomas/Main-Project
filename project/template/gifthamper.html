@@ -1,0 +1,371 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <title>Spice Gift Hamper Customization</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 50px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .shape-selection {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .shape-item {
+            margin: 0 10px;
+        }
+
+        .hamper-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .spice-item {
+            margin: 0 5px 10px 0;
+        }
+
+        .hamper-summary {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #selectedShape {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .hamper-preview {
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hamper-mask {
+            width: 100%;
+            height: 100%;
+            background: url('https://i.imgur.com/0LLMm5g.png') no-repeat center center;
+            background-size: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            mask-image: url('https://i.imgur.com/0LLMm5g.png');
+            mask-repeat: no-repeat;
+            mask-position: center center;
+            mask-size: cover;
+        }
+
+        .hamper-item {
+            width: 50px;
+            height: 50px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        button.generate-btn {
+            margin-top: 20px;
+        }
+
+        #hamperImage {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-input {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Spice Gift Hamper Customization</h2>
+
+    <div class="shape-selection">
+        <button class="btn btn-success shape-item" onclick="chooseHamperShape('Square')">Square</button>
+        <button class="btn btn-success shape-item" onclick="chooseHamperShape('Round')">Round</button>
+        <!-- Add more shape items as needed -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="hamper-container" id="hamperContainer"></div>
+
+            <div class="hamper-summary" id="hamperSummary">
+                <h3>Hamper Summary</h3>
+                <ul id="hamperList" class="list-group"></ul>
+            </div>
+
+            <div id="selectedShape" class="font-weight-bold"></div>
+
+            <div class="message-input">
+                <label for="greetingMessage">Greeting Message:</label>
+                <input type="text" id="greetingMessage" class="form-control" placeholder="Add a greeting message...">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="spice-list">
+                <h3>Available Spices</h3>
+                <button class="btn btn-success spice-item" onclick="addToHamper('Cumin')">Cumin</button>
+                <button class="btn btn-success spice-item" onclick="addToHamper('Coriander')">Coriander</button>
+                <button class="btn btn-success spice-item" onclick="addToHamper('Turmeric')">Turmeric</button>
+                <!-- Add more spice items as needed -->
+            </div>
+
+            <div class="hamper-preview">
+                <div class="hamper-mask" id="hamperVisualContainer"></div>
+                <div class="hamper" id="hamperContentContainer"></div>
+            </div>
+
+            <button class="btn btn-primary generate-btn" onclick="generateHamperImage()">Generate Hamper Image</button>
+
+            <img id="hamperImage" alt="Hamper Image" class="img-fluid">
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    const hamperContainer = document.getElementById('hamperContainer');
+    const hamperList = document.getElementById('hamperList');
+    const hamperSummary = document.getElementById('hamperSummary');
+    const selectedShape = document.getElementById('selectedShape');
+    const hamperVisualContainer = document.getElementById('hamperVisualContainer');
+    const hamperContentContainer = document.getElementById('hamperContentContainer');
+    const hamperImage = document.getElementById('hamperImage');
+    const greetingMessageInput = document.getElementById('greetingMessage');
+
+    let chosenShape = '';
+    let spicesInHamper = [];
+
+    function chooseHamperShape(shape) {
+        chosenShape = shape;
+        selectedShape.innerText = `Selected Hamper Shape: ${chosenShape}`;
+        hamperVisualContainer.innerHTML = '';
+        hamperContentContainer.innerHTML = '';
+        spicesInHamper = [];
+        updateHamperSummary();
+    }
+
+    function addToHamper(spice) {
+        spicesInHamper.push(spice);
+
+        const hamperSpiceItem = document.createElement('button');
+        hamperSpiceItem.innerText = spice;
+        hamperSpiceItem.classList.add('btn', 'btn-success', 'spice-item');
+        hamperContainer.appendChild(hamperSpiceItem);
+
+        const hamperSummaryItem = document.createElement('li');
+        hamperSummaryItem.innerText = spice;
+        hamperSummaryItem.classList.add('list-group-item');
+        hamperList.appendChild(hamperSummaryItem);
+
+        hamperSummary.style.display = 'block';
+
+        const hamperVisualItem = document.createElement('button');
+        hamperVisualItem.innerText = spice;
+        hamperVisualItem.classList.add('btn', 'btn-success', 'hamper-item');
+        hamperVisualContainer.appendChild(hamperVisualItem);
+
+        const hamperContentItem = document.createElement('div');
+        hamperContentItem.innerText = spice;
+        hamperContentItem.classList.add('hamper-item');
+        hamperContentContainer.appendChild(hamperContentItem);
+
+        updateHamperSummary();
+    }
+
+    function updateHamperSummary() {
+        const hamperSummaryList = document.getElementById('hamperList');
+        hamperSummaryList.innerHTML = '';
+
+        spicesInHamper.forEach(spice => {
+            const hamperSummaryItem = document.createElement('li');
+            hamperSummaryItem.innerText = spice;
+            hamperSummaryItem.classList.add('list-group-item');
+            hamperSummaryList.appendChild(hamperSummaryItem);
+        });
+    }
+
+    function generateHamperImage() {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        const canvasWidth = chosenShape === 'Square' ? 200 : 200;
+        const canvasHeight = chosenShape === 'Square' ? 150 : 200;
+
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        context.fillStyle = '#f8f8f8';
+        context.fillRect(0, 0, canvasWidth, canvasHeight);
+        context.strokeStyle = '#ccc';
+        context.strokeRect(0, 0, canvasWidth, canvasHeight);
+
+        const spiceSize = 40;
+        const spices = spicesInHamper.length;
+        spicesInHamper.forEach((spice, index) => {
+            const angle = (index / spices) * Math.PI * 2;
+            const x = canvasWidth / 2 + Math.cos(angle) * (canvasWidth / 4);
+            const y = canvasHeight / 2 + Math.sin(angle) * (canvasHeight / 4);
+            context.fillStyle = '#f8f8f8';
+            context.fillRect(x, y, spiceSize, spiceSize);
+            context.strokeStyle = '#ccc';
+            context.strokeRect(x, y, spiceSize, spiceSize);
+            context.fillStyle = '#000';
+            context.fillText(spice, x + 5, y + 25);
+        });
+
+        if (greetingMessageInput.value.trim() !== '') {
+            context.font = 'bold 16px Arial';
+            context.fillStyle = '#343a40';
+            context.textAlign = 'center';
+            context.fillText(greetingMessageInput.value.trim(), canvasWidth / 2, canvasHeight / 2);
+        }
+
+        const hamperImageUrl = canvas.toDataURL('image/png');
+        hamperImage.src = hamperImageUrl;
+    }
+</script>
+
+</body>
+</html> {% endcomment %}
+
+
+
+
+
+
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #giftHamperConfigurator {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        
+        #shapeSelector,
+        #spiceSelector,
+        #giftHamperPreview {
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #hamperCanvas {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+    </style>
+    <title>Spice Gift Hampers</title>
+</head>
+<body>
+    <div id="giftHamperConfigurator">
+        <div id="shapeSelector">
+            <label for="shape">Select Box Shape:</label>
+            <select id="shape">
+                <option value="square">Square</option>
+                <option value="round">Round</option>
+            </select>
+        </div>
+        
+        <div id="spiceSelector">
+            <label for="spices">Select Spices:</label>
+            <select id="spices" multiple>
+                <option value="cumin">Cumin</option>
+                <option value="coriander">Coriander</option>
+                <option value="paprika">Paprika</option>
+                <!-- Add more spice options as needed -->
+            </select>
+        </div>
+
+        <div id="giftHamperPreview">
+            <h3>Preview</h3>
+            <canvas id="hamperCanvas" width="300" height="200"></canvas>
+        </div>
+
+        <button onclick="addToCart()">Add to Cart</button>
+    </div>
+
+    <script >function addToCart() {
+        const selectedShape = document.getElementById('shape').value;
+        const selectedSpices = Array.from(document.getElementById('spices').selectedOptions).map(option => option.value);
+    
+        const canvas = document.getElementById('hamperCanvas');
+        const context = canvas.getContext('2d');
+    
+        // Clear previous drawing
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    
+        // Draw the customized hamper
+        context.fillStyle = '#ffeecc'; // Background color
+        if (selectedShape === 'square') {
+            context.fillRect(10, 10, canvas.width - 20, canvas.height - 20);
+        } else if (selectedShape === 'round') {
+            context.beginPath();
+            context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2 - 10, 0, 2 * Math.PI);
+            context.fill();
+        }
+    
+        context.fillStyle = '#ffcc00'; // Spice color
+        context.font = '20px Arial';
+        context.fillText(selectedSpices.join(', '), 20, canvas.height - 20);
+        
+        // Here, you can add logic to send the selected options to the server or update the shopping cart.
+    }
+    </script>
+</body>
+</html>

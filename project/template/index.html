@@ -8,7 +8,7 @@
     <title>GustoGrove</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="apple-touch-icon" href="{% static 'img/logo.png' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}">
     <!-- Add this line for Bootstrap CSS -->
@@ -30,7 +30,33 @@ TemplateMo 559 Zay Shop
 
 https://templatemo.com/tm-559-zay-shop
 
+
+
 -->
+<style>
+    #iframe {
+        display: none; 
+        position: fixed;
+        bottom: 100px;
+        right: 100px;
+        z-index: 1;
+    }
+
+    #toggleButton {
+        z-index: 1;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgb(2, 48, 2);
+        color: #ffffff;
+        border: none;
+        border-radius: 100%;
+        padding: 25px;
+        cursor: pointer;
+        height: 85px;
+        width: 85px;
+    }
+</style>
 </head>
 
 <body>
@@ -87,6 +113,9 @@ https://templatemo.com/tm-559-zay-shop
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'seller_index' %}">Become a seller</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'gifthamper' %}">Blog</a>
                         </li>
                     </ul>
                 </div>
@@ -285,6 +314,25 @@ https://templatemo.com/tm-559-zay-shop
                 <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
             </div>
         </div>
+        
+        <button id="toggleButton" onclick="toggleIframe()"><i class="bi bi-chat-dots-fill"></i></button>
+    
+        <iframe id="iframe"
+            allow="microphone;"
+            width="350"
+            height="430"
+            src="https://console.dialogflow.com/api-client/demo/embedded/be0546da-811b-40d5-b5cb-e6d0d0cc0a16">
+        </iframe>
+    
+
+        <script>
+            function toggleIframe() {
+                console.log("Clicked")
+                var iframe = document.getElementById("iframe");
+                iframe.style.display = (iframe.style.display === "none") ? "block" : "none";
+            }
+        </script>
+
     </section>
     <!-- End Categories of The Month -->
 
@@ -376,6 +424,7 @@ https://templatemo.com/tm-559-zay-shop
                 </div>
             </div>
         </div>
+
     </section>
     <!-- End Featured Product -->
     <footer class="bg-dark" id="tempaltemo_footer">

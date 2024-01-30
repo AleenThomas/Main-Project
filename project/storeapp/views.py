@@ -1255,17 +1255,31 @@ def add_review(request, product_id):
         rating = int(request.POST.get('rating'))
         comment = request.POST.get('comment')
 
-        # Check if the user has already reviewed the product
-        existing_review = CustomerReview.objects.filter(product=product, user=request.user).exists()
+        # Check if the user has ordered the product
+        has_ordered_product = Order.objects.filter(user=request.user, products=product, payment_status=Order.PaymentStatusChoices.SUCCESSFUL).exists()
 
-        if not existing_review:
-            # Create a new review
-            review = CustomerReview.objects.create(product=product, user=request.user, rating=rating, comment=comment)
-            return redirect('product_detail', product_id=product_id)
+        if has_ordered_product:
+            # Check if the user has already reviewed the product
+            existing_review = CustomerReview.objects.filter(product=product, user=request.user).exists()
+
+            if not existing_review:
+                # Create a new review
+                review = CustomerReview.objects.create(product=product, user=request.user, rating=rating, comment=comment)
+                messages.success(request, 'Thank you for your review! Your feedback is valuable.')
+                return redirect('product_detail', product_id=product_id)
+            else:
+                messages.error(request, 'You have already reviewed this product.')
         else:
-            return JsonResponse({'success': False, 'message': 'You have already reviewed this product.'})
+            messages.error(request, 'You must order this product before reviewing. Make a purchase to share your thoughts with us!')
 
     return redirect('product_detail', product_id=product_id)
+
 def sales_report(request):
     
     return render(request,'sales-report.html')
+def blog(request):
+    
+    return render(request,'blog.html')
+def gifthamper(request):
+    
+    return render(request,'gifthamper.html')
