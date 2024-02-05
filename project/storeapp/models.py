@@ -182,6 +182,7 @@ class CustomerReview(models.Model):
     rating = models.PositiveIntegerField(choices=[(i, str(i)) for i in range(1, 6)])
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    sentiment_score = models.FloatField(null = True, blank=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

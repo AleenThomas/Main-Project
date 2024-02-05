@@ -383,28 +383,23 @@ https://templatemo.com/tm-559-zay-shop
 
    
     <section class="py-5">
+        {% if user_has_purchased_product %}
+    
         <div class="container px-4 px-lg-5 mt-5">
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <span id="email-error" class="error-message">{{ message }}</span>
-                {% endfor %}
-            </ul>
-        {% endif %}
             <h2 class="fw-bolder mb-4">Customer Reviews</h2>
-            <!-- Update the form for new reviews -->
-            <form method="post" action="{% url 'add_review' product_id=product.id %}">
+            <form method="post" action="{% url 'add_review' product_id=product.id %}" onsubmit="return validateRating()">
                 {% csrf_token %}
+                
                 <!-- Rating field as stars -->
                 <div class="mb-3">
                     <label for="inputRating" class="form-label">Your Rating:</label>
                     <div class="star-rating">
-                        <input type="hidden" id="inputRating" name="rating" value="0">
-                        <i class="far fa-star" onclick="setRating(1)"></i>
-                        <i class="far fa-star" onclick="setRating(2)"></i>
-                        <i class="far fa-star" onclick="setRating(3)"></i>
-                        <i class="far fa-star" onclick="setRating(4)"></i>
-                        <i class="far fa-star" onclick="setRating(5)"></i>
+                        <input type="hidden" id="inputRating" name="rating" value="-1">
+                        <i class="far fa-star" onclick="setRating(1)" required></i>
+                        <i class="far fa-star" onclick="setRating(2)" required></i>
+                        <i class="far fa-star" onclick="setRating(3)" required></i>
+                        <i class="far fa-star" onclick="setRating(4)" required></i>
+                        <i class="far fa-star" onclick="setRating(5)" required></i>
                     </div>
                 </div>
                 <!-- Comment field -->
@@ -425,17 +420,23 @@ https://templatemo.com/tm-559-zay-shop
                     <p><strong>{{ review.user.email }}</strong> - {{ review.created_at|date:"F d, Y" }}</p>
                     <p>Rating: 
                         {% for _ in ""|ljust:review.rating %}
-                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star" style="color: #ffd700;"></i>
                         {% endfor %}
                         
                     </p>
                     <p>{{ review.comment }}</p>
                 </div>
+                <hr>
             {% endfor %}
     
             </div>
         </div>
+        {% else %}
+        <p>You can only leave a review if you have purchased this product.</p>
+        {% endif %}
+    
     </section>
+    
 <!-- Your existing HTML code continues -->
 
     <!-- Close Content -->

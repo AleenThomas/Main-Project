@@ -212,6 +212,47 @@
   <!--Main Navigation-->
   
   <!--Main layout-->
+
+
+
+  <table class="table table-bordered mt-4 mb-4" style="align-items: center; margin: auto; width: 80%;">
+    <thead>
+        <tr>
+            <th class="bg-warning"><b>Order Date</b></th>
+            <th class="bg-warning"><b>Total Price</b></th>
+            <th class="bg-warning"><b>Product Details</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order_info in orders_data %}
+            <tr>
+                <td>{{ order_info.order_date }}</td>
+                <td>{{ order_info.total_price }}</td>
+                <td>
+                    <table class="table table-bordered">
+                        <tbody>
+                            {% for item_info in order_info.items %}
+                                <tr>
+                                    <td>
+                                        
+                                        <img src="{{ item_info.product_image }}" alt="{{ item_info.product_name }}" style="max-width: 50px; max-height: 50px;">
+                                    </td>
+                                    <td>{{ item_info.product_name }}</td>
+                                    <td>{{ item_info.quantity }}</td>
+                                    <td>{{ item_info.total_item_price }}</td>
+                                </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+  </table>
+
+
+
+
   <main style="margin-top: 58px">
     {% comment %} <div class="container mt-5">
         <div class="row">

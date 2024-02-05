@@ -50,6 +50,7 @@ urlpatterns = [
     path('result/', views.result, name='result'),
     path('blog/', views.blog, name='blog'),
     path('gifthamper/', views.gifthamper, name='gifthamper'),
+    
 
 
 

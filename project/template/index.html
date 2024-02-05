@@ -286,6 +286,56 @@ https://templatemo.com/tm-559-zay-shop
     <!-- End Banner Hero -->
 
 
+
+
+
+
+    <!-- Top Rated Products -->
+    <section class="bg-light">
+        <div class="container py-5">
+            <div class="row text-center py-3">
+                <div class="col-lg-6 m-auto">
+                    <h1 class="h1">Top Rated Products</h1>                    
+                </div>
+            </div>
+            <div class="row">
+                {% for product in products_with_sentiment_sum %}
+                <div class="col-12 col-md-4 mb-4">
+                    <div class="card h-100 card-rounded">
+                            <img src="{{ product.image.url }}" class="card-img-top p-2" alt="..." height="300px">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <strong class="card-text">₹{{ product.price }}</strong>
+                                
+                                <div class="justify-content-between align-items-center">
+                                    <div>
+                                        {% if product.status == 'in_stock' %}
+                                            <span class="badge bg-success text-white">In Stock</span>
+                                        {% elif product.status == 'out_of_stock' %}
+                                            <span class="badge bg-danger text-white">Out of Stock</span>
+                                        {% endif %}                                        
+                                </div> 
+                                    <div class="mt-2">                                        
+                                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-warning"><i class="fas fa-eye"></i></a>
+                                        <a href="#" onclick="toggleWishlist('{{ product.id }}')" class="btn btn-outline-danger" id="wishlist-icon-{{ product.id }}">
+                                            <i class="fas fa-heart{% if product_in_wishlist %} wishlist-active{% endif %}"></i>
+                                        </a>
+                                        {% if product.status == 'in_stock' %}
+                                        <a href="{% url 'add_to_cart' product_id=product.id %}" class="btn btn-outline-secondary"><i class="fas fa-shopping-cart"></i></a>
+                                        {% else %}
+                                        <button class="btn btn-outline-secondary" disabled><i class="fas fa-shopping-cart"></i></button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    
+                </div>
+                {% endfor %}                
+            </div>
+        </div>
+    </section>
+
     <!-- Start Categories of The Month -->
     <section class="container py-5">
         <div class="row text-center pt-3">

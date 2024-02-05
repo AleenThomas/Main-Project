@@ -32,13 +32,17 @@ from django.utils import timezone
 def index(request):
     
     user=request.user
+    products_with_sentiment_sum = Product.objects.annotate(sentiment_sum=Sum('customerreview__sentiment_score')).order_by('-sentiment_sum')[:3]
+    for product in products_with_sentiment_sum:
+        print (product.product_name)
     if user.is_anonymous:
-        return render(request,'index.html')
+        return render(request, 'index.html', {'products_with_sentiment_sum' : products_with_sentiment_sum})
+
     elif user.is_seller==True:
         return redirect('seller_index')
     else:
         
-        return render(request,'index.html')
+        return render(request, 'index.html', {'products_with_sentiment_sum' : products_with_sentiment_sum})
     # return render(request,'index.html')
     
 def contact(request):
@@ -385,10 +389,108 @@ def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     reviews = CustomerReview.objects.filter(product=product)
     print(reviews)
+    # Fetch related products and reviews
+    related_products = Product.objects.filter(
+        status__in=['in_stock', 'out_of_stock']
+    ).exclude(pk=product_id)[:4]
 
-    return render(request, 'shop-single.html', {'product': product,'reviews': reviews
-})
+    reviews = CustomerReview.objects.filter(product=product)
+    if request.user.is_authenticated:
+            user_has_purchased_product = Order.objects.filter(
+            user=request.user,
+            cartitem__product=product,
+            payment_status=Order.PaymentStatusChoices.SUCCESSFUL
+        ).exists()
+   
+    print(user_has_purchased_product)
+    context = {
+        'product': product,
+        'related_products': related_products,
+        'reviews': reviews,
+        'user_has_purchased_product': user_has_purchased_product
+    }
 
+    return render(request, 'shop-single.html',context)
+@login_required(login_url='user_login')
+def customer_ProductView(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    product_category = product.product_category
+    product_subcategory = product.product_subcategory
+
+    # Fetch related products and reviews
+    related_products = Product.objects.filter(
+        product_category=product_category,
+        status__in=['in_stock', 'out_of_stock']
+    ).exclude(pk=product_id)[:4]
+
+    reviews = CustomerReview.objects.filter(product=product)
+    if request.user.is_authenticated:
+            user_has_purchased_product = Order.objects.filter(
+            user=request.user,
+            cart_items__product=product,
+            payment_status=Order.PaymentStatusChoices.SUCCESSFUL
+        ).exists()
+   
+    print(user_has_purchased_product)
+    context = {
+        'product': product,
+        'product_category': product_category,
+        'product_subcategory': product_subcategory,
+        'related_products': related_products,
+        'reviews': reviews,
+        'user_has_purchased_product': user_has_purchased_product
+    }
+
+    return render(request, 'shop-single.html', context)
+
+import nltk
+nltk.download('vader_lexicon')
+from nltk.sentiment import SentimentIntensityAnalyzer
+@login_required
+def add_review(request, product_id):
+    # product = get_object_or_404(Product, pk=product_id)
+    # if request.method == 'POST':
+    #     rating = int(request.POST.get('rating'))
+    #     comment = request.POST.get('comment')
+
+    #     # Check if the user has ordered the product
+    #     has_ordered_product = Order.objects.filter(user=request.user, products=product, payment_status=Order.PaymentStatusChoices.SUCCESSFUL).exists()
+
+    #     if has_ordered_product:
+    #         # Check if the user has already reviewed the product
+    #         existing_review = CustomerReview.objects.filter(product=product, user=request.user).exists()
+
+    #         if not existing_review:
+    #             # Create a new review
+    #             review = CustomerReview.objects.create(product=product, user=request.user, rating=rating, comment=comment)
+    #             messages.success(request, 'Thank you for your review! Your feedback is valuable.')
+    #             return redirect('product_detail', product_id=product_id)
+    #         else:
+    #             messages.error(request, 'You have already reviewed this product.')
+    #     else:
+    #         messages.error(request, 'You must order this product before reviewing. Make a purchase to share your thoughts with us!')
+
+
+    product = get_object_or_404(Product, pk=product_id)
+    
+    if request.method == 'POST':
+        rating = int(request.POST.get('rating'))
+        comment = request.POST.get('comment')
+        sentiment_analyzer = SentimentIntensityAnalyzer()
+        sentiment_score = sentiment_analyzer.polarity_scores(comment)['compound']
+        
+        # Check if the user has already reviewed the product
+        existing_review = CustomerReview.objects.filter(product=product, user=request.user).exists()
+        
+
+        if not existing_review:
+            # Create a new review
+            review = CustomerReview.objects.create(product=product, user=request.user, rating=rating, comment=comment, sentiment_score=sentiment_score)
+            return redirect('product_detail', product_id=product_id)
+        else:
+            return JsonResponse({'success': False, 'message': 'You have already reviewed this product.'})
+
+    return redirect('product_detail', product_id=product_id)
 
 
 @login_required(login_url='loginredirect')
@@ -965,8 +1067,11 @@ def add_address(request):
 
 
 
-# @login_required
 
+    
+# commented for combining
+    
+# @login_required
 # def seller_orders(request):
 #     if request.user.is_seller:
 #         current_seller = request.user
@@ -974,46 +1079,22 @@ def add_address(request):
 #         product_sales = []
 
 #         for product in seller_products:
+#             orders = Order.objects.filter(products=product)
+#             total_amount = sum(order.total_price for order in orders)
 #             product_sales.append({
 #                 'product': product,
-#                 'total_sold': Order.objects.filter(products=product).count(),
-#                 'unique_customers': Order.objects.filter(products=product).values('user').distinct().count()
+#                 'total_sold': len(orders),
+#                 'total_amount': total_amount,
+#                 'unique_customers': orders.values('user').distinct().count()
 #             })
-
 #         context = {
 #             'product_sales': product_sales
 #         }
+    
 
 #         return render(request, 'seller_orders.html', context)
 #     else:
 #         return redirect('seller_register')
-    
-    
-    
-@login_required
-def seller_orders(request):
-    if request.user.is_seller:
-        current_seller = request.user
-        seller_products = Product.objects.filter(seller=current_seller)
-        product_sales = []
-
-        for product in seller_products:
-            orders = Order.objects.filter(products=product)
-            total_amount = sum(order.total_price for order in orders)
-            product_sales.append({
-                'product': product,
-                'total_sold': len(orders),
-                'total_amount': total_amount,
-                'unique_customers': orders.values('user').distinct().count()
-            })
-        context = {
-            'product_sales': product_sales
-        }
-    
-
-        return render(request, 'seller_orders.html', context)
-    else:
-        return redirect('seller_register')
 
 
 
@@ -1247,32 +1328,6 @@ def result(request):
 
 #     return render(request, 'customer_ProductView.html', context)
 
-@login_required
-def add_review(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
-    
-    if request.method == 'POST':
-        rating = int(request.POST.get('rating'))
-        comment = request.POST.get('comment')
-
-        # Check if the user has ordered the product
-        has_ordered_product = Order.objects.filter(user=request.user, products=product, payment_status=Order.PaymentStatusChoices.SUCCESSFUL).exists()
-
-        if has_ordered_product:
-            # Check if the user has already reviewed the product
-            existing_review = CustomerReview.objects.filter(product=product, user=request.user).exists()
-
-            if not existing_review:
-                # Create a new review
-                review = CustomerReview.objects.create(product=product, user=request.user, rating=rating, comment=comment)
-                messages.success(request, 'Thank you for your review! Your feedback is valuable.')
-                return redirect('product_detail', product_id=product_id)
-            else:
-                messages.error(request, 'You have already reviewed this product.')
-        else:
-            messages.error(request, 'You must order this product before reviewing. Make a purchase to share your thoughts with us!')
-
-    return redirect('product_detail', product_id=product_id)
 
 def sales_report(request):
     
@@ -1283,3 +1338,38 @@ def blog(request):
 def gifthamper(request):
     
     return render(request,'gifthamper.html')
+
+def seller_orders(request):
+    seller_id = request.user.id
+
+    # Step 1: Query orders for a specific seller with successful payment status
+    seller_orders = Order.objects.filter(products__seller_id=seller_id, payment_status=Order.PaymentStatusChoices.SUCCESSFUL).distinct()
+
+    # Step 2: Extract relevant information from orders
+    orders_data = []
+    for order in seller_orders:
+        order_info = {
+            'order_date': order.order_date,
+            'total_price': order.total_price,
+            'items': []
+        }
+
+        # Extract information about each bought item in the order
+        for cart_item in CartItem.objects.filter(order=order, product__seller_id=seller_id):
+            item_info = {
+                'product_image': cart_item.product.image.url,
+                'product_name': cart_item.product.product_name,
+                'quantity': cart_item.quantity,
+                'total_item_price': cart_item.product.price * cart_item.quantity,  # Assuming total_item_price is product of price and quantity
+            }
+            order_info['items'].append(item_info)
+
+        orders_data.append(order_info)
+
+    # Step 3: Pass the data to the template
+    context = {'orders_data': orders_data}
+
+    for i in orders_data:
+        print(i)
+    
+    return render(request, 'seller_orders.html', context)
