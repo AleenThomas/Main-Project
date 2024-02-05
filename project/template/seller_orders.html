@@ -64,6 +64,11 @@
                 background-color:#66c2ff; /* Set the background color to blue */
                 padding: 0; /* Optionally, adjust padding as needed */
               }
+
+              main {
+                margin-top: 58px; /* Adjust the margin-top as needed */
+                padding-left: 300px; /* Width of the side panel */
+            }
         </style>
     </head>
 
@@ -215,12 +220,21 @@
 
 
 
-  <table class="table table-bordered mt-4 mb-4" style="align-items: center; margin: auto; width: 80%;">
+  
+
+  
+  
+  
+  <main style="margin-top: 58px" >
+    
+
+    
+  <table class="table table-bordered mt-4 mb-4 " style="margin: auto; width: 100%; ">
     <thead>
         <tr>
-            <th class="bg-warning"><b>Order Date</b></th>
-            <th class="bg-warning"><b>Total Price</b></th>
-            <th class="bg-warning"><b>Product Details</b></th>
+            <th style="background-color:   color:rgb(2, 48, 2) "><b>Order Date</b></th>
+            <th style="background-color:   color:rgb(2, 48, 2) "><b>Total Price</b></th>
+            <th style="background-color:   color:rgb(2, 48, 2) "><b>Product Details</b></th>
         </tr>
     </thead>
     <tbody>
@@ -249,25 +263,7 @@
             {% endfor %}
         </tbody>
   </table>
-
-
-
-
-  <main style="margin-top: 58px">
-    {% comment %} <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <!-- Card display for each product -->
-                {% for sale in product_sales %}
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ sale.product.product_name }}</h5>
-                        <p class="card-text">Total Sold: {{ sale.total_sold }}</p>
-                        <p class="card-text">Unique Customers: {{ sale.unique_customers }}</p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div> {% endcomment %}
+  
             <div class="col-md-8">
                 <!-- Sales statistics graph -->
                 <canvas id="salesChart" width="400" height="200"></canvas>
@@ -275,6 +271,11 @@
         </div>
     </div>
 </main>
+
+
+
+
+
     <!-- Add Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
