@@ -327,10 +327,26 @@ def seller_index(request):
         total_amount_all = 0
 
         for product in seller_products:
-            total_orders = Order.objects.filter(products=product).count()
-            unique_customers = Order.objects.filter(products=product).values('user').distinct().count()
-            total_amount = total_orders * product.price  # Assuming price is per unit
-            
+            # total_orders = Order.objects.filter(products=product).count()
+            # unique_customers = Order.objects.filter(products=product).values('user').distinct().count()
+            # total_amount = total_orders * product.price  
+            orders_with_product = Order.objects.filter(products=product)
+            total_orders = orders_with_product.count()
+            unique_customers = orders_with_product.values('user').distinct().count()
+    
+    # Calculate total amount by summing up the total_price for all orders with the product
+            total_amount = orders_with_product.aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+            # total_orders_all += total_orders
+            # unique_customers_all += unique_customers
+            # total_amount_all += total_amount
+
+            # product_data.append({
+            #     'product': product,
+            #     'total_orders': total_orders,
+            #     'unique_customers': unique_customers,
+            #     'total_amount': total_amount
+            # })
             total_orders_all += total_orders
             unique_customers_all += unique_customers
             total_amount_all += total_amount

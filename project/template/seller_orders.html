@@ -280,7 +280,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- JavaScript code for Chart.js -->
-    <script>
+    {% comment %} <script>
         // Retrieve product sales data from your server-side code and store it in a variable
         var productSalesData = [
             {% for sale in product_sales %}
@@ -369,7 +369,7 @@
       // Initialize Bootstrap's JavaScript components
       $('[data-toggle="dropdown"]').dropdown();
     });
-  </script>
+  </script> {% endcomment %}
 
   <!--Main layout-->
 
