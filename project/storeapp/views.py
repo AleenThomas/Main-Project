@@ -321,22 +321,16 @@ def seller_index(request):
         notification=Notification.objects.filter(seller_id=current_seller.id,read=False).count()
 
         # Calculate total amount, unique customers, and total orders for each product
-        product_data = []
-        total_orders_all = 0
-        unique_customers_all = 0
-        total_amount_all = 0
+        # product_data = []
+        # total_orders_all = 0
+        # unique_customers_all = 0
+        # total_amount_all = 0
 
-        for product in seller_products:
-            # total_orders = Order.objects.filter(products=product).count()
-            # unique_customers = Order.objects.filter(products=product).values('user').distinct().count()
-            # total_amount = total_orders * product.price  
-            orders_with_product = Order.objects.filter(products=product)
-            total_orders = orders_with_product.count()
-            unique_customers = orders_with_product.values('user').distinct().count()
-    
-    # Calculate total amount by summing up the total_price for all orders with the product
-            total_amount = orders_with_product.aggregate(Sum('total_price'))['total_price__sum'] or 0
-
+        # for product in seller_products:
+        #     total_orders = Order.objects.filter(products=product).count()
+        #     unique_customers = Order.objects.filter(products=product).values('user').distinct().count()
+        #     total_amount = total_orders * product.price  
+            
             # total_orders_all += total_orders
             # unique_customers_all += unique_customers
             # total_amount_all += total_amount
@@ -347,31 +341,45 @@ def seller_index(request):
             #     'unique_customers': unique_customers,
             #     'total_amount': total_amount
             # })
-            total_orders_all += total_orders
-            unique_customers_all += unique_customers
-            total_amount_all += total_amount
+            # total_orders_all += total_orders
+            # unique_customers_all += unique_customers
+            # total_amount_all += total_amount
 
-            product_data.append({
-                'product': product,
-                'total_orders': total_orders,
-                'unique_customers': unique_customers,
-                'total_amount': total_amount
-            })
+            # product_data.append({
+            #     'product': product,
+            #     'total_orders': total_orders,
+            #     'unique_customers': unique_customers,
+            #     'total_amount': total_amount
+            # })
+
+
+         # Get seller's sales report
+        total_orders = Order.objects.filter(products__seller=current_seller).count()
+        total_sales = Order.objects.filter(products__seller=current_seller, payment_status=Order.PaymentStatusChoices.SUCCESSFUL).aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+        unique_customers = Order.objects.filter(products__seller=current_seller).values('user').distinct().count()
 
         context = {
             'seller_products': seller_products,
-            'product_data': product_data,
-            'total_orders_all': total_orders_all,
-            'unique_customers_all': unique_customers_all,
-            'total_amount_all': total_amount_all,
-            'total_amount':total_amount,
-            'unique_customers': unique_customers,
+            'notification': notification,
             'total_orders': total_orders,
-            'notification':notification
-
-
-
+            'total_sales': total_sales,
+            'unique_customers': unique_customers
         }
+        print(total_sales)
+        # context = {
+        #     'seller_products': seller_products,
+        #     'product_data': product_data,
+        #     'total_orders_all': total_orders_all,
+        #     'unique_customers_all': unique_customers_all,
+        #     'total_amount_all': total_amount_all,
+        #     'total_amount':total_amount,
+        #     'unique_customers': unique_customers,
+        #     'total_orders': total_orders,
+        #     'notification':notification
+
+
+
+        # }
 
         return render(request, 'sellerindex.html', context)
     else:
@@ -893,6 +901,7 @@ def homepage(request):
 
 @csrf_exempt
 def paymenthandler(request):
+    print("payment")
     if request.method == "POST":
         payment_id = request.POST.get('razorpay_payment_id', '')
         razorpay_order_id = request.POST.get('razorpay_order_id', '')
@@ -921,20 +930,23 @@ def paymenthandler(request):
             # Update the order with payment ID and change status to "Successful"
             order.payment_id = payment_id
             order.payment_status = Order.PaymentStatusChoices.SUCCESSFUL
+            
             order.save()
 
             # Get the associated cart items for this order
             cart_items = CartItem.objects.filter(order=order)
-
+            
             if cart_items.exists():
                 for cart_item in cart_items:
                     product = cart_item.product
                     product.stock -= cart_item.quantity
                     product.save()
                     
+                    
+                    
                     # Add the purchased product to the order
                     order.products.add(product)  # Associate the product with the order
-
+                    order_notification(product.seller.id, product.id)
                 # Get the cart_id from the first cart item
                 cart_id = cart_items.first().id
                 cart_items.update(is_active=False)
@@ -1155,17 +1167,23 @@ def monthly_sales(request):
 
 
 # Example: Creating a notification when a product's stock is low
-
+from django.db.models import Q
 @login_required
 def low_stock_notification(request, seller_id):
     products=Product.objects.filter(seller_id=seller_id)
     for i in products:
         if i.stock<5:
-            stock=Notification(
-                seller_id=seller_id,
-                message="The product "+i.product_name+" is on low stock with "+str(i.stock),
-            )
-            stock.save()
+            existing_notification = Notification.objects.filter(
+                Q(seller_id=seller_id) & Q(message__icontains=i.product_name)
+            ).exists()
+            if not existing_notification:
+
+
+                stock=Notification(
+                    seller_id=seller_id,
+                    message="The product "+i.product_name+" is on low stock with "+str(i.stock),
+                )
+                stock.save()
     return redirect("seller_index")
 @login_required
 def showNotification(request,seller_id):
@@ -1176,6 +1194,29 @@ def mark_notifications_as_read(request):
     noti=Notification.objects.filter(seller_id=request.user.id,read=False)
     noti.delete()
     return redirect('seller_index')
+
+
+
+def order_notification(seller_id, product_id):
+    # Retrieve the order
+    print("function")
+    
+    # Assuming you have a list of products in the order
+    
+
+    product=Product.objects.get(id=product_id)
+    print(product_id)
+        # Create a notification for the seller if the product is associated with the seller
+    if product.seller_id == seller_id:
+        print("if")
+        notification = Notification(
+            seller_id=seller_id,
+            message=f"An order for the product {product.product_name} has been placed."
+        )
+        notification.save()
+
+    
+
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
@@ -1356,6 +1397,7 @@ def gifthamper(request):
     return render(request,'gifthamper.html')
 
 def seller_orders(request):
+    print("BASE VIEW")
     seller_id = request.user.id
 
     # Step 1: Query orders for a specific seller with successful payment status
@@ -1384,8 +1426,9 @@ def seller_orders(request):
 
     # Step 3: Pass the data to the template
     context = {'orders_data': orders_data}
-
-    for i in orders_data:
-        print(i)
+    
+    
+    
+   
     
     return render(request, 'seller_orders.html', context)

@@ -128,6 +128,9 @@ def custom_login(request):
                 elif user.is_seller:
                     low_stock_notification_url = reverse('low_stock_notification', args=[user.id])
                     return redirect(low_stock_notification_url)
+                
+                
+                    
             else:
                 error_message = "Invalid login credentials."
                 return render(request, 'custlogin.html', {'error_message': error_message})
