@@ -549,6 +549,8 @@ def add_product(request):
             price = request.POST.get('price')
             brand_name = request.POST.get('brand_name')
             stock = request.POST.get('stock')
+            category = request.POST.get('category')  # Retrieve category from the form
+            subcategory = request.POST.get('subcategory') 
 
             # Validate the form data here if needed
             # You can use your ProductForm for validation
@@ -563,6 +565,8 @@ def add_product(request):
                 price=price,
                 brand_name=brand_name,
                 stock=stock,
+                category=category,  # Save the category to the product
+                subcategory=subcategory,
                 seller=request.user  # Assign the logged-in seller to the product
             )
             product.save()

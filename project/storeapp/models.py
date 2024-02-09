@@ -48,6 +48,8 @@ class Product(models.Model):
     
     # Add the status field
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='In Stock')
+    category = models.CharField(max_length=100, null=True)
+    subcategory = models.CharField(max_length=100, null=True)
 
     def save(self, *args, **kwargs):
         # Update the status based on the stock value

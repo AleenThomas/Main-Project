@@ -1,3 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <html>
 <head>
 
@@ -18,9 +33,7 @@
         <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
      
         <style>
-          .error-message {
-            color: red;
-        }
+
             body {
                 background-color: #fbfbfb;
               }
@@ -61,6 +74,11 @@
                 overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
               }
 
+              .list-group :hover{
+                background-color:#66c2ff; /* Set the background color to blue */
+                padding: 0; /* Optionally, adjust padding as needed */
+              }
+             
         </style>
     </head>
 
@@ -83,7 +101,7 @@
           </a>
           <a
              href="{% url "add_product" %}"
-             class="list-group-item list-group-item-action py-2 ripple"
+             class="list-group-item list-group-item-action py-2 ripple "
              >
             <i class="fas fa-chart-area fa-fw me-3"></i
               ><span>Add Product</span>
@@ -99,7 +117,12 @@
              ><i class="fas fa-chart-line fa-fw me-3"></i
             ><span>View Product</span></a
             >
-          <a
+            <a
+             href="{% url "seller_orders" %}"
+             class="list-group-item list-group-item-action py-2 ripple"
+             ><i class="fas fa-chart-bar fa-fw me-3"></i><span>Orders</span></a
+            >
+          {% comment %} <a
              href=""
              class="list-group-item list-group-item-action py-2 ripple"
              >
@@ -110,34 +133,42 @@
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-chart-bar fa-fw me-3"></i><span>Orders</span></a
             >
-          {% comment %} <a
+          <a
              href=""
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-globe fa-fw me-3"></i
             ><span>International</span></a
-            > {% endcomment %}
-          {% comment %} <a
+            >
+          <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-building fa-fw me-3"></i
             ><span>Partners</span></a
-            > {% endcomment %}
-          {% comment %} <a
+            >
+          <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-calendar fa-fw me-3"></i
             ><span>Calendar</span></a
-            > {% endcomment %}
-          {% comment %} <a
+            >
+          <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
-            > {% endcomment %}
-          {% comment %} <a
+            >
+          <a
              href="#"
              class="list-group-item list-group-item-action py-2 ripple"
              ><i class="fas fa-money-bill fa-fw me-3"></i><span>Sales</span></a
-            >
+            > {% endcomment %}
+            <a
+             href="{% url "quality" %}"
+             class="list-group-item list-group-item-action py-2 ripple"
+             aria-current="true"
+             >
+            <i class="fas fa-tachometer-alt fa-fw me-3"></i
+              ><span>Quality</span>
+          </a>
         </div>
       </div>
     </nav>
@@ -171,7 +202,7 @@
                 <span class="badge badge-danger"></span>
               </a>
             </li>
-      {% endcomment %}
+      
             <!-- User dropdown -->
             <li class="nav-item dropdown">
               <a
@@ -189,9 +220,6 @@
                 <a class="dropdown-item" href="{% url "seller_product_listing" %}">Register</a>
                 <a class="dropdown-item" href="{% url "custom_login" %}">Login</a>
                 <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
-                {% if user.is_authenticated %}
-                    <h6 class=" text-dark" >{{user.name}}<h6>
-              {% endif %}
               </div>
             </li>
           </ul>
@@ -266,7 +294,29 @@
                     <div class="error-message" id="product_name_error"></div>
                 </div> {% endcomment %}
             </div>
-           
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                  <label for="category" class="form-label">Category:</label>
+                  <select class="form-select" id="category" name="category" required>
+                      <option value="" selected disabled>Select category</option>
+                      <option value="Spices">Spices</option>
+                      <option value="Beverages">Beverages</option>
+                      <!-- Add more categories as needed -->
+                  </select>
+                  <div class="error-message" id="category_error"></div>
+              </div>
+              <div class="col-md-6 mb-3">
+                  <label for="subcategory" class="form-label">Subcategory:</label>
+                  <select class="form-select" id="subcategory" name="subcategory" required>
+                      <option value="" selected disabled>Select subcategory</option>
+                      <!-- Subcategory options will be populated dynamically -->
+                  </select>
+                  <div class="error-message" id="subcategory_error"></div>
+              </div>
+          </div>
+          
+        
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
@@ -274,6 +324,42 @@
     <!-- Include Bootstrap 5 JavaScript and jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const categorySelect = document.getElementById("category");
+          const subcategorySelect = document.getElementById("subcategory");
+          const subcategoryOptions = {
+              "Spices": ["Whole Spices", "Spice Mix"],
+              "Beverages": ["Tea", "Coffee"]
+              // Add more category-subcategory mappings as needed
+          };
+
+          categorySelect.addEventListener("change", function() {
+              const selectedCategory = categorySelect.value;
+              subcategorySelect.innerHTML = ""; // Clear existing options
+
+              if (selectedCategory in subcategoryOptions) {
+                  subcategoryOptions[selectedCategory].forEach(function(subcategory) {
+                      const option = document.createElement("option");
+                      option.value = subcategory;
+                      option.textContent = subcategory;
+                      subcategorySelect.appendChild(option);
+                  });
+              } else {
+                  // If no subcategories are available for the selected category
+                  const option = document.createElement("option");
+                  option.textContent = "No subcategories available";
+                  subcategorySelect.appendChild(option);
+              }
+          });
+
+          // Initialize subcategory dropdown on page load
+          categorySelect.dispatchEvent(new Event('change'));
+      });
+  </script>
+  
+  
     <script>
       document.addEventListener("DOMContentLoaded", function() {
           const productNameInput = document.getElementById("product_name");
@@ -381,5 +467,8 @@
           }
       });
   </script>
+
+ 
+
 </body>
 </html>
