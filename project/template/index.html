@@ -315,9 +315,10 @@ https://templatemo.com/tm-559-zay-shop
                                             <span class="badge bg-danger text-white">Out of Stock</span>
                                         {% endif %}                                        
                                 </div> 
+                                
                                     <div class="mt-2">                                        
-                                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-warning"><i class="fas fa-eye"></i></a>
-                                        <a href="#" onclick="toggleWishlist('{{ product.id }}')" class="btn btn-outline-danger" id="wishlist-icon-{{ product.id }}">
+                                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-success"><i class="fas fa-eye"></i></a>
+                                        <a href="{% url 'add_to_wishlist' product_id=product.id%}" onclick="" class="btn btn-outline-danger" id="wishlist-icon-{{ product.id }}">
                                             <i class="fas fa-heart{% if product_in_wishlist %} wishlist-active{% endif %}"></i>
                                         </a>
                                         {% if product.status == 'in_stock' %}
@@ -327,15 +328,24 @@ https://templatemo.com/tm-559-zay-shop
                                         {% endif %}
                                     </div>
                                 </div>
+                                
                             </div>
                     </div>
                     
                 </div>
+                
                 {% endfor %}                
             </div>
         </div>
+        
     </section>
-
+    {% if message %}
+    <div class="container">
+        <div class="alert alert-success mt-3" role="alert">
+            {{ message }}
+        </div>
+    </div>
+    {% endif %}
     <!-- Start Categories of The Month -->
     <section class="container py-5">
         <div class="row text-center pt-3">

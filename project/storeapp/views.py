@@ -27,8 +27,6 @@ from django.utils import timezone
 
 # from .models import booknow, On_payment
 
-
-
 def index(request):
     
     user=request.user
@@ -67,11 +65,14 @@ def wishlist_view(request):
 
 @login_required(login_url='loginredirect')
 def add_to_wishlist(request, product_id):
+    products_with_sentiment_sum = Product.objects.annotate(sentiment_sum=Sum('customerreview__sentiment_score')).order_by('-sentiment_sum')[:3]
+    for product in products_with_sentiment_sum:
+        print (product.product_name)
     product = get_object_or_404(Product, pk=product_id)
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     wishlist.products.add(product)
-    return JsonResponse({'message': 'Product added to wishlist'})
-
+    message = 'Product added to wishlist'
+    return render(request, 'index.html', {'message': message,'products_with_sentiment_sum' : products_with_sentiment_sum})
 @login_required(login_url='loginredirect')
 def remove_from_wishlist(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
