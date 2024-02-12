@@ -51,9 +51,10 @@ urlpatterns = [
     path('upload_image/', views.upload_image, name='upload_image'),
     path('result/', views.result, name='result'),
     path('blog/', views.blog, name='blog'),
-    path('gifthamper/', views.gifthamper, name='gifthamper'),
+    # path('gifthamper/', views.gifthamper, name='gifthamper'),
     
 
+    # path('filter-products/', views.filter_products, name='filter_products'),
 
 
     # path('notifications/', views.notification_list, name='notification_list'),

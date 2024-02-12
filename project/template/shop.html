@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="{% static 'css\bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css\templatemo.css' %}">
@@ -246,36 +247,38 @@ https://templatemo.com/tm-559-zay-shop
       {% endfor %}            
     {% endif %}
     <div class="container py-5">
+        
         <div class="row">
 
             <div class="col-lg-3">
                 <h1 class="h2 pb-4">Categories</h1>
                 <ul class="list-unstyled templatemo-accordion">
                     <li class="pb-3">
-                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
+                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none category-link" href="#" data-category="Spices">
                             Spices
                             <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
                         </a>
                         <ul class="collapse show list-unstyled pl-3">
-                            <li><a class="text-decoration-none" href="#"> Whole Spices</a></li>
-                            <li><a class="text-decoration-none" href="#">Spice Mix</a></li>
+                            <li><a class="text-decoration-none subcategory-link" href="#" data-subcategory="Whole Spices">Whole Spices</a></li>
+                            <li><a class="text-decoration-none subcategory-link" href="#" data-subcategory="Spice Mix">Spice Mix</a></li>
                         </ul>
                     </li>
                     <li class="pb-3">
-                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
+                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none category-link" href="#" data-category="Beverages">
                             Beverages
                             <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
                         </a>
                         <ul id="collapseTwo" class="collapse list-unstyled pl-3">
-                            <li><a class="text-decoration-none" href="#">Tea</a></li>
-                            <li><a class="text-decoration-none" href="#">Cofee</a></li>
+                            <li><a class="text-decoration-none subcategory-link" href="#" data-subcategory="Tea">Tea</a></li>
+                            <li><a class="text-decoration-none subcategory-link" href="#" data-subcategory="Coffee">Coffee</a></li>
                         </ul>
                     </li>
-                   
                 </ul>
             </div> 
+           
 
              <div class="col-lg-9">
+                
                 <div class="row">
                     <div class="col-md-6">
                         <ul class="list-inline shop-top-menu pb-3 pt-1">
@@ -300,8 +303,14 @@ https://templatemo.com/tm-559-zay-shop
                         </div>
                     </div>
                 </div>
+                
                 <div class="row">
-                    
+                    <div class="col-lg-9">
+                        <div id="filtered-products-container" class="col-lg-9">
+                            <!-- Filtered products will be displayed here -->
+                        </div>
+                        <!-- Add other sections of your shop page -->
+                    </div>
                     {% for product in supplier_products %}
                     <div class="col-md-4">
                         <div class="card mb-4 product-wap rounded-0">
@@ -438,16 +447,16 @@ https://templatemo.com/tm-559-zay-shop
                                     <div class="carousel-item active">
                                         <div class="row">
                                             <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_01.png" alt="Brand Logo"></a>
+                                                <a href="#"><img class="img-fluid brand-img" src="{% static 'img/orika_bring_logo0_1.jpg' %}" alt="Brand Logo"></a>
                                             </div>
                                             <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_02.png" alt="Brand Logo"></a>
+                                                <a href="#"><img class="img-fluid brand-img w-100 h-80" src="{% static 'img/octavious.png' %}" alt="Brand Logo"></a>
                                             </div>
                                             <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_03.png" alt="Brand Logo"></a>
+                                                <a href="#"><img class="img-fluid brand-img" src="{% static 'img/keralaspice.png' %}" alt="Brand Logo"></a>
                                             </div>
                                             <div class="col-3 p-md-5">
-                                                <a href="#"><img class="img-fluid brand-img" src="assets/img/brand_04.png" alt="Brand Logo"></a>
+                                                <a href="#"><img class="img-fluid brand-img" src="{% static 'img/kerala.jpg' %}" alt="Brand Logo"></a>
                                             </div>
                                         </div>
                                     </div>
@@ -613,6 +622,46 @@ https://templatemo.com/tm-559-zay-shop
     <script src="{% static 'js\templatemo.js' %}"></script>
     <script src="{% static 'js\templatemo.js' %}"></script>
     <script src="{% static 'js\custom.js' %}"></script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Event listener for category links
+        $('.category-link').click(function(e) {
+            e.preventDefault();
+            var category = $(this).data('category');
+            filterProducts(category);
+        });
+    
+        // Event listener for subcategory links
+        $('.subcategory-link').click(function(e) {
+            e.preventDefault();
+            var category = $(this).closest('li').prev('.category-link').data('category');
+            var subcategory = $(this).data('subcategory');
+            filterProducts(category, subcategory);
+        });
+    
+        // Function to filter products
+        function filterProducts(category, subcategory) {
+            $.ajax({
+                url: '/filter-products/',  // URL to your view that handles filtering
+                type: 'GET',
+                data: {
+                    category: category,
+                    subcategory: subcategory
+                },
+                success: function(response) {
+                    // Update the HTML content of the container with the filtered products
+                    $('#filtered-products-container').html(response);
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(errmsg);
+                }
+            });
+        }
+    });
+</script>
     <script>
         function toggleWishlist(button) {
             const productId = button.getAttribute('data-product-id');

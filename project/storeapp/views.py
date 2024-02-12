@@ -1397,9 +1397,9 @@ def sales_report(request):
 def blog(request):
     
     return render(request,'blog.html')
-def gifthamper(request):
+# def gifthamper(request):
     
-    return render(request,'gifthamper.html')
+#     return render(request,'gifthamper.html')
 
 def seller_orders(request):
     print("BASE VIEW")
@@ -1437,3 +1437,22 @@ def seller_orders(request):
    
     
     return render(request, 'seller_orders.html', context)
+
+# def filter_products(request):
+#     if request.method == 'GET' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+#         # Get category and subcategory from the request
+#         category = request.GET.get('category')
+#         subcategory = request.GET.get('subcategory')
+
+#         # Query the filtered products based on category and subcategory
+#         filtered_products = Product.objects.filter(category=category, subcategory=subcategory)
+
+#         # Convert the filtered products to JSON data
+#         filtered_products_data = [{'product_name': product.product_name, 'price': product.price} for product in filtered_products]
+
+
+#         # Return the JSON response
+#         return JsonResponse({'filtered_products': filtered_products_data})
+#     else:
+#         # If it's not an AJAX GET request, return an error response
+#         return JsonResponse({'error': 'Invalid request'}, status=400)

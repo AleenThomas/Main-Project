@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Blog Post</title>
+</head>
+<body>
+    <h1>New Blog Post</h1>
+    <form action="/submit_blog" method="post" enctype="multipart/form-data">
+        <!-- Text area for writing content -->
+        <div>
+            <label for="blog_content">Blog Content:</label><br>
+            <textarea id="blog_content" name="blog_content" rows="5" cols="50"></textarea>
+        </div><br>
+
+        <!-- Image uploading field -->
+        <div>
+            <label for="blog_image">Upload Image:</label><br>
+            <input type="file" id="blog_image" name="blog_image">
+        </div><br>
+
+        <!-- Submit button -->
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</body>
+</html>
