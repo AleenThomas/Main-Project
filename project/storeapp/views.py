@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from .models import Customer_Profile
 # from .forms import ProductForm
-from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification,PredictionImage,CustomerReview
+from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification,PredictionImage,CustomerReview,BlogPost
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
@@ -200,112 +200,6 @@ def seller_reg_step(request):
 
 
 
-# Import the necessary models
-
-
-# ...
-
-# def seller_reg_step(request):
-#     if request.method == 'POST':
-#         step = request.POST.get('step')
-        
-#         if step == '1':
-#             # Step 1 Data
-#             name = request.POST.get('name')
-#             email = request.POST.get('email')
-#             password = request.POST.get('password')
-#             gstn = request.POST.get('gstn')
-
-#             if CustomUser.objects.filter(email=email).exists():
-#                 messages.error(request, "Email already exists.")
-#             else:
-#                 user = CustomUser(name=name, email=email, gstn=gstn)
-#                 user.password = make_password(password)
-#                 user.is_seller = True
-#                 user.save()
-
-#                 request.session['user_id'] = user.id
-
-#                 messages.success(request, "Step 1 completed successfully.")
-#                 return redirect('reg_step')
-
-#         elif step == '2':
-#             # Step 2 Data
-#             user_id = request.session.get('user_id')
-#             if user_id:
-#                 user = CustomUser.objects.get(id=user_id)
-                
-#                 store_name = request.POST.get('store-name')
-#                 phone_number = request.POST.get('phone-number')
-#                 pincode = request.POST.get('pincode')
-#                 pickup_address = request.POST.get('pickup-address')
-#                 city = request.POST.get('city')
-#                 state = request.POST.get('state')
-
-#                 seller_details = user.seller_details_user.all().first()
-
-#                 if not seller_details:
-#                     seller_details = SellerDetails(
-#                         user=user,
-#                         store_name=store_name,
-#                         phone_number=phone_number,
-#                         pincode=pincode,
-#                         pickup_address=pickup_address,
-#                         city=city,
-#                         state=state
-#                     )
-#                     seller_details.save()
-#                 else:
-#                     seller_details.store_name = store_name
-#                     seller_details.phone_number = phone_number
-#                     seller_details.pincode = pincode
-#                     seller_details.pickup_address = pickup_address
-#                     seller_details.city = city
-#                     seller_details.state = state
-#                     seller_details.save()
-
-#                 messages.success(request, "Step 2 completed successfully.")
-#                 return redirect('reg_step')
-
-#         elif step == '3':
-#             # Step 3 Data
-#             user_id = request.session.get('user_id')
-#             if user_id:
-#                 user = CustomUser.objects.get(id=user_id)
-                
-#                 account_holder_name = request.POST.get('account-holder-name')
-#                 account_number = request.POST.get('account-number')
-#                 bank_name = request.POST.get('bank-name')
-#                 branch = request.POST.get('branch')
-#                 ifsc_code = request.POST.get('ifsc-code')
-
-#                 seller_details = user.seller_details_user.all().first()
-
-#                 if not seller_details:
-#                     seller_details = SellerDetails(
-#                         user=user,
-#                         account_holder_name=account_holder_name,
-#                         account_number=account_number,
-#                         bank_name=bank_name,
-#                         branch=branch,
-#                         ifsc_code=ifsc_code
-#                     )
-#                     seller_details.save()
-#                 else:
-#                     seller_details.account_holder_name = account_holder_name
-#                     seller_details.account_number = account_number
-#                     seller_details.bank_name = bank_name
-#                     seller_details.branch = branch
-#                     seller_details.ifsc_code = ifsc_code
-#                     seller_details.save()
-
-#                 messages.success(request, "Step 3 completed successfully.")
-#                 # Redirect to confirmation page or other steps
-#                 return redirect('seller_reg_step')
-
-#     return render(request, 'reg_step.html')
-
-
 
 
 
@@ -436,6 +330,7 @@ def product_detail(request, product_id):
     }
 
     return render(request, 'shop-single.html',context)
+
 @login_required(login_url='user_login')
 def customer_ProductView(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
@@ -1394,9 +1289,9 @@ def result(request):
 def sales_report(request):
     
     return render(request,'sales-report.html')
-def blog(request):
-    
-    return render(request,'blog.html')
+
+
+
 # def gifthamper(request):
     
 #     return render(request,'gifthamper.html')
@@ -1456,3 +1351,36 @@ def seller_orders(request):
 #     else:
 #         # If it's not an AJAX GET request, return an error response
 #         return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def createblog(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        image = request.FILES.get('image')
+        
+        # Assuming you're using Django's built-in user authentication system
+        author = request.user
+        
+        if title and content:  # Ensure title and content are provided
+            new_post = BlogPost(
+                title=title,
+                content=content,
+                image=image,
+                author=author,
+                created_at=timezone.now()
+            )
+            new_post.save()
+            print("blog")
+            return redirect('seller_index')  # Redirect to blog list page after successful submission
+        else:
+            # Handle the case where either title or content is missing
+            # You may want to render a form with an error message here
+            pass
+    
+    return render(request, 'createblog.html')
+
+def blog(request):
+    blogs = BlogPost.objects.all()  # Fetch all blogs from the database
+    return render(request, 'blog.html', {'blogs': blogs})
+    

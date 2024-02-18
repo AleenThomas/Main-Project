@@ -193,3 +193,12 @@ class CustomerReview(models.Model):
         self.product.save()
 
 
+class BlogPost(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='blog_images/', null=True, blank=True)
+
+    def __str__(self):
+        return self.title

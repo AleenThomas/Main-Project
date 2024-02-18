@@ -415,7 +415,7 @@ https://templatemo.com/tm-559-zay-shop
 
 
 
-    <div class="container mt-3 pt-2">
+    {% comment %} <div class="container mt-3 pt-2">
       <!-- Other content goes here -->
   
       <!-- Icon for posting a new blog -->
@@ -423,26 +423,29 @@ https://templatemo.com/tm-559-zay-shop
         <i class="bi bi-pencil-fill text-dark"></i>
           <span class="hover-text">Post your content</span>
       </a>
-  </div>
-    <div class="projcard-container">
+  </div> {% endcomment %}
     
-      <div class="projcard projcard-blue">
+  <div class="projcard-container">
+    {% for blog in blogs %}
+    <div class="projcard projcard-blue">
         <div class="projcard-innerbox">
-          <img class="projcard-img" src="https://picsum.photos/800/600?image=1041" />
-          <div class="projcard-textbox">
-            <div class="projcard-title">Card Title</div>
-            <div class="projcard-subtitle">This explains the card in more detail</div>
-            <div class="projcard-bar"></div>
-            <div class="projcard-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-            <div class="projcard-tagbox">
-              <span class="projcard-tag">HTML</span>
-              <span class="projcard-tag">CSS</span>
+            <img class="projcard-img" src="{{ blog.image.url }}" />
+            <div class="projcard-textbox">
+                <div class="projcard-title">{{ blog.title }}</div>
+                {% comment %} <div class="projcard-subtitle">{{ blog.summary }}</div> {% endcomment %}
+                <div class="projcard-bar"></div>
+                <div class="projcard-description">{{ blog.content }}</div>
+                <div class="projcard-tagbox">
+                    {% for tag in blog.tags.all %}
+                    <span class="projcard-tag">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      
-      <div class="projcard projcard-red">
+        {% endfor %}
+    </div>
+</div>
+      {% comment %} <div class="projcard projcard-red">
         <div class="projcard-innerbox">
           <img class="projcard-img" src="https://picsum.photos/800/600?image=1080" />
           <div class="projcard-textbox">
@@ -492,7 +495,7 @@ https://templatemo.com/tm-559-zay-shop
         </div>
       </div>
       
-    </div>
+    </div> {% endcomment %}
     <!-- End Featured Product -->
     <footer class="bg-dark" id="tempaltemo_footer">
         <div class="container">

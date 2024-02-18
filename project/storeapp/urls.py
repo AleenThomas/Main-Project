@@ -51,6 +51,8 @@ urlpatterns = [
     path('upload_image/', views.upload_image, name='upload_image'),
     path('result/', views.result, name='result'),
     path('blog/', views.blog, name='blog'),
+    path('createblog/', views.createblog, name='createblog'),
+
     # path('gifthamper/', views.gifthamper, name='gifthamper'),
     
 
