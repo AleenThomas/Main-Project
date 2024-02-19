@@ -186,46 +186,58 @@
 <body>
     <main style="margin-top: 58px">
 
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form action="{% url 'farm_details' %}" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="farm_name" class="form-label">Farm Name:</label>
-                            <input type="text" class="form-control" id="farm_name" name="farm_name" required>
+      <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form action="{% url 'farm_details' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="farm_name" class="form-label">Farm Name:</label>
+                                <input type="text" class="form-control" id="farm_name" name="farm_name" required value="{% if farm %}{{ farm2.farm_name }}{% endif %}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location:</label>
+                                <input type="text" class="form-control" id="location" name="location" required value="{% if farm %}{{ farm2.location }}{% endif %}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description:</label>
+                                <textarea class="form-control" id="description" name="description" rows="4" required>{% if farm %}{{ farm2.description }}{% endif %}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="activities" class="form-label">Activities:</label>
+                                <textarea class="form-control" id="activities" name="activities" rows="4" required>{% if farm %}{{ farm2.activities }}{% endif %}</textarea>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="location" class="form-label">Location:</label>
-                            <input type="text" class="form-control" id="location" name="location" required>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="visiting_hours_from" class="form-label">Visiting Hours From:</label>
+                                <input type="time" class="form-control" id="visiting_hours_from" name="visiting_hours_from" required value="{% if farm %}{{ farm2.visiting_hours_from }}{% endif %}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="visiting_hours_to" class="form-label">Visiting Hours To:</label>
+                                <input type="time" class="form-control" id="visiting_hours_to" name="visiting_hours_to" required value="{% if farm %}{{ farm2.visiting_hours_to }}{% endif %}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact_info" class="form-label">Contact Information:</label>
+                                <input type="text" class="form-control" id="contact_info" name="contact_info" required value="{% if farm %}{{ farm2.contact_info }}{% endif %}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Upload Image:</label>
+                                <input type="file" class="form-control" id="image" name="image" required accept="image/*">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description:</label>
-                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="activities" class="form-label">Activities:</label>
-                            <textarea class="form-control" id="activities" name="activities" rows="4" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="visiting_hours" class="form-label">Visiting Hours:</label>
-                            <input type="text" class="form-control" id="visiting_hours" name="visiting_hours" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="contact_info" class="form-label">Contact Information:</label>
-                            <input type="text" class="form-control" id="contact_info" name="contact_info" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Upload Image:</label>
-                            <input type="file" class="form-control" id="image" name="image" required accept="image/*">
-                        </div>
-                        <div class="mb-3 text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="{% url 'seller_booking'  %}"><button type="button" class="btn btn-success" id="editButton">Next</button></a>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
+    
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

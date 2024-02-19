@@ -1383,35 +1383,69 @@ def createblog(request):
 def blog(request):
     blogs = BlogPost.objects.all()  # Fetch all blogs from the database
     return render(request, 'blog.html', {'blogs': blogs})
-
+@login_required
 def farm_details(request):
+    farm2=None
+    farm1 = Farm.objects.filter(seller=request.user).exists()
+    if farm1:
+        farm2 = Farm.objects.get(seller=request.user)
+    print(farm2)
+    print(farm1)
     seller=request.user
     if request.method == 'POST':
         farm_name = request.POST.get('farm_name')
         location = request.POST.get('location')
         description = request.POST.get('description')
         activities = request.POST.get('activities')
-        visiting_hours = request.POST.get('visiting_hours')
+        visiting_hours_from = request.POST.get('visiting_hours_from')
+        visiting_hours_to = request.POST.get('visiting_hours_to')
+
         contact_info = request.POST.get('contact_info')
         image = request.FILES.get('image')
-        
-        # Save the farm details to the database
-        new_farm = Farm.objects.create(
+        if farm1:
+            farm2.farm_name=farm_name
+            farm2.location=location
+            farm2.description=description
+            farm2.activities=activities
+            farm2.visiting_hours_from=visiting_hours_from
+            farm2.visiting_hours_to=visiting_hours_to
+            farm2.contact_info=contact_info
+            farm2.image=image
+            farm2.save()
+            return redirect('seller_index')
+        else:
+            new_farm = Farm.objects.create(
             farm_name=farm_name,
             location=location,
             description=description,
             activities=activities,
-            visiting_hours=visiting_hours,
+            visiting_hours_from=visiting_hours_from,
+            visiting_hours_to=visiting_hours_to,
             contact_info=contact_info,
             image=image,
             seller=seller,
             created_at=timezone.now()
-        )
-        
-        return redirect('seller_index')  # Redirect to farm detail page after successful submission
-    
-    return render(request, 'farm_details.html')
+            )
+            new_farm.save()
+            return redirect('seller_index')
+            
+            
+            
+        # Save the farm details to the database
+    return render(request,'farm_details.html',{'farm':farm1,'farm2':farm2})
+@login_required
 def farm_view(request):
     
     farms = Farm.objects.all()  # Fetch all blogs from the database
     return render(request, 'farm_view.html', {'farms': farms})    
+@login_required
+def farm_view_details(request,farm_id):
+    
+    farms = Farm.objects.get(id=farm_id)  # Fetch all blogs from the database
+    return render(request, 'farm_view_detail.html', {'farm': farms})  
+
+def farm_booking(request):
+    
+    return render(request,'farm_booking.html')
+def seller_booking(request):
+    return render(request,'booking_seller.html')

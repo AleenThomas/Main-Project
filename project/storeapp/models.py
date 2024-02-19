@@ -210,7 +210,9 @@ class Farm(models.Model):
     location = models.CharField(max_length=255)
     description = models.TextField()
     activities = models.TextField()
-    visiting_hours = models.CharField(max_length=100)
+    visiting_hours_from = models.CharField(max_length=100,null=True)
+    visiting_hours_to = models.CharField(max_length=100,null=True)
+
     contact_info = models.CharField(max_length=100)
     image = models.ImageField(upload_to='farm_images/')
     created_at = models.DateTimeField(auto_now_add=True)

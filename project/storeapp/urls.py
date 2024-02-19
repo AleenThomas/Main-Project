@@ -54,6 +54,9 @@ urlpatterns = [
     path('createblog/', views.createblog, name='createblog'),
     path('farm_details/',views.farm_details,name='farm_details'),
     path('farm_view/',views.farm_view,name='farm_view'),
+    path('farm_view_details <int:farm_id>',views.farm_view_details,name='farm_view_details'),
+    path('farm_booking/',views.farm_booking,name='farm_booking'),
+    path('booking_seller/',views.seller_booking,name='seller_booking'),
 
     # path('gifthamper/', views.gifthamper, name='gifthamper'),
     

@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Details Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        {% comment %} <h2 class="text-center">Hotel Details Form</h2> {% endcomment %}
+                    </div>
+                    <div class="card-body">
+                        <form id="hotelDetailsForm">
+                            <div class="form-group">
+                                <label for="hotelName">Hotel Name:</label>
+                                <input type="text" class="form-control" id="hotelName" name="hotelName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="availableRooms">Available Rooms:</label>
+                                <input type="number" class="form-control" id="availableRooms" name="availableRooms" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pricePerNight">Price per Night:</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="number" class="form-control" id="pricePerNight" name="pricePerNight" min="0" step="any" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (optional if needed) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- SweetAlert JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#hotelDetailsForm').submit(function(event){
+                event.preventDefault();
+                const formData = $(this).serializeArray();
+                const hotelDetails = {};
+                $(formData).each(function(index, obj){
+                    hotelDetails[obj.name] = obj.value;
+                });
+                console.log(hotelDetails); // You can send this data to your backend or store it locally
+                // For now, let's assume we're storing it locally
+                storeHotelDetailsLocally(hotelDetails);
+            });
+        });
+
+        function storeHotelDetailsLocally(data) {
+            const hotels = JSON.parse(localStorage.getItem('hotels')) || [];
+            hotels.push(data);
+            localStorage.setItem('hotels', JSON.stringify(hotels));
+            // Display SweetAlert message
+            swal({
+                title: "Success",
+                text: "Hotel details stored successfully!",
+                icon: "success",
+                button: "OK",
+            });
+            // You can redirect the user or perform further actions here
+        }
+    </script>
+</body>
+</html>
