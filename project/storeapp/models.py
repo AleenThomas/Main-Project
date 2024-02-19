@@ -202,3 +202,15 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+    
+    
+class Farm(models.Model):
+    seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    farm_name = models.CharField(max_length=100)
+    location = models.CharField(max_length=255)
+    description = models.TextField()
+    activities = models.TextField()
+    visiting_hours = models.CharField(max_length=100)
+    contact_info = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='farm_images/')
+    created_at = models.DateTimeField(auto_now_add=True)

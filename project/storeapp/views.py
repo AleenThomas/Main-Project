@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from .models import Customer_Profile
 # from .forms import ProductForm
-from .models import Product,CustomUser,SellerDetails,Wishlist,CartItem,Order,Notification,PredictionImage,CustomerReview,BlogPost
+from .models import *
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
@@ -1383,4 +1383,35 @@ def createblog(request):
 def blog(request):
     blogs = BlogPost.objects.all()  # Fetch all blogs from the database
     return render(request, 'blog.html', {'blogs': blogs})
+
+def farm_details(request):
+    seller=request.user
+    if request.method == 'POST':
+        farm_name = request.POST.get('farm_name')
+        location = request.POST.get('location')
+        description = request.POST.get('description')
+        activities = request.POST.get('activities')
+        visiting_hours = request.POST.get('visiting_hours')
+        contact_info = request.POST.get('contact_info')
+        image = request.FILES.get('image')
+        
+        # Save the farm details to the database
+        new_farm = Farm.objects.create(
+            farm_name=farm_name,
+            location=location,
+            description=description,
+            activities=activities,
+            visiting_hours=visiting_hours,
+            contact_info=contact_info,
+            image=image,
+            seller=seller,
+            created_at=timezone.now()
+        )
+        
+        return redirect('seller_index')  # Redirect to farm detail page after successful submission
     
+    return render(request, 'farm_details.html')
+def farm_view(request):
+    
+    farms = Farm.objects.all()  # Fetch all blogs from the database
+    return render(request, 'farm_view.html', {'farms': farms})    
