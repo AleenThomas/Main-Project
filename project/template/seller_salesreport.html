@@ -1,0 +1,103 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Sales Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                {% for item in order.cart_items.all %}
+                    <tr>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ item.product.product_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ order.total_price }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+ {% endcomment %}
+
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Sales Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product_id, data in sales_data.items %}
+                <tr>
+                    <td>{{ data.order_date }}</td>  <!-- Assuming you want to display the order date of the first associated order -->
+                    <td>{{ data.product_name }}</td>
+                    <td>{{ data.total_quantity }}</td>
+                    <td>{{ data.total_sales }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

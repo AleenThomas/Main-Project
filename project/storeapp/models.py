@@ -216,3 +216,15 @@ class Farm(models.Model):
     contact_info = models.CharField(max_length=100)
     image = models.ImageField(upload_to='farm_images/')
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.farm_name
+class Farm_Booking(models.Model):
+    seller=models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=4)
+    stay_name=models.CharField(max_length=100)
+    rooms=models.CharField(max_length=10)
+    price = models.DecimalField(max_digits=10, decimal_places=2,null=True) 
+    
+    def __str__(self):
+        return self.stay_name 
+    
+    

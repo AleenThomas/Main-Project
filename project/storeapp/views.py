@@ -1427,7 +1427,7 @@ def farm_details(request):
             created_at=timezone.now()
             )
             new_farm.save()
-            return redirect('seller_index')
+            # return redirect('seller_index')
             
             
             
@@ -1448,4 +1448,127 @@ def farm_booking(request):
     
     return render(request,'farm_booking.html')
 def seller_booking(request):
+    seller=request.user
+    
+    if request.method == 'POST':
+       stay_name=request.POST.get('stay_name')
+       rooms=request.POST.get('rooms') 
+       price=request.POST.get('price')
+       if stay_name and price:
+            stay = Farm_Booking(
+                stay_name=stay_name,
+                rooms=rooms,
+                seller=seller,
+                price=price,
+            )
+            stay.save()
+            print('fkjj')
+            return redirect('seller_index')
+            
+           
     return render(request,'booking_seller.html')
+
+def seller_report(request):
+    return render(request, 'seller_report.html')
+
+from django.http import HttpResponse, HttpResponseNotAllowed
+from django.template.loader import get_template
+
+# def generate_sales_report(request):
+#     if request.method == 'POST':
+#         start_date = request.POST.get('start_date')
+#         end_date = request.POST.get('end_date')
+
+#         # Convert start_date and end_date to datetime objects
+#         # Assuming start_date and end_date are in the format 'YYYY-MM-DD'
+#         start_datetime = timezone.make_aware(timezone.datetime.strptime(start_date, '%Y-%m-%d'))
+#         end_datetime = timezone.make_aware(timezone.datetime.strptime(end_date, '%Y-%m-%d'))
+
+
+#         # Filter orders based on the selected date range
+#         orders = Order.objects.filter(order_date__range=[start_datetime, end_datetime])
+
+#         # Generate PDF
+#         template_path = 'seller_salesreport.html'
+#         context = {'orders': orders}
+#         response = HttpResponse(content_type='application/pdf')
+#         response['Content-Disposition'] = 'filename="sales_report.pdf"'
+
+#         template = get_template(template_path)
+#         html = template.render(context)
+
+#         # Create PDF
+#         pisa_status = pisa.CreatePDF(html, dest=response)
+#         if pisa_status.err:
+#             return HttpResponse('Error creating PDF', status=500)
+#         return response
+#     else:
+#         # Handle GET request or other methods if needed
+#         return HttpResponseNotAllowed(['POST'])
+
+
+
+def generate_sales_report(request):
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        # Convert start_date and end_date to datetime objects with timezone information
+        start_datetime = timezone.make_aware(timezone.datetime.strptime(start_date, '%Y-%m-%d'))
+        end_datetime = timezone.make_aware(timezone.datetime.strptime(end_date, '%Y-%m-%d'))
+
+        # Filter orders based on the selected date range
+        orders = Order.objects.filter(order_date__range=[start_datetime, end_datetime])
+
+        # Initialize a dictionary to store sales data
+        sales_data = {}
+
+        # Iterate over each order
+        for order in orders:
+            # Get all cart items associated with the order
+            cart_items = CartItem.objects.filter(order=order)
+
+            # Iterate over each cart item
+            for cart_item in cart_items:
+                product = cart_item.product
+
+                # Check if the product is already in sales_data
+                if product.id not in sales_data:
+                    sales_data[product.id] = {
+                        'product_name': product.product_name,
+                        'total_quantity': cart_item.quantity,
+                        'total_sales': cart_item.quantity * product.price
+                    }
+                else:
+                    # Update total_quantity and total_sales
+                    sales_data[product.id]['total_quantity'] += cart_item.quantity
+                    sales_data[product.id]['total_sales'] += cart_item.quantity * product.price
+
+        # You can now use sales_data to generate the sales report
+
+        # For demonstration purposes, let's print the sales data
+        for product_id, data in sales_data.items():
+            print(f"Product: {data['product_name']}, Total Quantity Sold: {data['total_quantity']}, Total Sales: {data['total_sales']}")
+
+        # Once you have the sales data, you can proceed to generate the PDF report
+
+        # Generate PDF
+        template_path = 'seller_salesreport.html'
+        context = {'sales_data': sales_data}
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="sales_report.pdf"'
+
+        template = get_template(template_path)
+        html = template.render(context)
+
+        # Create PDF
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Error creating PDF', status=500)
+        return response
+    else:
+        # Handle GET request or other methods if needed
+        return HttpResponseNotAllowed(['POST'])
+
+def seller_sales_report(request):
+    return render(request, 'seller_salesreport.html')

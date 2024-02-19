@@ -57,6 +57,9 @@ urlpatterns = [
     path('farm_view_details <int:farm_id>',views.farm_view_details,name='farm_view_details'),
     path('farm_booking/',views.farm_booking,name='farm_booking'),
     path('booking_seller/',views.seller_booking,name='seller_booking'),
+    path('generate_sales_report/', views.generate_sales_report, name='generate_sales_report'),
+    path('seller_sales_report/',views.seller_sales_report,name='seller_sales_report'),
+    path('seller_report/',views.seller_report,name='seller_report'),
 
     # path('gifthamper/', views.gifthamper, name='gifthamper'),
     
