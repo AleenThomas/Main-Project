@@ -164,8 +164,8 @@
              class="list-group-item list-group-item-action py-2 ripple"
              aria-current="true"
              >
-            <i class="fas fa-tachometer-alt fa-fw me-3"></i
-              ><span> My Farm</span>
+             <i class="bi bi-house-fill"></i>         
+              <span> My Farm</span>
           </a> 
         </div>
       </div>
@@ -363,11 +363,12 @@
                                 <div class="align-self-center">
                                     <h2 class="h1 mb-0 me-4">₹{{ total_amount }}</h2>
                                 </div>
+                                <a href="{% url 'seller_report' %}" class="text-decoration-none text-dark">
                                 <div>
-                                  <a href="{% url 'seller_report' %}" class="text-decoration-none">
+                                 
                                     <h4>Total Sales</h4>
-                                    <p class="mb-0">Total Sales Amount</p></a>
-                                </div>
+                                    <p class="mb-0">Total Sales Amount</p>
+                                </div></a>
                             </div>
                             <div class="align-self-center">
                               <i class="fas fa-wallet text-danger fa-3x"></i>

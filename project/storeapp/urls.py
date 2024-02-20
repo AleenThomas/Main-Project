@@ -60,6 +60,8 @@ urlpatterns = [
     path('generate_sales_report/', views.generate_sales_report, name='generate_sales_report'),
     path('seller_sales_report/',views.seller_sales_report,name='seller_sales_report'),
     path('seller_report/',views.seller_report,name='seller_report'),
+    path(' get_most_sold_products/', views. get_most_sold_products, name=' get_most_sold_products'),
+
 
     # path('gifthamper/', views.gifthamper, name='gifthamper'),
     

@@ -30,17 +30,24 @@ from django.utils import timezone
 def index(request):
     
     user=request.user
+    product_ids, product_names = get_most_sold_products()
+    list1=[]
+    for i in product_ids:
+        var=Product.objects.get(id=i)
+        list1.append(var)
+    print(list1)
     products_with_sentiment_sum = Product.objects.annotate(sentiment_sum=Sum('customerreview__sentiment_score')).order_by('-sentiment_sum')[:3]
     for product in products_with_sentiment_sum:
         print (product.product_name)
     if user.is_anonymous:
-        return render(request, 'index.html', {'products_with_sentiment_sum' : products_with_sentiment_sum})
+        return render(request, 'index.html', {'products_with_sentiment_sum' :products_with_sentiment_sum ,'product_ids': list1,})
 
     elif user.is_seller==True:
         return redirect('seller_index')
     else:
         
-        return render(request, 'index.html', {'products_with_sentiment_sum' : products_with_sentiment_sum})
+        return render(request, 'index.html', {'products_with_sentiment_sum' : products_with_sentiment_sum,'product_ids': list1,
+                                               })
     # return render(request,'index.html')
     
 def contact(request):
@@ -195,16 +202,6 @@ def seller_reg_step(request):
                 # Redirect to confirmation page or other steps
 
     return render(request, 'seller_reg_step.html')
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1572,3 +1569,26 @@ def generate_sales_report(request):
 
 def seller_sales_report(request):
     return render(request, 'seller_salesreport.html')
+
+from django.db.models import Sum
+
+# Assuming you want to recommend the top 5 most sold products
+def get_most_sold_products(num_recommendations=5):
+    # Aggregate total quantity sold for each product
+    sold_products = CartItem.objects.filter(order__payment_status=Order.PaymentStatusChoices.SUCCESSFUL)\
+                                     .values('product__id', 'product__product_name')\
+                                     .annotate(total_quantity_sold=Sum('quantity'))\
+                                     .order_by('-total_quantity_sold')[:num_recommendations]
+
+    # Extract product IDs and names from the query results
+    product_ids = [item['product__id'] for item in sold_products]
+    product_names = [item['product__product_name'] for item in sold_products]
+
+    # Return product IDs and names
+    return product_ids, product_names
+
+# Example usage:
+# product_ids, product_names = get_most_sold_products()
+# print("Most sold product IDs:", product_ids)
+# print("Most sold product names:", product_names)
+

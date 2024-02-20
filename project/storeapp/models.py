@@ -149,9 +149,9 @@ class Order(models.Model):
     razorpay_order_id = models.CharField(max_length=255, default=None)
     payment_status = models.CharField(
     max_length=20, choices=PaymentStatusChoices.choices, default=PaymentStatusChoices.PENDING)
-    # date_added = models.DateField(default=timezone.now)
+        # date_added = models.DateField(default=timezone.now)
 
-    # cart = models.ForeignKey(CartItem, on_delete=models.SET_NULL, null=True, blank=True)
+        # cart = models.ForeignKey(CartItem, on_delete=models.SET_NULL, null=True, blank=True)
 
     def _str_(self):
         return self.user.email
