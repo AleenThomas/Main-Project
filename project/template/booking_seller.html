@@ -245,7 +245,7 @@
                         {% comment %} <h2 class="text-center">Hotel Details Form</h2> {% endcomment %}
                     </div>
                     <div class="card-body">
-                        <form id="hotelDetailsForm" action="{% url 'seller_booking'  %}" method="post" enctype="multipart/form-data">
+                        <form id="hotelDetailsForm"  method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="hotelName">Hotel Name:</label>

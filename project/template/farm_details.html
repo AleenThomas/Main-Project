@@ -189,7 +189,7 @@
       <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form action="{% url 'farm_details' %}" method="post" enctype="multipart/form-data">
+                <form  method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
@@ -231,7 +231,7 @@
                     </div>
                     <div class="mb-3 text-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="{% url 'seller_booking'  %}"><button type="button" class="btn btn-success" id="editButton">Next</button></a>
+                        <a href="{% url 'seller_booking' farm2.id %}"><button type="button" class="btn btn-success" id="editButton">Next</button></a>
                     </div>
                 </form>
             </div>

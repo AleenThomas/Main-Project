@@ -346,22 +346,23 @@ https://templatemo.com/tm-559-zay-shop
                         </div>
                         <div class="col-md-4 col-md-pull-7">
                             <div class="booking-form">
-                                <form>
+                                <form method="post">
+                                    {% csrf_token %}
                                     <div class="form-group">
                                         <span class="form-label">Your Name</span>
-                                        <input class="form-control" type="text" placeholder="Enter your name">
+                                        <input class="form-control" type="text" placeholder="Enter your name" name="name">
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <span class="form-label">Check In</span>
-                                                <input class="form-control" type="date" required>
+                                                <input class="form-control" type="date" name="check_in" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <span class="form-label">Check out</span>
-                                                <input class="form-control" type="date" required>
+                                                <input class="form-control" type="date"  name="check_out" required>
                                             </div>
                                         </div>
                                     </div>
@@ -369,7 +370,7 @@ https://templatemo.com/tm-559-zay-shop
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <span class="form-label">Rooms</span>
-                                                <select class="form-control">
+                                                <select class="form-control" name="rooms_booked">
                                                     <option>1</option>
                                                     <option>2</option>
                                                     <option>3</option>
@@ -383,7 +384,7 @@ https://templatemo.com/tm-559-zay-shop
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <span class="form-label">Adults</span>
+                                                <span class="form-label" name="adults">Adults</span>
                                                 <select class="form-control">
                                                     <option>1</option>
                                                     <option>2</option>
@@ -399,7 +400,7 @@ https://templatemo.com/tm-559-zay-shop
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <span class="form-label">Children</span>
-                                                <select class="form-control">
+                                                <select class="form-control" name="children">
                                                     <option>0</option>
                                                     <option>1</option>
                                                     <option>2</option>
@@ -412,7 +413,7 @@ https://templatemo.com/tm-559-zay-shop
                                         </div>
                                     </div>
                                     <div class="form-btn">
-                                        <button class="submit-btn">Check availability</button>
+                                        <button class="submit-btn" type="submit" name="submit">Check availability</button>
                                     </div>
                                 </form>
                             </div>
@@ -420,6 +421,15 @@ https://templatemo.com/tm-559-zay-shop
                     </div>
                 </div>
             </div>
+            {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
     </body>
     </html>

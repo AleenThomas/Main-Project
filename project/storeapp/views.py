@@ -1441,11 +1441,58 @@ def farm_view_details(request,farm_id):
     farms = Farm.objects.get(id=farm_id)  # Fetch all blogs from the database
     return render(request, 'farm_view_detail.html', {'farm': farms})  
 
-def farm_booking(request):
-    
-    return render(request,'farm_booking.html')
-def seller_booking(request):
-    seller=request.user
+def farm_booking(request,farmbooking_id):
+    farm_id=Farm_Booking.objects.get(farm_id_id=farmbooking_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        check_in = request.POST.get('check_in')
+        check_out = request.POST.get('check_out')
+        rooms_booked = int(request.POST.get('rooms_booked'))
+        adults = request.POST.get('adults')
+        children = request.POST.get('children')
+        check_in_con = datetime.strptime(check_in, '%Y-%m-%d')
+        check_out_con = datetime.strptime(check_out, '%Y-%m-%d')
+        # print((check_out_con - check_in_con).days)
+        diff = (check_out_con - check_in_con).days
+        print(diff)
+        # Calculate the difference in days
+        # date_difference = (check_out_con - check_in_con).days        
+        
+
+        # Check if rooms are available
+        farm_booking = Farm_Booking.objects.get(farm_id_id=farmbooking_id)
+        if int(farm_booking.rooms) >= rooms_booked:
+            # Calculate total price
+            total_price = farm_booking.price * rooms_booked*diff
+
+            # Create SaveBooking object and save it
+            save_booking = SaveBooking.objects.create(
+                farm_id=farm_id.id,
+                name=name,
+                check_in=check_in,
+                check_out=check_out,
+                rooms_booked=rooms_booked,
+                adults=adults,
+                children=children,
+                total_price=total_price
+            )
+            save_booking.save()
+            
+            
+            farm_booking.rooms = str(int(farm_booking.rooms) - rooms_booked)  # Convert to integer, subtract, and then convert back to string
+            farm_booking.save()
+            messages.success(request, 'Your booking has been saved successfully!')
+            return redirect('index')  # Replace 'success_url' with the URL name of the success page
+        else:
+            messages.error(request, 'Sorry, the selected number of rooms is not available.')
+            return redirect('farm_booking')  # Redirect back to the booking page
+    else:
+        # Handle GET request if needed
+        return render(request, 'farm_booking.html')
+#  return render(request, 'farm_booking.html')
+
+        
+def seller_booking(request,farm_id):
     
     if request.method == 'POST':
        stay_name=request.POST.get('stay_name')
@@ -1455,8 +1502,8 @@ def seller_booking(request):
             stay = Farm_Booking(
                 stay_name=stay_name,
                 rooms=rooms,
-                seller=seller,
                 price=price,
+                farm_id_id=farm_id,
             )
             stay.save()
             print('fkjj')
@@ -1505,7 +1552,8 @@ from django.template.loader import get_template
 
 
 
-def generate_sales_report(request):
+def generate_sales_report(request,):
+    seller=request.user.id
     if request.method == 'POST':
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -1515,7 +1563,8 @@ def generate_sales_report(request):
         end_datetime = timezone.make_aware(timezone.datetime.strptime(end_date, '%Y-%m-%d'))
 
         # Filter orders based on the selected date range
-        orders = Order.objects.filter(order_date__range=[start_datetime, end_datetime])
+        orders = Order.objects.filter(Q(order_date__range=[start_datetime, end_datetime]) &
+    Q(products__seller_id=seller))
 
         # Initialize a dictionary to store sales data
         sales_data = {}
@@ -1532,6 +1581,7 @@ def generate_sales_report(request):
                 # Check if the product is already in sales_data
                 if product.id not in sales_data:
                     sales_data[product.id] = {
+                        'order_date': order.order_date,
                         'product_name': product.product_name,
                         'total_quantity': cart_item.quantity,
                         'total_sales': cart_item.quantity * product.price

@@ -219,12 +219,25 @@ class Farm(models.Model):
     def __str__(self):
         return self.farm_name
 class Farm_Booking(models.Model):
-    seller=models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=4)
+    farm_id=models.ForeignKey(Farm,on_delete=models.CASCADE,default=1)
     stay_name=models.CharField(max_length=100)
     rooms=models.CharField(max_length=10)
     price = models.DecimalField(max_digits=10, decimal_places=2,null=True) 
     
     def __str__(self):
         return self.stay_name 
+class SaveBooking(models.Model):
+    farm=models.ForeignKey(Farm_Booking, on_delete=models.CASCADE,default=2)
+    user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=6)
+    total_price=models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    name=models.CharField(max_length=100)
+    rooms_booked=models.PositiveIntegerField(default=1,null=True)
+    check_in= models.DateField(default=timezone.now)
+    check_out= models.DateField(default=timezone.now)
+    adults=models.PositiveIntegerField(default=0,null=True)
+    children=models.PositiveIntegerField(default=0,null=True)
+    def __str__(self):
+        return self.name 
+    
     
     
