@@ -513,6 +513,8 @@ def add_product(request):
 @login_required(login_url='loginredirect')
 def customer_Profile(request):
     user_profile, created = Customer_Profile.objects.get_or_create(customer=request.user)
+    # farm_booking = Farm_Booking.objects.filter(user=request.user).order_by('-created_at').first()
+
 
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
@@ -528,6 +530,8 @@ def customer_Profile(request):
         messages.success(request, 'Profile added successfully')  # Display a success message
         return redirect('customer_profile') 
     context = {
+        
+
         'user_profile': user_profile,
         'form_submitted': request.method == 'POST',
     }
@@ -1433,16 +1437,99 @@ def farm_details(request):
 @login_required
 def farm_view(request):
     
-    farms = Farm.objects.all()  # Fetch all blogs from the database
-    return render(request, 'farm_view.html', {'farms': farms})    
+    farms = Farm.objects.all() 
+    farm_booking = SaveBooking.objects.filter(user=request.user).order_by('-id').first()
+
+    # Fetch all blogs from the database
+    return render(request, 'farm_view.html', {'farms': farms,'farm_booking': farm_booking})    
 @login_required
 def farm_view_details(request,farm_id):
     
     farms = Farm.objects.get(id=farm_id)  # Fetch all blogs from the database
     return render(request, 'farm_view_detail.html', {'farm': farms})  
 
-def farm_booking(request,farmbooking_id):
-    farm_id=Farm_Booking.objects.get(farm_id_id=farmbooking_id)
+# def farm_booking(request,farmbooking_id):
+#     farm_id=Farm_Booking.objects.get(farm_id_id=farmbooking_id)
+#     if request.method == 'POST':
+#         name = request.POST.get('name')
+#         check_in = request.POST.get('check_in')
+#         check_out = request.POST.get('check_out')
+#         rooms_booked = int(request.POST.get('rooms_booked'))
+#         adults = request.POST.get('adults')
+#         children = request.POST.get('children')
+#         check_in_con = datetime.strptime(check_in, '%Y-%m-%d')
+#         check_out_con = datetime.strptime(check_out, '%Y-%m-%d')
+#         # print((check_out_con - check_in_con).days)
+#         diff = (check_out_con - check_in_con).days
+#         print(diff)
+#         # Calculate the difference in days
+#         # date_difference = (check_out_con - check_in_con).days        
+        
+
+#         # Check if rooms are available
+#         farm_booking = Farm_Booking.objects.get(farm_id_id=farmbooking_id)
+#         if int(farm_booking.rooms) >= rooms_booked:
+#             # Calculate total price
+#             total_price = farm_booking.price * rooms_booked*diff
+
+#             # Create SaveBooking object and save it
+#             save_booking = SaveBooking.objects.create(
+#                 farm_id=farm_id.id,
+#                 name=name,
+#                 check_in=check_in,
+#                 check_out=check_out,
+#                 rooms_booked=rooms_booked,
+#                 adults=adults,
+#                 children=children,
+#                 total_price=total_price
+#             )
+#             save_booking.save()
+            
+            
+#             farm_booking.rooms = str(int(farm_booking.rooms) - rooms_booked)  # Convert to integer, subtract, and then convert back to string
+#             farm_booking.save()
+#             messages.success(request, 'Your booking has been saved successfully!')
+#             total_price_float = float(total_price)  
+#             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+
+#         # Create a new order
+#             order_data = {
+#                 'amount': int(total_price_float*100),  # Amount should be in paisa
+#                 'currency': 'INR',
+#                 'receipt': str(save_booking.id),  # Use booking ID as receipt ID
+#                 'payment_capture': 1  # Auto capture payment
+#             }
+#             order = client.order.create(data=order_data)
+
+#         # Redirect the user to the Razorpay checkout page
+#             return render(request, 'payment.html', {'order': order})
+#             # return redirect('index')  # Replace 'success_url' with the URL name of the success page
+#         else:
+#             messages.error(request, 'Sorry, the selected number of rooms is not available.')
+#             return redirect('farm_booking')  # Redirect back to the booking page
+#     else:
+#         # Handle GET request if needed
+#         return render(request, 'farm_booking.html')
+# #  return render(request, 'farm_booking.html')
+
+# razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+       
+        
+
+    
+    
+    
+    
+    
+    
+    
+    
+razorpay_client = razorpay.Client(
+ 	auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+
+def farm_booking(request, farmbooking_id):
+    farm_booking = get_object_or_404(Farm_Booking, farm_id=farmbooking_id)
+
     if request.method == 'POST':
         name = request.POST.get('name')
         check_in = request.POST.get('check_in')
@@ -1450,48 +1537,81 @@ def farm_booking(request,farmbooking_id):
         rooms_booked = int(request.POST.get('rooms_booked'))
         adults = request.POST.get('adults')
         children = request.POST.get('children')
+
         check_in_con = datetime.strptime(check_in, '%Y-%m-%d')
         check_out_con = datetime.strptime(check_out, '%Y-%m-%d')
-        # print((check_out_con - check_in_con).days)
         diff = (check_out_con - check_in_con).days
-        print(diff)
-        # Calculate the difference in days
-        # date_difference = (check_out_con - check_in_con).days        
+
+        total_price = farm_booking.price * rooms_booked * diff
+
+        save_booking = SaveBooking.objects.create(
+            farm=farm_booking,
+            name=name,
+            check_in=check_in,
+            check_out=check_out,
+            rooms_booked=rooms_booked,
+            adults=adults,
+            children=children,
+            total_price=total_price
+        )
+        save_booking.save()
+
+        farm_booking.rooms = str(int(farm_booking.rooms) - rooms_booked)  
+        farm_booking.save()
+        amount=int(total_price*100)
+        
+        razorpay_order = razorpay_client.order.create(dict(amount=amount,
+                                                        currency='INR',
+                                                        payment_capture='0'))
+    
+        # order id of newly created order.
+        razorpay_order_id = razorpay_order['id']
+        callback_url = 'http://127.0.0.1:8000/process_payment/'+str(save_booking.id)+'/'+str(amount)+'/'
+        
+            # we need to pass these details to frontend.
+        context = {}
+        context['razorpay_order_id'] = razorpay_order_id
+        context['razorpay_merchant_key'] = settings.RAZOR_KEY_ID
+        context['razorpay_amount'] = amount
+        context['currency'] = 'INR'
+        context['callback_url'] = callback_url
+        
+        
         
 
-        # Check if rooms are available
-        farm_booking = Farm_Booking.objects.get(farm_id_id=farmbooking_id)
-        if int(farm_booking.rooms) >= rooms_booked:
-            # Calculate total price
-            total_price = farm_booking.price * rooms_booked*diff
-
-            # Create SaveBooking object and save it
-            save_booking = SaveBooking.objects.create(
-                farm_id=farm_id.id,
-                name=name,
-                check_in=check_in,
-                check_out=check_out,
-                rooms_booked=rooms_booked,
-                adults=adults,
-                children=children,
-                total_price=total_price
-            )
-            save_booking.save()
-            
-            
-            farm_booking.rooms = str(int(farm_booking.rooms) - rooms_booked)  # Convert to integer, subtract, and then convert back to string
-            farm_booking.save()
-            messages.success(request, 'Your booking has been saved successfully!')
-            return redirect('index')  # Replace 'success_url' with the URL name of the success page
-        else:
-            messages.error(request, 'Sorry, the selected number of rooms is not available.')
-            return redirect('farm_booking')  # Redirect back to the booking page
+        return render(request, 'payment.html', {'order': razorpay_order,'razorpay_merchant_key':settings.RAZOR_KEY_ID,'razorpay_amount':amount,'callback_url':callback_url,'booking_id': save_booking.id})
+    
+    return render(request, 'farm_booking.html', {'farm_booking': farm_booking})
+@csrf_exempt
+def process_payment(request,booking_id,amount):
+    print('capture')
+    print(booking_id,amount)
+    if request.method == 'POST':
+        # payment_id = request.POST.get('razorpay_payment_id')
+        # razorpay_order_id = request.POST.get('razorpay_order_id')
+        # signature = request.POST.get('razorpay_signature')
+        # print(payment_id,razorpay_order_id,signature)
+        # params_dict = {
+        #     'razorpay_order_id': razorpay_order_id,
+        #     'razorpay_payment_id': payment_id,
+        #     'razorpay_signature': signature
+        # }
+ 
+        #     # verify the payment signature.
+        # result = razorpay_client.utility.verify_payment_signature(
+        #         params_dict)
+        # if result is not None:
+        #     razorpay_client.payment.capture(payment_id, amount)
+        booking = get_object_or_404(SaveBooking, id=booking_id)
+        print(booking_id)
+        booking.status = "success"
+        booking.save()
+        messages.success(request, 'Payment successful!')
+        return render(request, 'index.html')
+            # messages.error(request, 'Payment verification failed!')
+            # return render(request, 'farm_booking.html')
     else:
-        # Handle GET request if needed
-        return render(request, 'farm_booking.html')
-#  return render(request, 'farm_booking.html')
-
-        
+        return redirect('index')
 def seller_booking(request,farm_id):
     
     if request.method == 'POST':
@@ -1512,9 +1632,20 @@ def seller_booking(request,farm_id):
            
     return render(request,'booking_seller.html')
 
+
+from django.utils.timezone import now
+
+def booking_result_display(request,user_id):
+    
+    user = CustomUser.objects.get(id=user_id)
+    # Query all bookings made by the user
+    user_bookings = SaveBooking.objects.filter(user=user)
+    current_date = datetime.now().strftime("%b. %d, %Y")  
+    return render(request, 'booking_result_display.html', {'user_bookings': user_bookings,'current_date': current_date})
+
+
 def seller_report(request):
     return render(request, 'seller_report.html')
-
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.template.loader import get_template
 

@@ -227,6 +227,10 @@ class Farm_Booking(models.Model):
     def __str__(self):
         return self.stay_name 
 class SaveBooking(models.Model):
+    class BookingStatusChoices(models.TextChoices):
+            PENDING = 'pending', 'Pending'
+            SUCCESSFUL = 'successful', 'Successful'
+            FAILED = 'failed', 'Failed'
     farm=models.ForeignKey(Farm_Booking, on_delete=models.CASCADE,default=2)
     user=models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=6)
     total_price=models.DecimalField(max_digits=10, decimal_places=2,null=True)
@@ -236,6 +240,9 @@ class SaveBooking(models.Model):
     check_out= models.DateField(default=timezone.now)
     adults=models.PositiveIntegerField(default=0,null=True)
     children=models.PositiveIntegerField(default=0,null=True)
+    status = models.CharField(
+    max_length=20, choices=BookingStatusChoices.choices, default=BookingStatusChoices.PENDING) 
+    
     def __str__(self):
         return self.name 
     

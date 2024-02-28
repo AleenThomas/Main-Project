@@ -7,7 +7,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('',views.index,name='index'),
-    path('profile_view',views.customer_Profile,name='customer_profile'),
+    path('profile_view/',views.customer_Profile,name='customer_profile'),
     # path('profile_update/',views.profile,name='profile'),
     path('seller/',views.seller_index,name='seller_index'),
     path('wishlist/', views.wishlist_view, name='wishlist'),
@@ -62,7 +62,8 @@ urlpatterns = [
     path('seller_report/',views.seller_report,name='seller_report'),
     path(' get_most_sold_products/', views. get_most_sold_products, name=' get_most_sold_products'),
 
-
+    path('process_payment/<int:booking_id>/<int:amount>/', views.process_payment, name='process_payment'),
+    path('booking_result_display/<int:user_id>/',views.booking_result_display,name='booking_result_display'),
     # path('gifthamper/', views.gifthamper, name='gifthamper'),
     
 

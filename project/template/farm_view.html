@@ -263,7 +263,15 @@
 
 
 
+
         <div class="container d-flex align-items-center justify-content-center flex-wrap mt-5 pt-3">
+
+            <div class="list-group list-group-flush me-5">
+                <a href="{% url 'booking_result_display' user_id=user.id  %}"  class="list-group-item list-group-item-action mb-2 bg-light text-dark">My Bookings</a>
+                <!-- Add more sidebar items as needed -->
+            </div>
+
+
             {% for farm in farms %}
 
             <div class="box">
@@ -306,6 +314,9 @@
                 </div>
             </div> {% endcomment %}
             {% endfor %}
+
+
+
         </div>
     </body>
     </html>
