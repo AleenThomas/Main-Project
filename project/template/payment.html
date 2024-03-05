@@ -1,104 +1,43 @@
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment</title>
-</head>
-<body>
-    <h1>Payment Page</h1>
-    <p>Total Amount: {{ order.amount }}</p>
-    <form id="paymentForm" action="{% url 'process_payment' %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="razorpay_payment_id" value="">
-        <input type="hidden" name="razorpay_order_id" value="{{ order.id }}">
-        <input type="hidden" name="razorpay_signature" value="">
-        <input type="hidden" name="receipt" value="{{ booking_id }}">
-        <button type="submit">Complete Payment</button>
-    </form>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-        var options = {
-            "key": "{{ settings.RAZOR_KEY_ID }}",
-            "amount": "{{ order.amount }}",
-            "currency": "INR",
-            "name": "Your Hotel Name",
-            "description": "Room Booking Payment",
-            "image": "",
-            "order_id": "{{ order.id }}",
-            "handler": function (response){
-                document.querySelector("input[name='razorpay_payment_id']").value = response.razorpay_payment_id;
-                document.querySelector("input[name='razorpay_signature']").value = response.razorpay_signature;
-                document.getElementById("paymentForm").submit();
-            },
-            "prefill": {
-                "name": "{{ order.name }}",
-                "email": "{{ order.email }}"
-            },
-            "theme": {
-                "color": "#F37254"
-            }
-        };
-        var rzp1 = new Razorpay(options);
-        rzp1.on('payment.failed', function (response){
-            console.log(response.error.code);
-            console.log(response.error.description);
-            console.log(response.error.source);
-            console.log(response.error.step);
-            console.log(response.error.reason);
-            console.log(response.error.metadata.order_id);
-            console.log(response.error.metadata.payment_id);
-        });
-        document.getElementById('paymentForm').addEventListener('submit', function(e){
-            rzp1.open();
-            e.preventDefault();
-        });
-    </script>
-</body>
-</html> {% endcomment %}
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Payment Page</h1>
-    <p>Total Amount: {{ order.amount }}</p>
-    <button id="pay-btn" >Complete Payment</button>
+    <div class="container">
+        <h1 class="mt-5">Payment Page</h1>
+        <p>Total Amount: {{ order.amount }}</p>
+        <button id="pay-btn" class="btn btn-primary">Complete Payment</button>
+    </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script>
-    var options = {
-       
-      // Enter the Key ID generated from the Dashboard
-      key: "{{ razorpay_merchant_key }}", 
-       
-      // Amount is in currency subunits.
-      // Default currency is INR. Hence, 
-      // 50000 refers to 50000 paise
-      amount: "{{ razorpay_amount }}", 
-      currency: "INR",
-       
-      // Your/store name.
-      name: "Dj Razorpay", 
-       
-      // Pass the `id` obtained in the response of Step 1
-      order_id: "{{ razorpay_order_id }}", 
-      callback_url: "{{ callback_url }}",
-    };
-     
-    // initialise razorpay with the options.
-    var rzp1 = new Razorpay(options);
-     
-    // add event listener to the payment button.
-    document.getElementById("pay-btn").onclick = function (e) {
-        console.log("clicked");
-      rzp1.open();
-      e.preventDefault();
-    };
-  </script>
+    <script>
+        var options = {
+            // Enter the Key ID generated from the Dashboard
+            key: "{{ razorpay_merchant_key }}", 
+            // Amount is in currency subunits.
+            // Default currency is INR. Hence, 
+            // 50000 refers to 50000 paise
+            amount: "{{ razorpay_amount }}", 
+            currency: "INR",
+            // Your/store name.
+            name: "Dj Razorpay", 
+            // Pass the `id` obtained in the response of Step 1
+            order_id: "{{ razorpay_order_id }}", 
+            callback_url: "{{ callback_url }}",
+        };
+        
+        // initialise razorpay with the options.
+        var rzp1 = new Razorpay(options);
+        
+        // add event listener to the payment button.
+        document.getElementById("pay-btn").onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        };
+    </script>
 </body>
 </html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Page</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        {% comment %} <h1 class="mt-4">Welcome, {{ seller.name }}</h1>
+        <h2 class="mt-4">Your Bookings for {{ farm.farm_name }}</h2> {% endcomment %}
+        <table class="table table-bordered mt-2">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Check-in Date</th>
+                    <th>Check-out Date</th>
+                    <!-- Add more headers if needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings_data %}
+                    <tr>
+                        <td>{{ booking.name }}</td>
+                        <td>{{ booking.check_in }}</td>
+                        <td>{{ booking.check_out }}</td>
+                        <!-- Add more cells if needed -->
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="3">No bookings available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -350,7 +350,10 @@ https://templatemo.com/tm-559-zay-shop
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <span class="form-label">Your Name</span>
-                                        <input class="form-control" type="text" placeholder="Enter your name" name="name">
+                                        <input class="form-control" type="text" placeholder="Enter your name" name="uname" value="{{ name }}" disabled>
+                                        <input type="hidden" name="name" value="{{ name }}"> <!-- Hidden input to hold the user's name -->
+
+                                        {% comment %} <input class="form-control" type="text" placeholder="Enter your name" name="name"> {% endcomment %}
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">

@@ -1529,6 +1529,7 @@ razorpay_client = razorpay.Client(
 
 def farm_booking(request, farmbooking_id):
     farm_booking = get_object_or_404(Farm_Booking, farm_id=farmbooking_id)
+    name = request.user
 
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -1581,7 +1582,7 @@ def farm_booking(request, farmbooking_id):
 
         return render(request, 'payment.html', {'order': razorpay_order,'razorpay_merchant_key':settings.RAZOR_KEY_ID,'razorpay_amount':amount,'callback_url':callback_url,'booking_id': save_booking.id})
     
-    return render(request, 'farm_booking.html', {'farm_booking': farm_booking})
+    return render(request, 'farm_booking.html', {'farm_booking': farm_booking,'name':name})
 @csrf_exempt
 def process_payment(request,booking_id,amount):
     print('capture')
@@ -1768,8 +1769,23 @@ def get_most_sold_products(num_recommendations=5):
     # Return product IDs and names
     return product_ids, product_names
 
-# Example usage:
-# product_ids, product_names = get_most_sold_products()
-# print("Most sold product IDs:", product_ids)
-# print("Most sold product names:", product_names)
 
+
+
+def seller_booking_display(request):
+    seller = request.user
+
+    # Retrieve the farm associated with the seller
+    farm = Farm.objects.get(seller=seller)
+
+    # Retrieve all SaveBooking instances associated with the farm
+    bookings_data = SaveBooking.objects.filter(farm__farm_id=farm.id)
+
+    context = {
+        'seller': seller,
+        'farm': farm,
+        'bookings_data': bookings_data,
+    }
+    print(bookings_data)
+
+    return render(request, 'seller_booking_display.html', context)

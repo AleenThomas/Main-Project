@@ -79,6 +79,32 @@ https://templatemo.com/tm-559-zay-shop
         border-color: #bd2130;
     }
 </style>
+<script>
+    function checkdate(date11, date22) {
+        console.log(date11); 
+        console.log(date22);
+        
+        const date1 = new Date(date11);
+        const date2 = new Date(date22);
+        console.log(date1); 
+        console.log(date2);
+        console.log(date1 > date2);
+        
+        if (date1 > date2) {
+            console.log("print");
+            var cancelButton = document.getElementById("btn-cancel");
+            cancelButton.disabled = true;
+        } else {
+            console.log("else");
+            var cannotCancelButton = document.getElementById("btn-cancel");
+            
+            cannotCancelButton.disabled = false;
+            
+        }
+    }
+    
+</script>
+
 </head>
 
 <body>
@@ -227,21 +253,18 @@ https://templatemo.com/tm-559-zay-shop
                         
 
 
-                    {% if booking.check_in %}
+                    {% comment %} {% if booking.check_in %}
                         <p>Check-in Date: {{ booking.check_in }}</p>
                     {% endif %}
                     
                     {% if current_date %}
                         <p>Current Date: {{ current_date }}</p>
-                    {% endif %}
-                    <script>console.log("{{booking.check_in}}");
-                        console.log("{{current_date}}");
+                    {% endif %} {% endcomment %}
+                    <script>
+                        checkdate('{{booking.check_in}}','{{current_date}}')
                     </script>
-                    {% if booking.check_in > current_date %}
-                        <a href="#" class="btn btn-danger">Cancel Booking</a>
-                    {% else %}
-                        <button class="btn btn-danger" disabled>Cannot Cancel</button>
-                    {% endif %}             
+                         <button href="#" disabled id="btn-cancel"class="btn btn-danger">Cancel Booking</button> 
+                         
  </div>
                 </div>
             </div>

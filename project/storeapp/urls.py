@@ -64,6 +64,7 @@ urlpatterns = [
 
     path('process_payment/<int:booking_id>/<int:amount>/', views.process_payment, name='process_payment'),
     path('booking_result_display/<int:user_id>/',views.booking_result_display,name='booking_result_display'),
+    path('seller_booking_display/',views.seller_booking_display,name='seller_booking_display'),
     # path('gifthamper/', views.gifthamper, name='gifthamper'),
     
 
