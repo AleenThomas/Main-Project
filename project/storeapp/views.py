@@ -1538,16 +1538,19 @@ def farm_booking(request, farmbooking_id):
         rooms_booked = int(request.POST.get('rooms_booked'))
         adults = request.POST.get('adults')
         children = request.POST.get('children')
+        phone_no=request.POST.get('phone_no')
 
         check_in_con = datetime.strptime(check_in, '%Y-%m-%d')
         check_out_con = datetime.strptime(check_out, '%Y-%m-%d')
         diff = (check_out_con - check_in_con).days
+        
 
         total_price = farm_booking.price * rooms_booked * diff
 
         save_booking = SaveBooking.objects.create(
             farm=farm_booking,
             name=name,
+            phone_no=phone_no,
             check_in=check_in,
             check_out=check_out,
             rooms_booked=rooms_booked,

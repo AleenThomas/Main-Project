@@ -349,8 +349,8 @@ https://templatemo.com/tm-559-zay-shop
                                 <form method="post">
                                     {% csrf_token %}
                                     <div class="form-group">
-                                        <span class="form-label">Your Name</span>
-                                        <input class="form-control" type="text" placeholder="Enter your name" name="uname" value="{{ name }}" disabled>
+                                        <span class="form-label">Phone Number</span>
+                                        <input class="form-control" type="tel" placeholder="Enter your phone number" name="phone_no">
                                         <input type="hidden" name="name" value="{{ name }}"> <!-- Hidden input to hold the user's name -->
 
                                         {% comment %} <input class="form-control" type="text" placeholder="Enter your name" name="name"> {% endcomment %}
@@ -416,15 +416,21 @@ https://templatemo.com/tm-559-zay-shop
                                         </div>
                                     </div>
                                     <div class="form-btn">
-                                        <button class="submit-btn" type="submit" name="submit">Check availability</button>
+                                        <button id="checkAvailabilityBtn" class="submit-btn" type="submit" name="submit">Check availability</button>
+                                        
                                     </div>
+                                    
                                 </form>
+                                <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none;">
+                                    Sorry, the selected number of rooms is not available.
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {% if messages %}
+            
+            {% comment %} {% if messages %}
             <div class="container mt-3">
                 {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}" role="alert">
@@ -432,8 +438,51 @@ https://templatemo.com/tm-559-zay-shop
                 </div>
                 {% endfor %}
             </div>
-            {% endif %}
+            {% endif %} {% endcomment %}
+        
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var submitButton = document.getElementById('checkAvailabilityBtn');
+                var errorMessage = document.getElementById('errorMessage');
+                var roomsAvailable = {{ farm_booking.rooms }};
+                var selectedRooms = document.querySelector('select[name="rooms_booked"]').value;
+        
+                submitButton.addEventListener('click', function(event) {
+                    if (roomsAvailable < selectedRooms) {
+                        event.preventDefault(); // Prevent form submission
+                        errorMessage.style.display = 'block'; // Display error message
+                        submitButton.disabled = true; // Disable the button
+                    }
+                });
+        
+                // Update selected rooms when the user changes the value in the dropdown
+                document.querySelector('select[name="rooms_booked"]').addEventListener('change', function() {
+                    selectedRooms = this.value;
+                    if (roomsAvailable >= selectedRooms) {
+                        errorMessage.style.display = 'none'; // Hide error message if available rooms are sufficient
+                        submitButton.disabled = false; // Enable the button
+                    }
+                });
+            });
+        </script>
+        
+     <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var submitButton = document.getElementById('checkAvailabilityBtn');
+                var errorMessage = document.getElementById('errorMessage');
+                var roomsAvailable = {{ farm_booking.rooms }};
+        
+                submitButton.addEventListener('click', function(event) {
+                    if (roomsAvailable < 1) {
+                        event.preventDefault(); // Prevent form submission
+                        errorMessage.style.display = 'block'; // Display error message
+                        submitButton.disabled = true; // Disable the button
+                    }
+                });
+            });
+        </script>
 
         <script>
             function setMinDate() {
