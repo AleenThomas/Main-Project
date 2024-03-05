@@ -359,13 +359,13 @@ https://templatemo.com/tm-559-zay-shop
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <span class="form-label">Check In</span>
-                                                <input class="form-control" type="date" name="check_in" required>
+                                                <input class="form-control" type="date" id="check-in" name="check_in" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <span class="form-label">Check out</span>
-                                                <input class="form-control" type="date"  name="check_out" required>
+                                                <input class="form-control" type="date" id="check-out" name="check_out" required>
                                             </div>
                                         </div>
                                     </div>
@@ -434,5 +434,20 @@ https://templatemo.com/tm-559-zay-shop
             </div>
             {% endif %}
         </div>
+
+        <script>
+            function setMinDate() {
+                var today = new Date();
+                var yyyy = today.getFullYear();
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var dd = String(today.getDate()).padStart(2, '0');
+                var minDate = yyyy + '-' + mm + '-' + dd;
+        
+                document.getElementById('check-in').min = minDate;
+                document.getElementById('check-out').min = minDate;
+            }
+        
+            window.onload = setMinDate;
+        </script>
     </body>
     </html>

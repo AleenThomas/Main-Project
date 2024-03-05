@@ -1583,6 +1583,8 @@ def farm_booking(request, farmbooking_id):
         return render(request, 'payment.html', {'order': razorpay_order,'razorpay_merchant_key':settings.RAZOR_KEY_ID,'razorpay_amount':amount,'callback_url':callback_url,'booking_id': save_booking.id})
     
     return render(request, 'farm_booking.html', {'farm_booking': farm_booking,'name':name})
+from twilio.rest import Client
+
 @csrf_exempt
 def process_payment(request,booking_id,amount):
     print('capture')
@@ -1607,6 +1609,14 @@ def process_payment(request,booking_id,amount):
         print(booking_id)
         booking.status = "success"
         booking.save()
+        
+        client = Client("AC72d0d232baf2a2fba6788361351e6a46", "6e9f1f907246740d18f121972c80aec7")
+
+        message = client.messages.create(
+            from_='whatsapp:+14155238886',
+            body="Your booking is successful. Thank you for choosing our service!",
+            to='whatsapp:+917510284058'  # Replace with the user's WhatsApp number
+        )
         messages.success(request, 'Payment successful!')
         return render(request, 'index.html')
             # messages.error(request, 'Payment verification failed!')
@@ -1789,3 +1799,43 @@ def seller_booking_display(request):
     print(bookings_data)
 
     return render(request, 'seller_booking_display.html', context)
+
+def booking_notification(seller_id, farm_id):
+    try:
+        # Retrieve the farm associated with the booking
+        farm = Farm.objects.get(id=farm_id)
+
+        # Assuming you have a list of bookings for the farm
+        bookings = SaveBooking.objects.filter(farm__farm_id=farm_id, status='success')
+
+        # Create a notification for the seller for each successful booking associated with the farm
+        for booking in bookings:
+            notification = Notification(
+                seller_id=seller_id,
+                message=f"A booking for the farm {farm.farm_name} has been successfully made by {booking.name}."
+            )
+            notification.save()
+    except Farm.DoesNotExist:
+        # Handle the case where the farm does not exist
+        print("Farm does not exist")
+    except SaveBooking.DoesNotExist:
+        # Handle the case where there are no successful bookings for the farm
+        print("No successful bookings for the farm")
+        
+from django.shortcuts import redirect, get_object_or_404
+# def booking_message(request, appointment_id):
+#     appointment = get_object_or_404(Appointment, pk=appointment_id)
+#     appointment.cancelled = True
+#     appointment.save()
+
+#     # Initialize Twilio client with your Twilio account SID and auth token
+#     client = Client("AC72d0d232baf2a2fba6788361351e6a46", "5835cdfc1e86b98e02c2dd4af81c135e")
+
+#     # Replace 'from_' with your Twilio phone number and 'to' with the user's phone number
+#     message = client.messages.create(
+#         from_='whatsapp:+14155238886',
+#         body="Your booking has been successful.",
+#         to='whatsapp:+917510284058'
+#     )
+
+#     return redirect('')

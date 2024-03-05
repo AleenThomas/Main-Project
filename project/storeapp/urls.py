@@ -45,6 +45,7 @@ urlpatterns = [
     path('show_notification/<int:seller_id>',views.showNotification,name="show_notification"),
     path('mark_notifications_as_read/',views.mark_notifications_as_read,name="mark_notifications_as_read"),
     path('order-notification/<int:seller_id>/<int:order_id>/', views.order_notification, name='order_notification'),
+    path('booking-notification/<int:seller_id>/<int:farm_id>/', views.booking_notification, name='booking_notification'),
 
     path('quality/',views.quality,name="quality"),
     path('predict/', views.predict, name='predict'),
