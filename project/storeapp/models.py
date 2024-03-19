@@ -141,6 +141,11 @@ class Order(models.Model):
             PENDING = 'pending', 'Pending'
             SUCCESSFUL = 'successful', 'Successful'
             FAILED = 'failed', 'Failed'
+    class OrderStatusChoices(models.TextChoices):
+        REQUESTED = 'Requested', 'Requested'
+        DISPATCHED = 'Dispatched', 'Dispatched'
+        DELIVERED = 'Delivered', 'Delivered'
+
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
@@ -149,6 +154,10 @@ class Order(models.Model):
     razorpay_order_id = models.CharField(max_length=255, default=None)
     payment_status = models.CharField(
     max_length=20, choices=PaymentStatusChoices.choices, default=PaymentStatusChoices.PENDING)
+    order_status = models.CharField(
+        max_length=20, choices=OrderStatusChoices.choices, default=OrderStatusChoices.REQUESTED)
+    accepted_by_store = models.BooleanField(default=False)
+    ready_for_pickup = models.BooleanField(default=False)
         # date_added = models.DateField(default=timezone.now)
 
         # cart = models.ForeignKey(CartItem, on_delete=models.SET_NULL, null=True, blank=True)
@@ -162,6 +171,9 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    dispatched = models.BooleanField(default=False)  
+    accepted_by_store = models.BooleanField(default=False)
+    ready_for_pickup = models.BooleanField(default=False) 
 
 
     def __str__(self):
@@ -237,6 +249,8 @@ class SaveBooking(models.Model):
     name=models.CharField(max_length=100)
     phone_no=models.CharField(max_length=15,null=True)
     rooms_booked=models.PositiveIntegerField(default=1,null=True)
+    # available_rooms = models.PositiveIntegerField(default=1)  # New field for available rooms
+    rooms_updated = models.BooleanField(default=False)
     check_in= models.DateField(default=timezone.now)
     check_out= models.DateField(default=timezone.now)
     adults=models.PositiveIntegerField(default=0,null=True)

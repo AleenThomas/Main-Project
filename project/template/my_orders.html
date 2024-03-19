@@ -186,6 +186,38 @@
                         </div>
                     </div>
                 </div>
+                <td colspan="5"> <!-- Span across all columns -->
+                    <p class="fs-5"><strong>Status:</strong></p>
+                    <div class="delivery-status mt-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> Order Placed</span>
+                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">                                        
+                            {% if order.order_status == 'Dispatched' %}
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i>Pick Up by Store</span>
+                            {% else %}
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i>Pick Up by Store</span>
+                            {% endif %}                                        
+                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
+                            {% if order.accepted_by_store %}
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> On the Way</span>
+                            {% else %}
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> On the Way</span>
+                            {% endif %}                                        
+                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
+                            {% if order.ready_for_pickup %}
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> Ready for Pickup</span>
+                            {% else %}
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Ready for Pickup</span>
+                            {% endif %}
+                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
+                            <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Delivered</span>                                   
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr style="border-left: white;border-right: white;">
+                <td colspan="5">&nbsp;</td>
+ </tr>
                 {% endfor %}
             </div>
         </div>

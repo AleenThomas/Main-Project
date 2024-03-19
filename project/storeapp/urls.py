@@ -68,6 +68,8 @@ urlpatterns = [
     path('seller_booking_display/',views.seller_booking_display,name='seller_booking_display'),
     # path('gifthamper/', views.gifthamper, name='gifthamper'),
     
+    path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
+    path('update-available-rooms/', views.update_available_rooms, name='update_available_rooms'),
 
     # path('filter-products/', views.filter_products, name='filter_products'),
 

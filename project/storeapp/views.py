@@ -45,6 +45,8 @@ def index(request):
     elif user.is_seller==True:
         return redirect('seller_index')
     else:
+        update_available_rooms(request)
+
         
         return render(request, 'index.html', {'products_with_sentiment_sum' : products_with_sentiment_sum,'product_ids': list1,
                                                })
@@ -300,6 +302,7 @@ def shop(request):
     return render(request, 'shop.html', context)
 
 # @login_required
+@never_cache
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
@@ -409,7 +412,7 @@ def add_review(request, product_id):
 
     return redirect('product_detail', product_id=product_id)
 
-
+@never_cache
 @login_required(login_url='loginredirect')
 def seller_product_listing(request):
     if request.user.is_seller:
@@ -1563,6 +1566,7 @@ def farm_booking(request, farmbooking_id):
         farm_booking.rooms = str(int(farm_booking.rooms) - rooms_booked)  
         farm_booking.save()
         amount=int(total_price*100)
+        new_amt=amount/100
         
         razorpay_order = razorpay_client.order.create(dict(amount=amount,
                                                         currency='INR',
@@ -1583,7 +1587,7 @@ def farm_booking(request, farmbooking_id):
         
         
 
-        return render(request, 'payment.html', {'order': razorpay_order,'razorpay_merchant_key':settings.RAZOR_KEY_ID,'razorpay_amount':amount,'callback_url':callback_url,'booking_id': save_booking.id})
+        return render(request, 'payment.html', {'order': razorpay_order,'razorpay_merchant_key':settings.RAZOR_KEY_ID,'razorpay_amount':amount,'callback_url':callback_url,'booking_id': save_booking.id,'new_amt':new_amt})
     
     return render(request, 'farm_booking.html', {'farm_booking': farm_booking,'name':name})
 from twilio.rest import Client
@@ -1609,6 +1613,11 @@ def process_payment(request,booking_id,amount):
         # if result is not None:
         #     razorpay_client.payment.capture(payment_id, amount)
         booking = get_object_or_404(SaveBooking, id=booking_id)
+        check_in_date = booking.check_in.strftime("%Y-%m-%d")  # Format date as needed
+        check_out_date = booking.check_out.strftime("%Y-%m-%d")  # Format date as needed
+        stay_name = booking.farm.stay_name
+        message_body = f"🏡 Your booking for {stay_name} 🏨 from {check_in_date} 📅 to {check_out_date} 📅 is successful. Thank you for choosing our service! 🎉"
+
         print(booking_id)
         booking.status = "success"
         booking.save()
@@ -1617,7 +1626,7 @@ def process_payment(request,booking_id,amount):
 
         message = client.messages.create(
             from_='whatsapp:+14155238886',
-            body="Your booking is successful. Thank you for choosing our service!",
+            body=message_body,
             to='whatsapp:+917510284058'  # Replace with the user's WhatsApp number
         )
         messages.success(request, 'Payment successful!')
@@ -1649,13 +1658,15 @@ def seller_booking(request,farm_id):
 
 from django.utils.timezone import now
 
-def booking_result_display(request,user_id):
-    
+def booking_result_display(request, user_id):
     user = CustomUser.objects.get(id=user_id)
-    # Query all bookings made by the user
-    user_bookings = SaveBooking.objects.filter(user=user)
-    current_date = datetime.now().strftime("%b. %d, %Y")  
-    return render(request, 'booking_result_display.html', {'user_bookings': user_bookings,'current_date': current_date})
+    # Get the current date
+    current_date = datetime.now().date()
+
+    # Query bookings made by the user with check-in date greater than current date
+    user_bookings = SaveBooking.objects.filter(user=user, check_in__gt=current_date, status='success')
+
+    return render(request, 'booking_result_display.html', {'user_bookings': user_bookings, 'current_date': current_date})
 
 
 def seller_report(request):
@@ -1826,19 +1837,64 @@ def booking_notification(seller_id, farm_id):
         print("No successful bookings for the farm")
         
 from django.shortcuts import redirect, get_object_or_404
-# def booking_message(request, appointment_id):
-#     appointment = get_object_or_404(Appointment, pk=appointment_id)
-#     appointment.cancelled = True
-#     appointment.save()
+# 
 
-#     # Initialize Twilio client with your Twilio account SID and auth token
-#     client = Client("AC72d0d232baf2a2fba6788361351e6a46", "5835cdfc1e86b98e02c2dd4af81c135e")
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(SaveBooking, id=booking_id)
+    check_in_date = booking.check_in.strftime("%Y-%m-%d")  # Format date as needed
+    check_out_date = booking.check_out.strftime("%Y-%m-%d")  # Format date as needed
+    stay_name = booking.farm.stay_name    
+    # Update the booking status to canceled
+    num_rooms_booked = booking.rooms_booked
+    
+    # Retrieve the corresponding farm booking
+    farm_booking = booking.farm
+    
+    # Increment the available rooms
+    farm_booking.rooms = str(int(farm_booking.rooms) + num_rooms_booked)
+    farm_booking.save()
+    
+    # Update the booking status to canceled
+    message_body = f"❌ Your booking for {stay_name} 🏨 from {check_in_date} 📅 to {check_out_date} 📅 has been canceled. We apologize for any inconvenience caused."
 
-#     # Replace 'from_' with your Twilio phone number and 'to' with the user's phone number
-#     message = client.messages.create(
-#         from_='whatsapp:+14155238886',
-#         body="Your booking has been successful.",
-#         to='whatsapp:+917510284058'
-#     )
+    # Update booking status to "Canceled"
+    booking.status = "Canceled"
+    booking.save()
 
-#     return redirect('')
+    # Send cancellation message via Twilio WhatsApp
+    client = Client("AC72d0d232baf2a2fba6788361351e6a46", "6e9f1f907246740d18f121972c80aec7")
+    message = client.messages.create(
+        from_='whatsapp:+14155238886',
+        body=message_body,
+        to='whatsapp:+917510284058'  # Replace with the user's WhatsApp number
+    )
+        
+        # Set rooms_updated to True
+    booking.rooms_updated = True
+    
+    # Save the changes
+    booking.save()
+    
+    # Add a success message
+    # messages.success(request, 'Booking has been successfully canceled.')
+
+    # Redirect to the booking display page
+    return redirect('booking_result_display', user_id=request.user.id)
+def update_available_rooms(request):
+    # Get bookings with exceeded checkout dates, status is 'successful', and rooms have not been updated yet
+    expired_bookings = SaveBooking.objects.filter(
+        check_out__lt=timezone.now(),
+        rooms_updated=False  
+    )
+    
+    for booking in expired_bookings:
+        farm_booking = booking.farm
+        farm_booking.rooms = str(int(farm_booking.rooms) + booking.rooms_booked)
+        farm_booking.save()
+        
+        # Set the rooms_updated flag to True
+        booking.rooms_updated = True
+        booking.save()
+    
+    # Optionally, you can redirect to a specific page after updating available rooms
+    return redirect('index') 

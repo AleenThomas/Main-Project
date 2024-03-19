@@ -236,40 +236,42 @@ https://templatemo.com/tm-559-zay-shop
         </div>
     </nav>
     <div class="container pt-4">
-        {% comment %} <h1 class="mt-4 mb-3">Your Bookings</h1> {% endcomment %}
-        <div class="row">
-            {% for booking in user_bookings %}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Stay Name: {{ booking.stay_name }}</h5>
-                        <p class="card-text">Room No: {{ booking.rooms_booked }}</p>
-                        <p class="card-text">Number of Adults: {{ booking.adults }}</p>
-                        <p class="card-text">Number of Children: {{ booking.children }}</p>
-                        <p class="card-text">Check-in Date: {{ booking.check_in }}</p>
-                        <p class="card-text">Check-out Date: {{ booking.check_out }}</p>
-                        <p class="card-text">Price: {{ booking.total_price }}</p>
-
-                        
-
-
-                    {% comment %} {% if booking.check_in %}
-                        <p>Check-in Date: {{ booking.check_in }}</p>
-                    {% endif %}
-                    
-                    {% if current_date %}
-                        <p>Current Date: {{ current_date }}</p>
-                    {% endif %} {% endcomment %}
-                    <script>
-                        checkdate('{{booking.check_in}}','{{current_date}}')
-                    </script>
-                         <button href="#" disabled id="btn-cancel"class="btn btn-danger">Cancel Booking</button> 
-                         
- </div>
-                </div>
+        {% if user_bookings %}
+            <div class="row">
+                {% for booking in user_bookings %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Stay Name: {{ booking.farm.stay_name }}</h5>
+                                <p class="card-text">Rooms Booked: {{ booking.rooms_booked }}</p>
+                                <p class="card-text">Number of Adults: {{ booking.adults }}</p>
+                                <p class="card-text">Number of Children: {{ booking.children }}</p>
+                                <p class="card-text">Check-in Date: {{ booking.check_in }}</p>
+                                <p class="card-text">Check-out Date: {{ booking.check_out }}</p>
+                                <p class="card-text">Amount Paid: {{ booking.total_price }}</p>
+                                <a href="{% url 'cancel_booking' booking.id %}" id="btn-cancel" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel Booking</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No bookings found.
+            </div>
+        {% endif %}
+    </div>
+    
+        {% comment %} </div> {% endcomment %}
+        {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
         </div>
+    {% endfor %}
+{% endif %}
+{% comment %} <button class="custom-btn"> Make new</button> {% endcomment %}
+
     </div>
 </body>
 </html>

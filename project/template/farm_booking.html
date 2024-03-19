@@ -350,7 +350,9 @@ https://templatemo.com/tm-559-zay-shop
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <span class="form-label">Phone Number</span>
-                                        <input class="form-control" type="tel" placeholder="Enter your phone number" name="phone_no">
+                                        <input class="form-control" type="tel" placeholder="Enter your phone number" name="phone_no" required>
+                                        <span id="phoneError" class="text-danger"></span> <!-- Span for error message -->
+
                                         <input type="hidden" name="name" value="{{ name }}"> <!-- Hidden input to hold the user's name -->
 
                                         {% comment %} <input class="form-control" type="text" placeholder="Enter your name" name="name"> {% endcomment %}
@@ -373,7 +375,7 @@ https://templatemo.com/tm-559-zay-shop
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <span class="form-label">Rooms</span>
-                                                <select class="form-control" name="rooms_booked">
+                                                <select class="form-control" name="rooms_booked" required>
                                                     <option>1</option>
                                                     <option>2</option>
                                                     <option>3</option>
@@ -388,7 +390,7 @@ https://templatemo.com/tm-559-zay-shop
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <span class="form-label" name="adults">Adults</span>
-                                                <select class="form-control">
+                                                <select class="form-control" required>
                                                     <option>1</option>
                                                     <option>2</option>
                                                     <option>3</option>
@@ -403,7 +405,7 @@ https://templatemo.com/tm-559-zay-shop
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <span class="form-label">Children</span>
-                                                <select class="form-control" name="children">
+                                                <select class="form-control" name="children" required>
                                                     <option>0</option>
                                                     <option>1</option>
                                                     <option>2</option>
@@ -441,7 +443,27 @@ https://templatemo.com/tm-559-zay-shop
             {% endif %} {% endcomment %}
         
         </div>
-
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var phoneInput = document.querySelector('input[name="phone_no"]');
+                var errorSpan = document.getElementById('phoneError');
+                var phonePattern = /^[6789]\d{9}$/; // Regular expression for 10-digit numeric phone number starting with 6, 7, 8, or 9
+                
+                phoneInput.addEventListener('input', function() {
+                    var phoneNumber = phoneInput.value.trim();
+                    if (!phonePattern.test(phoneNumber)) {
+                        // Invalid phone number format
+                        errorSpan.textContent = 'Please enter a valid phone number';
+                        phoneInput.setCustomValidity('Invalid phone number');
+                    } else {
+                        // Valid phone number format
+                        errorSpan.textContent = ''; // Clear the error message
+                        phoneInput.setCustomValidity('');
+                    }
+                });
+            });
+        </script>
+        
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var submitButton = document.getElementById('checkAvailabilityBtn');
