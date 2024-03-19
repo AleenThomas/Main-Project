@@ -1297,23 +1297,52 @@ def sales_report(request):
 
 
 # def gifthamper(request):
-    
+import ast
 #     return render(request,'gifthamper.html')
-
+def changeDispatch(request,cart_items,order_id):
+    print("FUNCTION")
+    print(cart_items)
+    print(order_id)
+    integer_list = ast.literal_eval(cart_items)
+    for cart_id in integer_list:
+        cart_item = CartItem.objects.get(pk=cart_id)  
+        cart_item.dispatched = True
+        cart_item.save()
+    order=Order.objects.get(id=order_id)
+        
+    order.order_status = Order.OrderStatusChoices.DISPATCHED
+    order.save()
+    return redirect('seller_orders')
+    
+    return 
 def seller_orders(request):
     print("BASE VIEW")
     seller_id = request.user.id
 
     # Step 1: Query orders for a specific seller with successful payment status
     seller_orders = Order.objects.filter(products__seller_id=seller_id, payment_status=Order.PaymentStatusChoices.SUCCESSFUL).distinct()
+      
+    
+        # Check if all products of the order are dispatched
+    
 
     # Step 2: Extract relevant information from orders
     orders_data = []
+    
     for order in seller_orders:
+        var=CartItem.objects.filter(order_id=order.id)
+        varList=[]
+        for i in var:
+            varList.append(i.id)
+        print(varList)
+        cart_items = CartItem.objects.filter(order_id=order.id) 
         order_info = {
+            'order_id':order.id,
+            'cart_items': varList,
             'order_date': order.order_date,
             'total_price': order.total_price,
-            'items': []
+            'items': [],
+            'dispatched':order.order_status,
         }
 
         # Extract information about each bought item in the order
@@ -1322,6 +1351,9 @@ def seller_orders(request):
                 'product_image': cart_item.product.image.url,
                 'product_name': cart_item.product.product_name,
                 'quantity': cart_item.quantity,
+                'cart_item_id':cart_item.id,
+                'dispatched': cart_item.dispatched,
+
                 'total_item_price': cart_item.product.price * cart_item.quantity,  # Assuming total_item_price is product of price and quantity
             }
             order_info['items'].append(item_info)
@@ -1898,3 +1930,55 @@ def update_available_rooms(request):
     
     # Optionally, you can redirect to a specific page after updating available rooms
     return redirect('index') 
+
+
+def hub_home(request):
+    
+    return render(request,'hub_home.html')
+
+
+from django.contrib.auth import authenticate, login as auth_login
+
+@never_cache
+def hub_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        if email and password:
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+
+                auth_login(request, user)  
+              
+                if user.hub_status:
+                    print("hubstatus")
+                    return redirect('hub_home')  # Redirect to customer index page
+                
+            else:
+                error_message = "Invalid login credentials."
+                return render(request, 'hub_login.html', {'error_message': error_message})
+        # else:
+        #     error_message = "Please fill out all fields."
+        #     return render(request, 'Login.html', {'error_message': error_message})
+    return render(request,'hub_login.html')
+
+
+
+def hub_orders(request): 
+    orders = Order.objects.filter(cart_items__dispatched=True).distinct()
+    if request.method == 'POST':  
+        cart_item_id = request.POST.get('cart_item_id')  
+        cart_item = CartItem.objects.get(pk=cart_item_id)  
+        cart_item.accepted_by_store = True
+        cart_item.save()
+        for order in Order.objects.filter(cart_items=cart_item):
+            if not all(item.dispatched for item in order.cart_items.all()):
+                break
+        else:
+            order.accepted_by_store = True
+            order.save()
+
+        return redirect('hub_orders')
+    context = {'orders': orders}
+    return render(request, 'hub_orders.html',context)

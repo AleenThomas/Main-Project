@@ -70,6 +70,14 @@ urlpatterns = [
     
     path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
     path('update-available-rooms/', views.update_available_rooms, name='update_available_rooms'),
+    path('changeDispatch/<str:cart_items>/<int:order_id>', views.changeDispatch, name='changeDispatch'),
+    
+    
+    path('hub_home/', views.hub_home, name='hub_home'),
+    path('hub_login/', views.hub_login, name='hub_login'),
+
+
+    
 
     # path('filter-products/', views.filter_products, name='filter_products'),
 

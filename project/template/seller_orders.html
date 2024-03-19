@@ -249,7 +249,7 @@
                 <td>
                     <table class="table table-bordered">
                         <tbody>
-                            {% for item_info in order_info.items %}
+                          {% for item_info in order_info.items %}
                                 <tr>
                                     <td>
                                         
@@ -258,30 +258,31 @@
                                     <td>{{ item_info.product_name }}</td>
                                     <td>{{ item_info.quantity }}</td>
                                     <td>{{ item_info.total_item_price }}</td>
-                                    {% comment %} anantha fieldsss {% endcomment %}
-                                    <td>
-                                      <form method="post" action="">
-                                          {% csrf_token %}
-                                          <input type="hidden" name="cart_item_id" value="{{ item_info.cart_item_id }}">
-                                          {% if not item_info.dispatched %}
-                                          <button type="submit" class="bg-secondary text-white rounded shadow" onclick="return confirm('Are you sure you want to dispatch this order?')">Dispatch</button>
-                                          {% else %}
-                                              <button type="button" class="bg-success rounded shadow" disabled><i class="fas fa-check"></i></button>
-                                          {% endif %}
-                                      </form>
-                                  </td>
-                                  <td>
-                                    {% if item_info.dispatched %}
-                                        Dispatched
-                                    {% else %}
-                                        Requested
-                                    {% endif %}
-                                </td>
+                                    
                                 </tr>
+                                
                             {% endfor %}
                           </tbody>
                         </table>
                     </td>
+                    {% comment %} anantha fieldsss {% endcomment %}
+                    <td>
+                      
+                          <input type="hidden" name="cart_item_id" value="{{ item_info.cart_item_id }}">
+                          {% if order_info.dispatched is 'Requested' %}
+                          <a href="{% url 'changeDispatch' order_info.cart_items order_info.order_id  %}" class="bg-secondary text-white rounded shadow">Dispatch</a>
+                          {% else %}
+                              <button type="button" class="bg-success rounded shadow" disabled><i class="fas fa-check"></i></button>
+                          {% endif %}
+                      
+                  </td>
+                  <td>
+                    {% if order_info.dispatched == 'Dispatched' %}
+                        Dispatched
+                    {% else %}
+                        Requested
+                    {% endif %}
+                </td>
                 </tr>
 
 
