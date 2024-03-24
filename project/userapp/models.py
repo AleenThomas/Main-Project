@@ -10,6 +10,8 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=128)
     is_customer = models.BooleanField(default=False)
     is_seller = models.BooleanField(default=False)
+    is_delivery = models.BooleanField(default=False)
+
     gstn = models.CharField(max_length=15, blank=True, null=True) 
     hub_status=models.BooleanField(default=False)
     

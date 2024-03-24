@@ -261,5 +261,15 @@ class SaveBooking(models.Model):
     def __str__(self):
         return self.name 
     
+class DeliveryAgent(models.Model):
+    
+    phone_number = models.CharField(max_length=15)
+    vehicle_type = models.CharField(max_length=20)
+    license_number = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
+    id_proof = models.ImageField(upload_to='id_proof/')
+    locality = models.CharField(max_length=255)
+    registration_date = models.DateTimeField(auto_now_add=True)
+    
     
     

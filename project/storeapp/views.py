@@ -977,16 +977,20 @@ def my_orders(request):
 
     # Retrieve a list of orders for the current user within the specified date range
     orders = Order.objects.filter(user=user, order_date__range=(start_date, end_date)).order_by('-order_date')
-    
+    sorders = Order.objects.filter(
+    Q(user=user) & 
+    Q(payment_status=Order.PaymentStatusChoices.SUCCESSFUL)
+)
     # Rest of your code...
 
     context = {
         'orders': orders,
         'start_date': start_date_str,
         'end_date': end_date_str,
+        'sorders':sorders,
         # ...other context data...
     }
-
+    # print("hh"+sorders)
     # Check if there are no orders for the selected date range and display a message
     if not orders:
         context['no_orders_message'] = 'No orders found for the selected date range.'
@@ -1146,7 +1150,7 @@ def quality(request):
             img = np.expand_dims(img, axis=0)
             img = img / 255.0  # Normalize the image
             print(img)
-            predict = model.predict(img)
+            wict = model.predict(img)
             predicted_class_index = np.argmax(predict)
             print("Helllllllloooooooooo",predicted_class_index)
             class_names = ["Dark", "Green", "Light", "Medium"]  # Update with your actual class names
@@ -1314,7 +1318,6 @@ def changeDispatch(request,cart_items,order_id):
     order.save()
     return redirect('seller_orders')
     
-    return 
 def seller_orders(request):
     print("BASE VIEW")
     seller_id = request.user.id
@@ -1966,19 +1969,141 @@ def hub_login(request):
 
 
 def hub_orders(request): 
-    orders = Order.objects.filter(cart_items__dispatched=True).distinct()
-    if request.method == 'POST':  
-        cart_item_id = request.POST.get('cart_item_id')  
-        cart_item = CartItem.objects.get(pk=cart_item_id)  
+    
+    
+    
+    hub_orders = Order.objects.filter(order_status="Dispatched").distinct()
+      
+        # Check if all products of the order are dispatched
+    print(hub_orders)
+
+    # Step 2: Extract relevant information from orders
+    orders_data = []
+    
+    for order in hub_orders:
+        var=CartItem.objects.filter(order_id=order.id)
+        varList=[]
+        for i in var:
+            varList.append(i.id)
+        print(varList)
+        order_info = {
+            'order_id':order.id,
+            'cart_items': varList,
+            'order_date': order.order_date,
+            'total_price': order.total_price,
+            'items': [],
+            'accepted_by_store':order.accepted_by_store,
+        }
+
+        # Extract information about each bought item in the order
+        for cart_item in CartItem.objects.filter(order=order):
+            item_info = {
+                'product_image': cart_item.product.image.url,
+                'product_name': cart_item.product.product_name,
+                'quantity': cart_item.quantity,
+                'cart_item_id':cart_item.id,
+                'accepted_by_store': cart_item.accepted_by_store,
+
+                'total_item_price': cart_item.product.price * cart_item.quantity,  # Assuming total_item_price is product of price and quantity
+            }
+            order_info['items'].append(item_info)
+
+        orders_data.append(order_info)
+
+    # Step 3: Pass the data to the template
+    context = {'orders_data': orders_data}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    return render(request, 'hub_orders.html',context)
+
+def changeStore(request, cart_items, order_id):
+    integer_list = ast.literal_eval(cart_items)
+
+    for cart_id in integer_list:
+        cart_item = CartItem.objects.get(pk=cart_id)
+        print(cart_item)
         cart_item.accepted_by_store = True
         cart_item.save()
-        for order in Order.objects.filter(cart_items=cart_item):
-            if not all(item.dispatched for item in order.cart_items.all()):
-                break
-        else:
-            order.accepted_by_store = True
-            order.save()
 
-        return redirect('hub_orders')
-    context = {'orders': orders}
-    return render(request, 'hub_orders.html',context)
+    order = Order.objects.get(id=order_id)
+    order.accepted_by_store = True
+    order.save()
+
+    return redirect('hub_orders')
+def delivery_registration(request):
+    return render(request,'delivery_registration.html')
+
+
+
+
+
+
+    # dispatched_order_ids = CartItem.objects.filter(dispatched=True).values('order_id').distinct()
+
+    # # Retrieve orders corresponding to the dispatched cart items
+    # orders = Order.objects.filter(id__in=dispatched_order_ids)
+
+    # if request.method == 'POST':
+    #     cart_item_id = request.POST.get('cart_item_id')
+    #     cart_item = CartItem.objects.get(pk=cart_item_id)
+    #     cart_item.accepted_by_store = True
+    #     cart_item.save()
+
+    #     # Check if all cart items in the order are dispatched
+    #     order = cart_item.order
+    #     if order and all(item.dispatched for item in order.cartitem_set.all()):
+    #         order.accepted_by_store = True
+    #         order.save()
+
+        # return redirect('hub_orders')
+        
+        
+        
+        
+        
+        
+        
+def register_delivery_agent(request):
+    if request.method == 'POST':
+        # Extract data from the request
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        phone_number = request.POST.get('phone_number')
+        vehicle_type = request.POST.get('vehicle_type')
+        license_number = request.POST.get('license_number')
+        id_proof = request.FILES.get('id_proof')
+        locality = request.POST.get('locality')
+
+        # Create custom user model instance
+        user = CustomUser.objects.create_user( email=email, first_name=first_name, last_name=last_name, password=password)
+
+        # Create delivery agent model instance
+        delivery_agent = DeliveryAgent.objects.create(
+            user=user,
+            phone_number=phone_number,
+            vehicle_type=vehicle_type,
+            license_number=license_number,
+            id_proof=id_proof,
+            locality=locality
+        )
+        delivery_agent.save()
+        
+
+        # Redirect to success page or wherever you want
+        return redirect('registration_success')
+
+    return render(request, 'registration_form.html')

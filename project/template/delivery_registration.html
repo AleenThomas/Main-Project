@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Agent Registration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .registration-form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="registration-form">
+                    <h2 class="mb-4 text-center">Delivery Agent Registration</h2>
+                    <form id="registrationForm" onsubmit="return validateForm()">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="Enter your first name" required>
+                                    <span id="firstNameError" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Enter your last name" required>
+                                    <span id="lastNameError" class="text-danger"></span>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter your email address" required>
+                                    <span id="emailError" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phoneNumber">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter your phone number" required>
+                                    <span id="phoneNumberError" class="text-danger"></span>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="vehicleType">Vehicle Type</label>
+                                    <select class="form-control" id="vehicleType" required>
+                                        <option value="">Select vehicle type</option>
+                                        <option value="car">Car</option>
+                                        <option value="motorcycle">Motorcycle</option>
+                                        <!-- <option value="bicycle">Bicycle</option> -->
+                                    </select>
+                                    <span id="vehicleTypeError" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="licenseNumber">License Number</label>
+                                    <input type="text" class="form-control" id="licenseNumber" placeholder="Enter your license number" required>
+                                    <span id="licenseNumberError" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                                    <span id="passwordError" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                                    <span id="confirmPasswordError" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="idProof">ID Proof</label>
+                                    <input type="file" class="form-control-file" id="idProof" required>
+                                    <span id="idProofError" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="locality">Locality</label>
+                                    <input type="text" class="form-control" id="locality" placeholder="Enter your locality" required>
+                                    <span id="localityError" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const fullName = document.getElementById('fullName');
+            const email = document.getElementById('email');
+            const phoneNumber = document.getElementById('phoneNumber');
+            const vehicleType = document.getElementById('vehicleType');
+            const licenseNumber = document.getElementById('licenseNumber');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const idProof = document.getElementById('idProof');
+            const locality = document.getElementById('locality');
+
+            firstName.addEventListener('keyup', validateFirstName);
+            lastName.addEventListener('keyup', validateLastName);
+            email.addEventListener('keyup', validateEmail);
+            phoneNumber.addEventListener('keyup', validatePhoneNumber);
+            vehicleType.addEventListener('change', validateVehicleType);
+            licenseNumber.addEventListener('keyup', validateLicenseNumber);
+            password.addEventListener('keyup', validatePassword);
+            confirmPassword.addEventListener('keyup', validateConfirmPassword);
+            idProof.addEventListener('change', validateIDProof);
+            locality.addEventListener('keyup', validateLocality);
+
+            function validateFirstName() {
+                const firstNameValue = firstName.value.trim();
+                const firstNameError = document.getElementById('firstNameError');
+                const nameRegex = /^[a-zA-Z\s]+$/; // Regex to allow only letters and white space
+
+                if (firstNameValue === '') {
+                    firstNameError.textContent = 'Please enter your first name';
+                    return false;
+                }
+                if (!nameRegex.test(firstNameValue)) {
+                    firstNameError.textContent = 'Please enter a valid first name (only letters and white space are allowed)';
+                    return false;
+                }
+                firstNameError.textContent = '';
+                return true;
+            }
+
+            function validateLastName() {
+                const lastNameValue = lastName.value.trim();
+                const lastNameError = document.getElementById('lastNameError');
+                const nameRegex = /^[a-zA-Z\s]+$/; // Regex to allow only letters and white space
+
+                if (lastNameValue === '') {
+                    lastNameError.textContent = 'Please enter your last name';
+                    return false;
+                }
+                if (!nameRegex.test(lastNameValue)) {
+                    lastNameError.textContent = 'Please enter a valid last name (only letters and white space are allowed)';
+                    return false;
+                }
+                lastNameError.textContent = '';
+                return true;
+            }
+
+            function validateEmail() {
+                const emailValue = email.value.trim().toLowerCase();
+                const emailError = document.getElementById('emailError');
+                const emailRegex = /^[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)+[a-z]{2,}$/;
+                if (!emailRegex.test(emailValue)) {
+                    emailError.textContent = 'Please enter a valid email address';
+                    return false;
+                }
+                emailError.textContent = '';
+                return true;
+            }
+
+            function validatePhoneNumber() {
+                const phoneNumberValue = phoneNumber.value.trim();
+                const phoneNumberError = document.getElementById('phoneNumberError');
+                const phoneRegex = /^[6-9]\d{9}$/; // Allows numbers starting with 6, 7, 8, or 9, and must be 10 digits long
+                if (!phoneRegex.test(phoneNumberValue)) {
+                    phoneNumberError.textContent = 'Please enter a valid phone number';
+                    return false;
+                }
+                phoneNumberError.textContent = '';
+                return true;
+            }
+
+            function validateVehicleType() {
+                const vehicleTypeError = document.getElementById('vehicleTypeError');
+                if (vehicleType.value === '') {
+                    vehicleTypeError.textContent = 'Please select a vehicle type';
+                    return false;
+                }
+                vehicleTypeError.textContent = '';
+                return true;
+            }
+
+            function validateLicenseNumber() {
+                const licenseNumberValue = licenseNumber.value.trim();
+                const licenseNumberError = document.getElementById('licenseNumberError');
+                if (licenseNumberValue === '') {
+                    licenseNumberError.textContent = 'Please enter your license number';
+                    return false;
+                }
+                licenseNumberError.textContent = '';
+                return true;
+            }
+
+            function validatePassword() {
+                const passwordValue = password.value.trim();
+                const passwordError = document.getElementById('passwordError');
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+                if (!passwordRegex.test(passwordValue)) {
+                    passwordError.textContent = 'Password must be at least 6 characters, include upper and lowercase letters, a number, and a special character';
+                    return false;
+                }
+                passwordError.textContent = '';
+                return true;
+            }
+
+            function validateConfirmPassword() {
+                const confirmPasswordValue = confirmPassword.value.trim();
+                const confirmPasswordError = document.getElementById('confirmPasswordError');
+                if (confirmPasswordValue !== password.value.trim()) {
+                    confirmPasswordError.textContent = 'Passwords do not match';
+                    return false;
+                }
+                confirmPasswordError.textContent = '';
+                return true;
+            }
+
+            function validateIDProof() {
+                const idProofValue = idProof.value.trim();
+                const idProofError = document.getElementById('idProofError');
+                if (idProofValue === '') {
+                    idProofError.textContent = 'Please upload your ID proof';
+                    return false;
+                }
+                idProofError.textContent = '';
+                return true;
+            }
+
+            function validateLocality() {
+                const localityValue = locality.value.trim();
+                const localityError = document.getElementById('localityError');
+                if (localityValue === '') {
+                    localityError.textContent = 'Please enter your locality';
+                    return false;
+                }
+                localityError.textContent = '';
+                return true;
+            }
+
+            function validateForm() {
+                return (
+                    validateFirstName() &&
+                    validateLastName() &&
+                    validateEmail() &&
+                    validatePhoneNumber() &&
+                    validateVehicleType() &&
+                    validateLicenseNumber() &&
+                    validatePassword() &&
+                    validateConfirmPassword() &&
+                    validateIDProof() &&
+                    validateLocality()
+                );
+            }
+        });
+    </script>
+</body>
+
+</html>

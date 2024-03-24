@@ -146,83 +146,96 @@
 
 
 
-    <div class="container mt-5">
+    {% comment %} <div class="container mt-5">
         <!-- Check if there are no orders and display the message -->
         {% if no_orders_message %}
         <div class="alert alert-danger" role="alert">
             {{ no_orders_message }}
         </div>
-        {% else %}
+        {% else %} {% endcomment %}
         
-            <div class="row">
-                {% for order in orders %}
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header">
-                            Order ID: {{ order.id }}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Order Date: {{ order.order_date }}</h5>
-                            <ul class="list-group">
-                                {% for product in order.products.all %}
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <img src="{{ MEDIA_URL }}{{ product.image.url }}" alt="{{ product.product_name }}" class="img-fluid">
-                                        </div>
-                                        <div class="col-md-5">
-                                            {{ product.product_name }} (Qty: 1)
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            ₹ {{ product.price }}
-                                        </div>
-                                    </div>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="card-footer text-muted">
-                            Total Amount: ₹ {{ order.total_price }}
-                        </div>
-                    </div>
+        <div class="container mt-5">
+            {% if no_orders_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ no_orders_message }}
                 </div>
-                <td colspan="5"> <!-- Span across all columns -->
-                    <p class="fs-5"><strong>Status:</strong></p>
-                    <div class="delivery-status mt-3">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> Order Placed</span>
-                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">                                        
-                            {% if order.order_status == 'Dispatched' %}
-                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i>Pick Up by Store</span>
-                            {% else %}
-                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i>Pick Up by Store</span>
-                            {% endif %}                                        
-                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
-                            {% if order.accepted_by_store %}
-                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> On the Way</span>
-                            {% else %}
-                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> On the Way</span>
-                            {% endif %}                                        
-                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
-                            {% if order.ready_for_pickup %}
-                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> Ready for Pickup</span>
-                            {% else %}
-                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Ready for Pickup</span>
-                            {% endif %}
-                            <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
-                            <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Delivered</span>                                   
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr style="border-left: white;border-right: white;">
-                <td colspan="5">&nbsp;</td>
- </tr>
-                {% endfor %}
-            </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Order Date</th>
+                                <th>Products</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in sorders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.order_date }}</td>
+                                    <td>
+                                        <ul>
+                                            {% for product in order.products.all %}
+                                                <li>{{ product.product_name }} (Qty: 1)</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>₹ {{ order.total_price }}</td>
+                                </tr>
+                            {% comment %} {% endfor %} {% endcomment %}
+                        {% comment %} </tbody>
+                    </table>
+                </div>
         </div>
-        
-        {% endif %}
+         {% endcomment %}
+
+        {% comment %} {% endfor %} {% endcomment %}
+
+
+                        <tr>
+                    </div>
+
+                    <td colspan="5"> <!-- Span across all columns -->
+                        <p class="fs-5"><strong>Status:</strong></p>
+                        <div class="delivery-status mt-3">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> Order Placed</span>
+                                <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">                                        
+                                {% if order.order_status == 'Dispatched' %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i>Pick Up by Store</span>
+                                {% else %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i>Pick Up by Store</span>
+                                {% endif %}                                        
+                                <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
+                                {% if order.accepted_by_store %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> On the Way</span>
+                                {% else %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> On the Way</span>
+                                {% endif %}                                        
+                                <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
+                                {% if order.ready_for_pickup %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> Ready for Pickup</span>
+                                {% else %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Ready for Pickup</span>
+                                {% endif %}
+                                <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
+                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Delivered</span>                                   
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="border-left: white;border-right: white;">
+                    <td colspan="5">&nbsp;</td>
+     </tr>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            {% endif %}
+                </div>
+               
     </div>
     
 
