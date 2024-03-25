@@ -78,6 +78,10 @@ urlpatterns = [
     path('hub_login/', views.hub_login, name='hub_login'),
     path('hub_orders/', views.hub_orders, name='hub_orders'),
     path('delivery_registration/', views.delivery_registration, name='delivery_registration'),
+    path('delivery_agent_home/', views.delivery_agent_home, name='delivery_agent_home'),
+    path('delivery_agent_profile/', views.delivery_agent_profile, name='delivery_agent_profile'),
+
+
 
 
 

@@ -150,7 +150,7 @@ class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    order_date = models.DateTimeField(auto_now_add=True,null=True)
+    order_date = models.DateTimeField(default=timezone.now,null=True)
     razorpay_order_id = models.CharField(max_length=255, default=None)
     payment_status = models.CharField(
     max_length=20, choices=PaymentStatusChoices.choices, default=PaymentStatusChoices.PENDING)
@@ -262,7 +262,8 @@ class SaveBooking(models.Model):
         return self.name 
     
 class DeliveryAgent(models.Model):
-    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=22)
+
     phone_number = models.CharField(max_length=15)
     vehicle_type = models.CharField(max_length=20)
     license_number = models.CharField(max_length=50)

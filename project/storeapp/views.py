@@ -2042,8 +2042,6 @@ def changeStore(request, cart_items, order_id):
     order.save()
 
     return redirect('hub_orders')
-def delivery_registration(request):
-    return render(request,'delivery_registration.html')
 
 
 
@@ -2074,8 +2072,9 @@ def delivery_registration(request):
         
         
         
-        
-def register_delivery_agent(request):
+from django.contrib.auth import get_user_model
+ 
+def delivery_registration(request):
     if request.method == 'POST':
         # Extract data from the request
         first_name = request.POST.get('first_name')
@@ -2085,25 +2084,37 @@ def register_delivery_agent(request):
         phone_number = request.POST.get('phone_number')
         vehicle_type = request.POST.get('vehicle_type')
         license_number = request.POST.get('license_number')
-        id_proof = request.FILES.get('id_proof')
         locality = request.POST.get('locality')
+        
+        # Save data to CustomUser model
+        # User = get_user_model()
+        user = CustomUser(email=email, password=password, first_name=first_name, last_name=last_name, is_delivery=True, is_active=False)
+        user.save()
 
-        # Create custom user model instance
-        user = CustomUser.objects.create_user( email=email, first_name=first_name, last_name=last_name, password=password)
-
-        # Create delivery agent model instance
+        # Save data to DeliveryAgent model
         delivery_agent = DeliveryAgent.objects.create(
-            user=user,
             phone_number=phone_number,
             vehicle_type=vehicle_type,
             license_number=license_number,
-            id_proof=id_proof,
+            password=password,
             locality=locality
         )
+        # Save the delivery_agent object
         delivery_agent.save()
-        
-
         # Redirect to success page or wherever you want
-        return redirect('registration_success')
+        return redirect('index')
 
-    return render(request, 'registration_form.html')
+    return render(request, 'delivery_registration.html')
+def delivery_agent_home(request):
+    return render(request,'delivery_agent_home.html')
+def delivery_agent_profile(request):
+    # Get the delivery agent profile based on the logged-in user
+    # user=request.user
+    delivery_agent = DeliveryAgent.objects.get(user=request.user)
+    
+    # Pass the delivery agent object to the template
+    context = {
+        'delivery_agent': delivery_agent
+    }
+    
+    return render(request, 'delivery_agent_profile.html', context)
