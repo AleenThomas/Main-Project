@@ -272,5 +272,15 @@ class DeliveryAgent(models.Model):
     locality = models.CharField(max_length=255)
     registration_date = models.DateTimeField(auto_now_add=True)
     
+class Address(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    house_building = models.CharField(max_length=100)
+    road_area_colony = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
+    phone = models.CharField(max_length=10)
+
+    
     
     

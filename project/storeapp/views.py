@@ -998,8 +998,6 @@ def my_orders(request):
     return render(request, 'my_orders.html', context)
 
 
-def add_address(request):
-    return render(request,'add_address.html')
 
 
 
@@ -2108,13 +2106,79 @@ def delivery_registration(request):
 def delivery_agent_home(request):
     return render(request,'delivery_agent_home.html')
 def delivery_agent_profile(request):
-    # Get the delivery agent profile based on the logged-in user
-    # user=request.user
-    delivery_agent = DeliveryAgent.objects.get(user=request.user)
-    
-    # Pass the delivery agent object to the template
+    print("save buttonnn clicked")
+
+    delivery_agent, created = DeliveryAgent.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        print("save clicked")
+        # Get the form data from the POST request
+        locality = request.POST.get('locality')
+        phone_number = request.POST.get('phone_number')
+        license_number = request.POST.get('license_number')
+        
+        # Update the attributes of the delivery agent
+        delivery_agent.locality = locality
+        delivery_agent.phone_number = phone_number
+        delivery_agent.license_number = license_number
+        
+        # Save the changes to the delivery agent
+        delivery_agent.save()
+        print(delivery_agent)
     context = {
-        'delivery_agent': delivery_agent
+        'delivery_agent': delivery_agent,
+        # 'form_submitted': request.method == 'POST',
     }
     
     return render(request, 'delivery_agent_profile.html', context)
+
+# def update_delivery_profile(request):
+#     delivery_agent, created = DeliveryAgent.objects.get_or_create(user=request.user)
+#     if request.method == 'POST':
+#         # Get the form data from the POST request
+#         locality = request.POST.get('locality')
+#         phone_number = request.POST.get('phone_number')
+#         license_number = request.POST.get('license_number')
+        
+#         # Update the attributes of the delivery agent
+#         delivery_agent.locality = locality
+#         delivery_agent.phone_number = phone_number
+#         delivery_agent.license_number = license_number
+        
+#         # Save the changes to the delivery agent
+#         delivery_agent.save()
+        
+#     context = {
+#         'form_submitted': request.method == 'POST',
+#     }
+#     return render(request, 'delivery_agent_profile.html', context)
+
+def address_card(request):
+    addresses = Address.objects.filter(user=request.user)  
+    
+    return render(request,"address_card.html",{'addresses': addresses})
+
+def add_address(request):
+    
+    if request.method == 'POST':
+        house_building = request.POST.get('house_building')
+        road_area_colony = request.POST.get('road_area_colony')
+        city = request.POST.get('city')
+        district = request.POST.get('district')
+        pincode = request.POST.get('pincode')
+        phone = request.POST.get('phone')
+
+        # Validate form data (you can add more validation as needed)
+
+        # Create and save Address instance
+        address = Address.objects.create(
+            user=request.user,  # Assuming the user is authenticated
+            house_building=house_building,
+            road_area_colony=road_area_colony,
+            city=city,
+            district=district,
+            pincode=pincode,
+            phone=phone
+        )
+        return redirect('address_card')  # Redirect to address list view
+
+    return render(request, 'add_address.html')

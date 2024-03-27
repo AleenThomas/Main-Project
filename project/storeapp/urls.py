@@ -80,6 +80,10 @@ urlpatterns = [
     path('delivery_registration/', views.delivery_registration, name='delivery_registration'),
     path('delivery_agent_home/', views.delivery_agent_home, name='delivery_agent_home'),
     path('delivery_agent_profile/', views.delivery_agent_profile, name='delivery_agent_profile'),
+    # path('update_delivery_profile/', views.update_delivery_profile, name='update_delivery_profile'),
+    path('address_card/', views.address_card, name='address_card'),
+
+
 
 
 
