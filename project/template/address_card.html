@@ -392,7 +392,6 @@ https://templatemo.com/tm-559-zay-shop
     }
 
 
-    
 </style>
 </head>
 
@@ -540,13 +539,13 @@ https://templatemo.com/tm-559-zay-shop
             <div class="col-lg-4">
                 <div class="card" style="width: 18rem;">
 
-                <div class="card-body bg-gray text-light">
+                <div class="card-body" style="background-color: #bac4b1;">
                     <h5 class="card-title ">{{ address.house_building }}</h5>
                     <p class="card-text">{{ address.road_area_colony }}</p>
                     <p class="card-text">{{ address.city }}, {{ address.district }}</p>
                     <p class="card-text">Pincode: {{ address.pincode }}</p>
                     <p class="card-text">Phone: {{ address.phone }}</p>
-                    <a href="#" class="btn btn-sm btn-flash-border-primary">View All</a>
+                    <a href="{% url 'homepage' address.id   %}" class="btn btn-sm btn-flash-border-dark bg-light">Select</a>
 
                 </div>   
             </div>
@@ -565,7 +564,7 @@ https://templatemo.com/tm-559-zay-shop
 
         <div class="row mt-4">
             <div class="col text-center">
-                <a href="" class="btn btn-primary">Add Address</a>
+                <a href="{% url 'add_address' %}" class="btn btn-primary">Add Address</a>
             </div>
         </div>
     

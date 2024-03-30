@@ -57,7 +57,12 @@ https://templatemo.com/tm-559-zay-shop
         height: 85px;
         width: 85px;
     }
+    #mck-sidebox {
+        display: none;
+    }
+    
 </style>
+
 </head>
 
 <body>
@@ -107,7 +112,7 @@ https://templatemo.com/tm-559-zay-shop
                             <a class="nav-link" href="{% url 'customer_profile' %}">Profile</a> 
                         </li>  {% endcomment %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'add_address' %}">Contact</a>
+                            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'shop' %}">Shop</a>
@@ -417,7 +422,7 @@ https://templatemo.com/tm-559-zay-shop
     </section>
     <div class="alan-btn"></div>
     <!-- Start Categories of The Month -->
-    <section class="container py-5">
+    {% comment %} <section class="container py-5">
         <div class="row text-center pt-3">
             <div class="col-lg-6 m-auto">
                 <h1 class="h1">Categories of The Month</h1>
@@ -444,7 +449,7 @@ https://templatemo.com/tm-559-zay-shop
                 <p class="text-center"><a class="btn btn-success">Go Shop</a></p>
             </div>
         </div>
-        
+         {% endcomment %}
         {% comment %} <button id="toggleButton" onclick="toggleIframe()"><i class="bi bi-chat-dots-fill"></i></button>
     
         <iframe id="iframe"
@@ -479,7 +484,7 @@ https://templatemo.com/tm-559-zay-shop
 
 
     <!-- Start Featured Product -->
-    <section class="bg-light">
+    {% comment %} <section class="bg-light">
         <div class="container py-5">
             <div class="row text-center py-3">
                 <div class="col-lg-6 m-auto">
@@ -566,7 +571,7 @@ https://templatemo.com/tm-559-zay-shop
             </div>
         </div>
 
-    </section>
+    </section> {% endcomment %}
     <!-- End Featured Product -->
     <footer class="bg-dark" id="tempaltemo_footer">
         <div class="container">
@@ -651,7 +656,7 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="row pt-2">
                     <div class="col-12">
                         <p class="text-left text-light">
-                            Copyright &copy; 2021 Company Name 
+                            Copyright &copy; 2024 GustoGrove
                             <a rel="sponsored" href="https://templatemo.com" target="_blank"></a>
                         </p>
                     </div>

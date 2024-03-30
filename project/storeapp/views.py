@@ -754,7 +754,9 @@ razorpay_client = razorpay.Client(
 
 
 
-def homepage(request):
+def homepage(request,address_id):
+    address = get_object_or_404(Address, id=address_id)
+
     cart_items = CartItem.objects.filter(user=request.user,is_active=True)
     total_price = Decimal(sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items))
     
@@ -780,6 +782,7 @@ def homepage(request):
         total_price=total_price,
         razorpay_order_id=razorpay_order_id,
         payment_status=Order.PaymentStatusChoices.PENDING,
+        address=address,
     )
 
     # Save the order to generate an order ID
@@ -2182,3 +2185,48 @@ def add_address(request):
         return redirect('address_card')  # Redirect to address list view
 
     return render(request, 'add_address.html')
+def admin_home(request):
+    total_products = Product.objects.count()
+    total_orders = Order.objects.count()
+    total_customers = CustomUser.objects.filter(is_customer=True).count()  # Assuming staff users are not customers
+    total_sellers = SellerDetails.objects.count()
+    delivery_agents=DeliveryAgent.objects.count()
+
+    context = {
+        'total_products': total_products,
+        'total_orders': total_orders,
+        'total_customers': total_customers,
+        'total_sellers': total_sellers,
+        'delivery_agents':delivery_agents,
+    }
+    return render (request,"admin_home.html",context)
+def admin_delivery_agent(request):
+    # Fetch all delivery agents from the database
+    agents = DeliveryAgent.objects.all()
+    print(agents)
+    
+    # Pass the agents data to the template
+    return render(request, 'admin_delivery_agent.html', {'agents': agents})
+def approve_agent(request, agent_id):
+    agent = get_object_or_404(DeliveryAgent, id=agent_id)
+    user = agent.user  # Assuming the user is stored as a foreign key in DeliveryAgent model
+    user.is_active = True  # Assuming is_active is the field in your custom user model
+    user.save()
+    return JsonResponse({'success': True})
+
+def admin_customer(request):
+    # Fetch all customers from the database where is_customer is True
+    customers = CustomUser.objects.filter(is_customer=True)
+
+    # Render the template with customers data
+    return render(request, 'admin_customer.html', {'customers': customers})
+def activate_customer(request, customer_id):
+    # Retrieve the customer object from the database
+    customer = CustomUser.objects.get(id=customer_id)
+
+    # Update the active status to True
+    customer.is_active = True
+    customer.save()
+
+    # Redirect back to the customer table page or any other appropriate page
+    return redirect('admin_customer')

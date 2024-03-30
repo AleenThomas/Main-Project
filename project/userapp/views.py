@@ -130,6 +130,8 @@ def custom_login(request):
                     return redirect(low_stock_notification_url)
                 elif user.is_delivery:
                     return redirect('delivery_agent_home')
+                elif user.is_superuser:
+                    return redirect('admin_home')
                 
                 
                     

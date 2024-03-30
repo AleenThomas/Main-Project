@@ -1,44 +1,63 @@
 {% load static %}
+{% comment %} {% load cart_tags %} {% endcomment %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Gustogrove Shop - Product Listing Page</title>
+    <title>GustoGrove</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="apple-touch-icon" href="{% static 'img/logo.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Add this line for Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="{% static 'css\bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css\templatemo.css' %}">
-    <link rel="stylesheet" href="{% static 'css\custom.css' %}">
+<!-- Add this line for Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo.css' %}">
+    <link rel="stylesheet" href="{% static '/css/custom.css' %}">
 
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="{% static 'css\fontawesome.min.css' %}">
-    <style>
-         .btn.added {
-    color: red; /* Change the color when it's in the wishlist */}
-    {% comment %} a.page-link {
-        background-color: black;
-        color: white; /* Text color */
-    }
-    
-    /* Change to blue when hovered */
-     a.page-link:hover {
-        background-color: blue;
-        color: white; /* Text color */
-    } {% endcomment %}
-</style>
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
 <!--
     
 TemplateMo 559 Zay Shop
 
 https://templatemo.com/tm-559-zay-shop
 
+
+
 -->
+<style>
+    #iframe {
+        display: none; 
+        position: fixed;
+        bottom: 100px;
+        right: 100px;
+        z-index: 1;
+    }
+
+    #toggleButton {
+        z-index: 1;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgb(2, 48, 2);
+        color: #ffffff;
+        border: none;
+        border-radius: 100%;
+        padding: 25px;
+        cursor: pointer;
+        height: 85px;
+        width: 85px;
+    }
+</style>
 </head>
 
 <body>
@@ -96,6 +115,12 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'seller_index' %}">Become a seller</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'farm_view' %}">Farms</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="navbar align-self-center d-flex">
@@ -134,7 +159,7 @@ https://templatemo.com/tm-559-zay-shop
                         {% comment %} <a class="dropdown-item" href="{% url 'seller_register' %}" style="color:rgb(2, 48, 2);">Register as Seller</a> {% endcomment %}
                         <a class="dropdown-item" href="{% url 'custom_login' %}" style="color:rgb(2, 48, 2);">Login</a>
                         {% if user.is_authenticated %}
-                            <a class="dropdown-item" href="{% url 'customer_profile' %}" style="color: rgb(2, 48, 2);">Profile</a>
+                            <a class="dropdown-item" href="{% url 'customer_profile'  %}" style="color: rgb(2, 48, 2);">Profile</a>
                         {% endif %}
 
                     </div>
@@ -527,7 +552,7 @@ https://templatemo.com/tm-559-zay-shop
             <div class="row">
 
                 <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-success border-bottom pb-3 border-light logo">Zay Shop</h2>
+                    <h2 class="h2 text-success border-bottom pb-3 border-light logo">GustoGrove</h2>
                     <ul class="list-unstyled text-light footer-link-list">
                         <li>
                             <i class="fas fa-map-marker-alt fa-fw"></i>
@@ -539,7 +564,7 @@ https://templatemo.com/tm-559-zay-shop
                         </li>
                         <li>
                             <i class="fa fa-envelope fa-fw"></i>
-                            <a class="text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                            <a class="text-decoration-none" href="mailto:info@company.com">gustogrove@gmail.com</a>
                         </li>
                     </ul>
                 </div>
@@ -547,13 +572,13 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="col-md-4 pt-5">
                     <h2 class="h2 text-light border-bottom pb-3 border-light">Products</h2>
                     <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Luxury</a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Wear</a></li>
-                        <li><a class="text-decoration-none" href="#">Men's Shoes</a></li>
-                        <li><a class="text-decoration-none" href="#">Women's Shoes</a></li>
-                        <li><a class="text-decoration-none" href="#">Popular Dress</a></li>
-                        <li><a class="text-decoration-none" href="#">Gym Accessories</a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Shoes</a></li>
+                        <li><a class="text-decoration-none" href="#">Cardamom</a></li>
+                        <li><a class="text-decoration-none" href="#">pepper</a></li>
+                        <li><a class="text-decoration-none" href="#">Clove</a></li>
+                        <li><a class="text-decoration-none" href="#">Gift Hamper</a></li>
+                        <li><a class="text-decoration-none" href="#">Spice Combos</a></li>
+                        {% comment %} <li><a class="text-decoration-none" href="#"></a></li>
+                        <li><a class="text-decoration-none" href="#">Sport Shoes</a></li> {% endcomment %}
                     </ul>
                 </div>
 
@@ -605,8 +630,8 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="row pt-2">
                     <div class="col-12">
                         <p class="text-left text-light">
-                            Copyright &copy; 2021 Company Name 
-                            | Designed by <a rel="sponsored" href="https://templatemo.com" target="_blank">TemplateMo</a>
+                            Copyright &copy; 2024 GustoGrove
+                            <a rel="sponsored" href="https://templatemo.com" target="_blank"></a>
                         </p>
                     </div>
                 </div>

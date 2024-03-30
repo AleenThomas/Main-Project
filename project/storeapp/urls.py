@@ -34,7 +34,7 @@ urlpatterns = [
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
     path('seller_orders/', views.seller_orders, name='seller_orders'),
 
-    path('homepage/', views.homepage, name='homepage'),
+    path('homepage/<int:address_id>/', views.homepage, name='homepage'),
     path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
     path('print_as_pdf/<int:cart_id>/', views.print_as_pdf, name='print_as_pdf'),
     path('my_orders/',views.my_orders,name='my_orders'),
@@ -82,6 +82,18 @@ urlpatterns = [
     path('delivery_agent_profile/', views.delivery_agent_profile, name='delivery_agent_profile'),
     # path('update_delivery_profile/', views.update_delivery_profile, name='update_delivery_profile'),
     path('address_card/', views.address_card, name='address_card'),
+    
+    
+    path('admin_home/', views.admin_home, name='admin_home'),
+    path('admin_delivery_agent/', views.admin_delivery_agent, name='admin_delivery_agent'),
+    path('approve_agent/<int:agent_id>/', views.approve_agent, name='approve_agent'),
+    path('admin_customer/', views.admin_customer, name='admin_customer'),
+    path('activate_customer/<int:customer_id>/', views.activate_customer, name='activate_customer'),
+
+
+
+
+
 
 
 

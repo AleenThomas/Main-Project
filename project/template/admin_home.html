@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,6 +13,56 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <title>Document</title>
     <style>
+
+
+
+
+        .order-card {
+            color: #fff;
+        }
+        
+        .bg-c-blue {
+            background: linear-gradient(45deg,#4099ff,#73b4ff);
+        }
+        
+        .bg-c-green {
+            background: linear-gradient(45deg,#2ed8b6,#59e0c5);
+        }
+        
+        .bg-c-yellow {
+            background: linear-gradient(45deg,#FFB64D,#ffcb80);
+        }
+        
+        .bg-c-pink {
+            background: linear-gradient(45deg,#FF5370,#ff869a);
+        }
+        
+        
+        .card {
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+            box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+            border: none;
+            margin-bottom: 30px;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .card .card-block {
+            padding: 25px;
+        }
+        
+        .order-card i {
+            font-size: 26px;
+        }
+        
+        .f-left {
+            float: left;
+        }
+        
+        .f-right {
+            float: right;
+        }
         *{
             list-style: none;
             text-decoration: none;
@@ -176,14 +227,14 @@
             {% if user.is_authenticated %}
 
             <h3>{{user.name}}</h3>
-            <p>Hub</p>
+            <p>Admin</p>
             {% endif %}
     </div>
 
             <!-- Menu items -->
             <ul>
                 <li>
-                    <a href="{% url 'hub_home'  %}" class="active">
+                    <a href="{% url 'admin_home'  %}" class="active">
                         <span class="icon"><i class="fas fa-home"></i></span>
                         <span class="item">Home</span>
                     </a>
@@ -205,19 +256,60 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main-content ">
-        <div class="welcome-message">Welcome to Your Hub Dashboard</div>
-        <div class="content">
-            <p>This is the main content area where you can add your content.</p>
-            <p>Feel free to customize it according to your needs.</p>
+    <div class="container mt-4 me-4 ps-5">
+        <div class="row ps-5">
+            <div class="col-md-6">
+                <div class="card bg-c-green order-card">
+                    <div class="card-block">
+                        <h6 class="m-b-20">Orders Received</h6>
+                        <h2 class="text-right"><i class="fa fa-shopping-cart f-left"></i><span>{{ total_orders }}</span></h2>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card bg-c-yellow order-card">
+                    <a href="{% url 'admin_customer'  %}" style="text-decoration: none;">
+                        <div class="card-block">
+                            <h6 class="m-b-20">Total Customers</h6>
+                            <h2 class="text-right"><i class="fa fa-users" aria-hidden="true"></i><span>{{ total_customers }}</span></h2>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card bg-c-pink order-card">
+                    <div class="card-block">
+                        <h6 class="m-b-20">Total Sellers</h6>
+                        <h2 class="text-right"><i class="fa fa-users" aria-hidden="true"></i><span>{{ total_sellers }}</span></h2>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card bg-c-blue order-card">
+                    <div class="card-block">
+                        <h6 class="m-b-20">Total Products</h6>
+                        <h2 class="text-right"><i class="fa fa-cubes" aria-hidden="true"></i><span>{{ total_products }}</span></h2>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="card bg-c-blue order-card">
+                   <a href="{% url 'admin_delivery_agent'  %}"  style="text-decoration: none;" >
+                    <div class="card-block">
+                        <h6 class="m-b-20">Delivery Agents</h6>
+                        <h2 class="text-right"><i class="fa fa-cubes" aria-hidden="true"></i><span>{{ delivery_agents }}</span></h2>
+                    </div>
+                </div></a>
+            </div>
         </div>
+    </div>
+    
 
-
-    <script>
-        var hamburger = document.querySelector(".hamburger");
-        hamburger.addEventListener("click", function(){
-            document.querySelector("body").classList.toggle("active");
-        })
-    </script>
+    
 </body>
 </html>

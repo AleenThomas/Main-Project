@@ -135,7 +135,18 @@ class Subcategory(models.Model):
     class Meta:
         verbose_name_plural = "Subcategory"
 
-        
+class Address(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    house_building = models.CharField(max_length=100)
+    road_area_colony = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
+    phone = models.CharField(max_length=10)
+
+    
+    
+    
 class Order(models.Model):
     class PaymentStatusChoices(models.TextChoices):
             PENDING = 'pending', 'Pending'
@@ -158,6 +169,8 @@ class Order(models.Model):
         max_length=20, choices=OrderStatusChoices.choices, default=OrderStatusChoices.REQUESTED)
     accepted_by_store = models.BooleanField(default=False)
     ready_for_pickup = models.BooleanField(default=False)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE) # Adding the foreign key to Address model
+
         # date_added = models.DateField(default=timezone.now)
 
         # cart = models.ForeignKey(CartItem, on_delete=models.SET_NULL, null=True, blank=True)
@@ -271,16 +284,4 @@ class DeliveryAgent(models.Model):
     id_proof = models.ImageField(upload_to='id_proof/')
     locality = models.CharField(max_length=255)
     registration_date = models.DateTimeField(auto_now_add=True)
-    
-class Address(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    house_building = models.CharField(max_length=100)
-    road_area_colony = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    district = models.CharField(max_length=100)
-    pincode = models.CharField(max_length=6)
-    phone = models.CharField(max_length=10)
-
-    
-    
     
