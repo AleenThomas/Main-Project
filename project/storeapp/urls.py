@@ -95,6 +95,10 @@ urlpatterns = [
     path('deactivate_seller/<int:seller_id>/',views.deactivate_seller, name='deactivate_seller'),
     path('admin_products/', views.admin_products, name='admin_products'),
     path('admin_orders/', views.admin_order, name='admin_order'),
+    path('admin_hub/', views.admin_hub, name='admin_hub'),
+    path('approve_hub/<int:agent_id>/', views.approve_hub, name='approve_hub'),
+
+
 
 
 

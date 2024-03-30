@@ -2282,3 +2282,14 @@ def admin_order(request):
    
         
     return render(request, 'admin_order.html', {'orders': orders})
+def admin_hub(request):
+    # Fetch all users who have hub status as True
+    hubs = CustomUser.objects.filter(hub_status=True)
+    return render(request, 'admin_hub.html', {'hubs': hubs})
+def approve_hub(request, agent_id):
+    hub = get_object_or_404(CustomUser, id=agent_id)
+    print(hub)
+     # Assuming the user is stored as a foreign key in DeliveryAgent model
+    hub.is_active = True  # Assuming is_active is the field in your custom user model
+    hub.save()
+    return JsonResponse({'success': True})
