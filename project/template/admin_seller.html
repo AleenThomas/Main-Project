@@ -1,3 +1,5 @@
+<!-- seller_table.html -->
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -240,18 +242,11 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'admin_order' %}">
+                    <a href="{% url 'hub_orders' %}">
                         <span class="icon"><i class="fas fa-desktop"></i></span>
                         <span class="item">Orders</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{% url 'admin_products' %}">
-                        <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-                        <span class="item">Products</span>
-                    </a>
-                </li>
-                
                 <li>
                     <a href="{% url 'logout' %}">
                         <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
@@ -262,78 +257,95 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container mt-4 me-4 ps-5">
+    <div class="container mt-4 ps-5 me-4">
         <div class="row ps-5">
-            <div class="col-md-6">
-                <div class="card bg-c-green order-card">
-                    <div class="card-block">
-                        <h6 class="m-b-20">Orders Received</h6>
-                        <h2 class="text-right"><i class="fa fa-shopping-cart f-left"></i><span>{{ total_orders }}</span></h2>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card bg-c-yellow order-card">
-                    <a href="{% url 'admin_customer'  %}"  class="text-light" style="text-decoration: none;">
-                        <div class="card-block">
-                            <h6 class="m-b-20">Total Customers</h6>
-                            <h2 class="text-right"><i class="fa fa-users" aria-hidden="true"></i><span>{{ total_customers }}</span></h2>
-                        </div>
-                    </a>
-                </div>
-            </div>
+            <div class="col-md-12">
+                <h2>Seller Table</h2>
 
-            <div class="col-md-6">
-                <div class="card bg-c-pink order-card">
-                    <a href="{% url 'admin_seller'  %}" class="text-light"style="text-decoration: none;">
-                    <div class="card-block">
-                        <h6 class="m-b-20">Total Sellers</h6>
-                        <h2 class="text-right"><i class="fa fa-users" aria-hidden="true"></i><span>{{ total_sellers }}</span></h2>
-                    </div>
-                </a>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card bg-c-blue order-card">
-                    <a href="{% url 'admin_products'  %}" class="text-light"style="text-decoration: none;">
-
-                    <div class="card-block">
-                        <h6 class="m-b-20">Total Products</h6>
-                        <h2 class="text-right"><i class="fa fa-cubes" aria-hidden="true"></i><span>{{ total_products }}</span></h2>
-                    </div>
-                </a>
-                </div>
-            </div>
-
-
-            <div class="col-md-6">
-                <div class="card bg-c-yellow order-card">
-                   <a href="{% url 'admin_delivery_agent'  %}" class="text-light" style="text-decoration: none;" >
-                    <div class="card-block">
-                        <h6 class="m-b-20">Delivery Agents</h6>
-                        <h2 class="text-right"><i class="fas fa-truck"></i>
-                            <span>{{ delivery_agents }}</span></h2>
-                    </div>
-                </div></a>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card bg-c-green order-card">
-                   <a href="{% url 'admin_delivery_agent'  %}" class="text-light" style="text-decoration: none;" >
-                    <div class="card-block">
-                        <h6 class="m-b-20">Hubs</h6>
-                        <h2 class="text-right"><i class="fas fa-warehouse"></i>
-                            <span>{{ hub}}</span></h2>
-                    </div>
-                </div></a>
-            </div>
-        </div>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <!-- Add more columns as needed -->
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for seller in sellers %}
+                <tr>
+                    <td>{{ seller.name }}</td>
+                    <td>{{ seller.email }}</td>
+                    <!-- Add more columns as needed -->
+                    <td>
+                        {% if not seller.is_active %}
+                                <button onclick="activateSeller({{ seller.id }})" class="btn btn-primary">Activate</button>
+                                {% else %}
+                                <button onclick="deactivateSeller({{ seller.id }})" class="btn btn-danger">Delete</button>
+                                {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    
+    </div>
+    </div>
 
-    
+    <!-- Add your JavaScript code here -->
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        function activateSeller(sellerId) {
+            fetch('/activate_seller/' + sellerId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Seller activated successfully.");
+                    // You can update the UI as needed here
+                } else {
+                    alert("Failed to activate seller.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while processing the request.");
+            });
+        }
+
+        function deactivateSeller(sellerId) {
+            fetch('/deactivate_seller/' + sellerId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Seller deactivated successfully.");
+                    // You can update the UI as needed here
+                } else {
+                    alert("Failed to deactivate seller.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while processing the request.");
+            });
+        }
+    </script>
 </body>
 </html>

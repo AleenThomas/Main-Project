@@ -89,6 +89,13 @@ urlpatterns = [
     path('approve_agent/<int:agent_id>/', views.approve_agent, name='approve_agent'),
     path('admin_customer/', views.admin_customer, name='admin_customer'),
     path('activate_customer/<int:customer_id>/', views.activate_customer, name='activate_customer'),
+    path('deactivate_customer/<int:customer_id>/', views.deactivate_customer, name='deactivate_customer'),    path('admin_sellers/', views.admin_seller, name='admin_seller'),
+    path('activate_seller/<int:seller_id>/', views.activate_seller, name='activate_seller'),
+    # path('activate_seller/<int:seller_id>/', activate_seller, name='activate_seller'),
+    path('deactivate_seller/<int:seller_id>/',views.deactivate_seller, name='deactivate_seller'),
+    path('admin_products/', views.admin_products, name='admin_products'),
+    path('admin_orders/', views.admin_order, name='admin_order'),
+
 
 
 

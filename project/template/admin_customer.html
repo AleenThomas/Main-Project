@@ -279,10 +279,10 @@
                     {% comment %} <td>{{ customer.active }}</td> {% endcomment %}
                     <td>
                         {% if not customer.is_active %}
-                        <button onclick="approveAgent({{ customer.id }})" class="btn btn-primary">Activate</button>
-                        {% else %}
-                            <button disabled class="btn btn-secondary">Activated</button>
-                        {% endif %}
+                                    <button onclick="activateCustomer({{ customer.id }})" class="btn btn-primary">Activate</button>
+                                {% else %}
+                                    <button onclick="deactivateCustomer({{ customer.id }})" class="btn btn-danger">Deactivate</button>
+                                {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -296,30 +296,55 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JavaScript -->
     <script>
-    function approveAgent(customerId) {
-        fetch('/activate_customer/' + customerId, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            credentials: 'same-origin'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Customer activated successfully.");
-                // You can update the UI as needed here
-            } else {
-                alert("Failed to activate customer.");
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("An error occurred while processing the request.");
-        });
-    }
-</script>
+        function activateCustomer(customerId) {
+            fetch('/activate_customer/' + customerId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Customer activated successfully.");
+                    // You can update the UI as needed here
+                } else {
+                    alert("Failed to activate customer.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while processing the request.");
+            });
+        }
+
+        function deactivateCustomer(customerId) {
+            fetch('/deactivate_customer/' + customerId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Customer deactivated successfully.");
+                    // You can update the UI as needed here
+                } else {
+                    alert("Failed to deactivate customer.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while processing the request.");
+            });
+        }
+    </script>
 </body>
 </html>

@@ -2191,6 +2191,7 @@ def admin_home(request):
     total_customers = CustomUser.objects.filter(is_customer=True).count()  # Assuming staff users are not customers
     total_sellers = SellerDetails.objects.count()
     delivery_agents=DeliveryAgent.objects.count()
+    hub=CustomUser.objects.filter(hub_status=True).count()
 
     context = {
         'total_products': total_products,
@@ -2198,6 +2199,7 @@ def admin_home(request):
         'total_customers': total_customers,
         'total_sellers': total_sellers,
         'delivery_agents':delivery_agents,
+        'hub':hub,
     }
     return render (request,"admin_home.html",context)
 def admin_delivery_agent(request):
@@ -2221,12 +2223,62 @@ def admin_customer(request):
     # Render the template with customers data
     return render(request, 'admin_customer.html', {'customers': customers})
 def activate_customer(request, customer_id):
-    # Retrieve the customer object from the database
-    customer = CustomUser.objects.get(id=customer_id)
+    customer = get_object_or_404(CustomUser, id=customer_id)
+    if not customer.is_active:
+        customer.is_active = True
+        customer.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'message': 'Customer is already activated.'})
+def deactivate_customer(request, customer_id):
+    customer = get_object_or_404(CustomUser, id=customer_id)
+    if not customer.is_active:
+        customer.is_active = False
+        customer.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'message': 'Customer is already activated.'})
 
-    # Update the active status to True
-    customer.is_active = True
-    customer.save()
 
-    # Redirect back to the customer table page or any other appropriate page
-    return redirect('admin_customer')
+
+def admin_seller(request):
+    # Fetch all sellers from the database where is_seller is True
+    sellers = CustomUser.objects.filter(is_seller=True)
+
+    # Render the template with sellers data
+    return render(request, 'admin_seller.html', {'sellers': sellers})
+
+@login_required
+@csrf_exempt
+def activate_seller(request, seller_id):
+        seller = get_object_or_404(CustomUser, id=seller_id)
+        seller.is_active = True
+        seller.save()
+        return JsonResponse({'success': True, 'message': 'Seller activated successfully'})
+
+@login_required
+@csrf_exempt
+def deactivate_seller(request, seller_id):
+        seller = get_object_or_404(CustomUser, id=seller_id)
+        seller.is_active = False
+        seller.save()
+        return JsonResponse({'success': True, 'message': 'Seller deactivated successfully'})
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+def admin_products(request):
+    products_list = Product.objects.all()
+    paginator = Paginator(products_list, 5)  # Show 5 products per page
+    page = request.GET.get('page')
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        products = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        products = paginator.page(paginator.num_pages)
+    return render(request, 'admin_products.html', {'products': products})
+def admin_order(request):
+    orders = Order.objects.filter(payment_status='successful').order_by('-order_date')
+   
+        
+    return render(request, 'admin_order.html', {'orders': orders})
