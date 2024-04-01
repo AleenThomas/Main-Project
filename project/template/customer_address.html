@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <!-- Add this line for Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <title>Delivery Agent Dashboard</title>
+    <style>
+        *{
+            list-style: none;
+            text-decoration: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        body{
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .wrapper .sidebar{
+            background: rgb(5, 68, 104);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 225px;
+            height: 100%;
+            padding: 20px 0;
+            transition: all 0.5s ease;
+            z-index: 1000;
+        }
+        .wrapper .sidebar .profile{
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .wrapper .sidebar .profile img{
+            display: block;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        
+        .wrapper .sidebar .profile h3{
+            color: #ffffff;
+            margin: 10px 0 5px;
+        }
+        
+        .wrapper .sidebar .profile p{
+            color: rgb(206, 240, 253);
+            font-size: 14px;
+        }
+        .wrapper .sidebar ul li a{
+            display: block;
+            padding: 13px 30px;
+            border-bottom: 1px solid #10558d;
+            color: rgb(241, 237, 237);
+            font-size: 16px;
+            position: relative;
+        }
+        
+        .wrapper .sidebar ul li a .icon{
+            color: #dee4ec;
+            width: 30px;
+            display: inline-block;
+        }
+        .wrapper .sidebar ul li a:hover,
+        .wrapper .sidebar ul li a.active{
+            color: #0c7db1;
+            background:white;
+            border-right: 2px solid rgb(5, 68, 104);
+        }
+        
+        .wrapper .sidebar ul li a:hover .icon,
+        .wrapper .sidebar ul li a.active .icon{
+            color: #0c7db1;
+        }
+        
+        .wrapper .sidebar ul li a:hover:before,
+        .wrapper .sidebar ul li a.active:before{
+            display: block;
+        }
+        .wrapper .section{
+            width: calc(100% - 225px);
+            margin-left: 225px;
+            transition: all 0.5s ease;
+        }
+        
+        .wrapper .section .top_navbar{
+            background: rgb(5, 68, 104);
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+        }
+        
+        .wrapper .section .top_navbar .hamburger a{
+            font-size: 28px;
+            color: #f4fbff;
+        }
+        
+        .wrapper .section .top_navbar .hamburger a:hover{
+            color: #a2ecff;
+        }
+        .wrapper .section .top_navbar .hamburger{
+            margin-left: auto;
+        }
+        body.active .wrapper .sidebar{
+            left: -225px;
+        }
+        
+        body.active .wrapper .section{
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin: 50px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+    
+        .welcome-message {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+    
+        .content {
+            color: #555;
+            line-height: 1.6;
+            text-align: justify;
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Top Navbar -->
+        <div class="section">
+            <div class="top_navbar" style="height: 70px;"> <!-- Adjusted height -->
+                <div class="hamburger">
+                    <a href="#">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="wrapper">
+        <!-- Side Navbar -->
+        <div class="sidebar">
+            <!-- Profile image & text -->
+            <div class="profile">
+                <img src="{% static 'img/delivery.png' %}">
+                {% if user.is_authenticated %}
+
+                <h3>{{user.name}}</h3>
+                <p>Delivery Agent</p>
+                {% endif %}
+
+            </div>
+
+            <!-- Menu items -->
+            <ul>
+                <li>
+                    <a href="" class="active">
+                        <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                        <span class="item">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accepted_orders_view'  %}">
+                        <span class="icon"><i class="fas fa-truck"></i></span>
+                        <span class="item">Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'delivery_agent_profile'  %}">
+                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <span class="item">Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'orders_ready_for_pickup_view'  %}">
+                        <span class="icon"><i class="fas fa-check"></i>
+                        </span>
+                        <span class="item">Accepted</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'logout'  %}">
+                        <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                        <span class="item">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Customer Address</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text"> {{ customer_address.user.name }}</p>
+                <p class="card-text"> {{ customer_address.house_building }}</p>
+                <p class="card-text"> {{ customer_address.road_area_colony }}, {{ customer_address.city }}</p>
+                {% comment %} <p class="card-text"> </p> {% endcomment %}
+                <p class="card-text"> {{ customer_address.district }},{{ customer_address.pincode }}</p>
+                {% comment %} <p class="card-text"> </p> {% endcomment %}
+                <p class="card-text">{{ customer_address.phone }}</p>
+                <!-- Add other address fields as needed -->
+            </div>
+            
+        </div>
+        <a href="#" onclick="history.go(-1)" class="btn btn-secondary mb-3">Back</a>
+
+    </div>
+</main>
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

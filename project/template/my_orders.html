@@ -221,7 +221,12 @@
                                     <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Ready for Pickup</span>
                                 {% endif %}
                                 <hr class="mx-1" style="height: 2px; width: 100px; border: none; background-color: #000;">
-                                <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Delivered</span>                                   
+                                {% if order.delivered %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary bg-success"></i> Delivered</span>
+                                {% else %}
+                                    <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Delivered</span>
+                                {% endif %}
+                                {% comment %} <span class="badge bg-light text-dark position-relative"><i class="far fa-circle text-secondary"></i> Delivered</span>                                    {% endcomment %}
                             </div>
                         </div>
                     </td>

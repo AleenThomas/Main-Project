@@ -182,7 +182,7 @@
             <!-- Menu items -->
             <ul>
                 <li>
-                    <a href="" class="active">
+                    <a href="{% url 'delivery_agent_home'  %}" class="active">
                         <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
                         <span class="item">Dashboard</span>
                     </a>
@@ -222,25 +222,36 @@
                     <th>User</th>
                     <th>Total Price</th>
                     <th>Order Date</th>
-                    <th>Locality</th>
-                    <th>City</th>
+                    {% comment %} <th>Locality</th> {% endcomment %}
+                    <th>Address</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
+                {% if ready_orders %}
                 {% for order in ready_orders %}
                     <tr>
                         <td>{{ order.user.email }}</td>
                         <td>{{ order.total_price }}</td>
                         <td>{{ order.order_date }}</td>
-                        <td>{{ order.address.locality }}</td>
-                        <td>{{ order.address.city }}</td>
+                        {% comment %} <td>{{ order.address.locality }}</td> {% endcomment %}
+                        {% comment %} <td>{{ order.address.city }}</td> {% endcomment %}
                         <td>
                             <a href="{% url 'view_customer_address' order.id %}" class="btn btn-info">View Address</a>
+                        </td>
+
+                            <td>
+
                             <a href="{% url 'mark_as_delivered' order.id %}" class="btn btn-success">Mark Delivered</a>
                         </td>
                     </tr>
                 {% endfor %}
+                {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">No orders to display</td>
+                            </tr>
+                        {% endif %}
+
             </tbody>
         </table>
     </div>

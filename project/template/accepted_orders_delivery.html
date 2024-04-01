@@ -182,7 +182,7 @@
             <!-- Menu items -->
             <ul>
                 <li>
-                    <a href="" class="active">
+                    <a href="{% url 'delivery_agent_home'  %}" class="active">
                         <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
                         <span class="item">Dashboard</span>
                     </a>
@@ -226,6 +226,8 @@
                     <th>Total Price</th>
                     <th>Order Date</th>
                     <th>Customer's City</th>
+                    {% comment %} <th>Address</th> {% endcomment %}
+
                     <th>Action</th>
                     <!-- Add more columns as needed -->
                 </tr>
@@ -239,9 +241,10 @@
                         <td>{{ order.total_price }}</td>
                         <td>{{ order.order_date }}</td>
                         <td>{{ order.address.city }}</td>
+                        
                         <td>
                             {% if not order.ready_for_pickup %}
-                                <form action="{% url 'approve_order' order.id %}" method="post">
+                                <form  method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-primary">Approve Product</button>
                                 </form>
