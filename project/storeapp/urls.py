@@ -97,6 +97,15 @@ urlpatterns = [
     path('admin_orders/', views.admin_order, name='admin_order'),
     path('admin_hub/', views.admin_hub, name='admin_hub'),
     path('approve_hub/<int:agent_id>/', views.approve_hub, name='approve_hub'),
+    path('accepted_orders_view/', views.accepted_orders_view, name='accepted_orders_view'),
+    path('approve_order/<int:order_id>/', views.approve_order, name='approve_order'),
+    path('ready_for_pickup/', views.orders_ready_for_pickup_view, name='orders_ready_for_pickup_view'),
+    path('view_address/<int:order_id>/', views.view_customer_address, name='view_customer_address'),
+    path('mark_delivered/<int:order_id>/', views.mark_as_delivered, name='mark_as_delivered'),
+
+
+
+    
 
 
 

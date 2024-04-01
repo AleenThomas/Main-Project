@@ -169,6 +169,8 @@ class Order(models.Model):
         max_length=20, choices=OrderStatusChoices.choices, default=OrderStatusChoices.REQUESTED)
     accepted_by_store = models.BooleanField(default=False)
     ready_for_pickup = models.BooleanField(default=False)
+    delivered = models.BooleanField(default=False)
+
     address = models.ForeignKey(Address, on_delete=models.CASCADE) # Adding the foreign key to Address model
 
         # date_added = models.DateField(default=timezone.now)
@@ -227,7 +229,6 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-    
     
 class Farm(models.Model):
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

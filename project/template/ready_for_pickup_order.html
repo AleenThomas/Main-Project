@@ -214,33 +214,37 @@
                 </li>
             </ul>
         </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Navbar -->
-            <div class="top_navbar">
-                <div class="hamburger">
-                    <a href="#">
-                        <i class="fas fa-bars"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Main Content Body -->
-            <div class="content">
-                <div class="welcome-message">Welcome to Your Delivery Agent Dashboard</div>
-                <p>This is the main content area where you can view and manage your delivery tasks.</p>
-                <!-- Additional content and features can be added here -->
-            </div>
-        </div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="container mt-5">
+                <h4>Accepted Orders</h4>
+                <table class="table table-bordered mt-4">
+                <tr>
+                    <th>User</th>
+                    <th>Total Price</th>
+                    <th>Order Date</th>
+                    <th>Locality</th>
+                    <th>City</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in ready_orders %}
+                    <tr>
+                        <td>{{ order.user.email }}</td>
+                        <td>{{ order.total_price }}</td>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ order.address.locality }}</td>
+                        <td>{{ order.address.city }}</td>
+                        <td>
+                            <a href="{% url 'view_customer_address' order.id %}" class="btn btn-info">View Address</a>
+                            <a href="{% url 'mark_as_delivered' order.id %}" class="btn btn-success">Mark Delivered</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-    <script>
-        // JavaScript for toggling sidebar
-        var hamburger = document.querySelector(".hamburger");
-        hamburger.addEventListener("click", function(){
-            document.querySelector("body").classList.toggle("active");
-        });
-    </script>
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

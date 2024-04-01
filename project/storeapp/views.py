@@ -214,42 +214,17 @@ def seller_index(request):
         seller_products = Product.objects.filter(seller=current_seller)
         notification=Notification.objects.filter(seller_id=current_seller.id,read=False).count()
 
-        # Calculate total amount, unique customers, and total orders for each product
-        # product_data = []
-        # total_orders_all = 0
-        # unique_customers_all = 0
-        # total_amount_all = 0
-
-        # for product in seller_products:
-        #     total_orders = Order.objects.filter(products=product).count()
-        #     unique_customers = Order.objects.filter(products=product).values('user').distinct().count()
-        #     total_amount = total_orders * product.price  
-            
-            # total_orders_all += total_orders
-            # unique_customers_all += unique_customers
-            # total_amount_all += total_amount
-
-            # product_data.append({
-            #     'product': product,
-            #     'total_orders': total_orders,
-            #     'unique_customers': unique_customers,
-            #     'total_amount': total_amount
-            # })
-            # total_orders_all += total_orders
-            # unique_customers_all += unique_customers
-            # total_amount_all += total_amount
-
-            # product_data.append({
-            #     'product': product,
-            #     'total_orders': total_orders,
-            #     'unique_customers': unique_customers,
-            #     'total_amount': total_amount
-            # })
-
+        total_products = seller_products.count()
 
          # Get seller's sales report
-        total_orders = Order.objects.filter(products__seller=current_seller).count()
-        total_sales = Order.objects.filter(products__seller=current_seller, payment_status=Order.PaymentStatusChoices.SUCCESSFUL).aggregate(total_sales=Sum('total_price'))['total_sales'] or 0
+        total_orders = Order.objects.filter(
+        products__seller=current_seller,
+        payment_status=Order.PaymentStatusChoices.SUCCESSFUL
+        ).count()        
+        total_sales = Order.objects.filter(
+        products__seller=current_seller,
+        payment_status=Order.PaymentStatusChoices.SUCCESSFUL
+        ).aggregate(total_sales=Sum('total_price'))['total_sales'] or 0        
         unique_customers = Order.objects.filter(products__seller=current_seller).values('user').distinct().count()
 
         context = {
@@ -257,7 +232,8 @@ def seller_index(request):
             'notification': notification,
             'total_orders': total_orders,
             'total_sales': total_sales,
-            'unique_customers': unique_customers
+            'unique_customers': unique_customers,
+            'total_products': total_products
         }
         print(total_sales)
         # context = {
@@ -2293,3 +2269,30 @@ def approve_hub(request, agent_id):
     hub.is_active = True  # Assuming is_active is the field in your custom user model
     hub.save()
     return JsonResponse({'success': True})
+def accepted_orders_view(request):
+    # Retrieve orders where accepted_by_store is True
+    accepted_orders = Order.objects.filter(accepted_by_store=True)
+
+    # Render the template with the accepted orders
+    return render(request, 'accepted_orders_delivery.html', {'accepted_orders': accepted_orders})
+def approve_order(request, order_id):
+    order = Order.objects.get(pk=order_id)
+    order.ready_for_pickup = True
+    order.save()
+    return redirect('accepted_orders_view')
+def orders_ready_for_pickup_view(request):
+    # Retrieve orders where ready_for_pickup is True and delivered is False
+    ready_orders = Order.objects.filter(ready_for_pickup=True, delivered=False)
+
+    return render(request, 'ready_for_pickup_order.html', {'ready_orders': ready_orders})
+
+def view_customer_address(request, order_id):
+    order = Order.objects.get(pk=order_id)
+    customer_address = order.address
+    return render(request, 'customer_address.html', {'customer_address': customer_address})
+
+def mark_as_delivered(request, order_id):
+    order = Order.objects.get(pk=order_id)
+    order.delivered = True
+    order.save()
+    return redirect('orders_ready_for_pickup_view')

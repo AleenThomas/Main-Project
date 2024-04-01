@@ -367,13 +367,13 @@
                         <div class="d-flex justify-content-between p-md-1">
                             <div class="d-flex flex-row">
                                 <div class="align-self-center">
-                                    <h2 class="h1 mb-0 me-4">₹{{ total_amount }}</h2>
+                                    <h3 class="h3 mb-0 me-4">Sales Report</h3>
                                 </div>
                                 <a href="{% url 'seller_report' %}" class="text-decoration-none text-dark">
                                 <div>
                                  
-                                    <h4>Total Sales</h4>
-                                    <p class="mb-0">Total Sales Amount</p>
+                                    {% comment %} <h4>Total Sales</h4> {% endcomment %}
+                                    <p class="mb-0">Report</p>
                                 </div></a>
                             </div>
                             <div class="align-self-center">
@@ -389,15 +389,15 @@
                         <div class="d-flex justify-content-between p-md-1">
                             <div class="d-flex flex-row">
                                 <div class="align-self-center">
-                                    <h2 class="h1 mb-0 me-4">₹36,0.00</h2>
+                                    <h2 class="h1 mb-0 me-4">{{total_products }}</h2>
                                 </div>
                                 <div>
-                                    <h4>Total Cost</h4>
-                                    <p class="mb-0">Monthly Cost</p>
+                                    <h4>Total Products</h4>
+                                    {% comment %} <p class="mb-0">Monthly Cost</p> {% endcomment %}
                                 </div>
                             </div>
                             <div class="align-self-center">
-                                <i class="fas fa-wallet text-warning fa-3x"></i>
+                              <i class="fas fa-box text-warning fa-3x"></i>
                             </div>
                         </div>
                     </div>

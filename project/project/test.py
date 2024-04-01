@@ -34,11 +34,7 @@ class Hosttest(TestCase):
         # Find and fill in the password field
         password = driver.find_element(By.CSS_SELECTOR, "input[name='password'][id='your_pass']")
         password.send_keys("Ria@12")
-<<<<<<< HEAD
         print("Test passed -wishlist")
-=======
-        print("Test passed ")
->>>>>>> 6a8cc4c2180b8601987b35ddddf737462f6753e4
         # Wait for a few seconds to ensure the form is ready
         time.sleep(2)
 
@@ -54,25 +50,12 @@ class Hosttest(TestCase):
         shop=driver.find_element(By.CSS_SELECTOR,"a.nav-link[href='/shop/']")
         shop.click()
         time.sleep(2)
-<<<<<<< HEAD
         cart=driver.find_element(By.CSS_SELECTOR,"a.btn.btn-success.text-white.mt-2")
-=======
-        cart=driver.find_element(By.CSS_SELECTOR,"a[href='/add_to_cart/2/'] ")
->>>>>>> 6a8cc4c2180b8601987b35ddddf737462f6753e4
         cart.click()
         time.sleep(2)
         cart_view=driver.find_element(By.CSS_SELECTOR,"i.fa.fa-fw.fa-cart-arrow-down.text-light.mr-1")
         cart_view.click()
-<<<<<<< HEAD
         print("Test passed - cart")
-=======
-
-        if "http://127.0.0.1:8000/" in driver.current_url:
-            print("Test Passed-cart")
-        else:
-            print("Test Failed-wishlist")
-        self.assertIn("http://127.0.0.1:8000/", driver.current_url)
->>>>>>> 6a8cc4c2180b8601987b35ddddf737462f6753e4
         time.sleep(2)
         cart_exit=driver.find_element(By.CSS_SELECTOR,"a[href='/shop/']")
         cart_exit.click()
@@ -86,6 +69,16 @@ class Hosttest(TestCase):
         wish_view=driver.find_element(By.CSS_SELECTOR,"a.btn.btn-success i.fas.fa-heart")
         wish_view.click()
         time.sleep(2)
+        farm_view=driver.find_element(By.CSS_SELECTOR,"a.nav-link[href='/farm_view/']")
+        farm_view.click()
+        time.sleep(2)
+        booking_view=driver.find_element(By.CSS_SELECTOR,"a.list-group-item.list-group-item-action[href='/booking_result_display/6/']")
+
+        booking_view.click()
+        time.sleep(2)
+
+
+
         
 
         

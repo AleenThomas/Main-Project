@@ -214,33 +214,49 @@
                 </li>
             </ul>
         </div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="container mt-5">
+                <h4>Orders List</h4>
+                <table class="table table-bordered mt-4">
+                    <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Navbar -->
-            <div class="top_navbar">
-                <div class="hamburger">
-                    <a href="#">
-                        <i class="fas fa-bars"></i>
-                    </a>
-                </div>
-            </div>
+                    <th>Total Price</th>
+                    <th>Order Date</th>
+                    <th>Customer's City</th>
+                    <th>Action</th>
+                    <!-- Add more columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in accepted_orders %}
+                    <tr>
+                        <td>{{ order.user.name }}</td>
 
-            <!-- Main Content Body -->
-            <div class="content">
-                <div class="welcome-message">Welcome to Your Delivery Agent Dashboard</div>
-                <p>This is the main content area where you can view and manage your delivery tasks.</p>
-                <!-- Additional content and features can be added here -->
-            </div>
-        </div>
+                        <td>{{ order.user.email }}</td>
+                        <td>{{ order.total_price }}</td>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ order.address.city }}</td>
+                        <td>
+                            {% if not order.ready_for_pickup %}
+                                <form action="{% url 'approve_order' order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Approve Product</button>
+                                </form>
+                                {% else %}
+                                <button type="button" class="btn btn-success" disabled>Accepted</button>
+                            {% endif %}
+                        </td>
+                        <!-- Add more columns as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-    <script>
-        // JavaScript for toggling sidebar
-        var hamburger = document.querySelector(".hamburger");
-        hamburger.addEventListener("click", function(){
-            document.querySelector("body").classList.toggle("active");
-        });
-    </script>
+</main>
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
