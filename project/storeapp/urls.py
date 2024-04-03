@@ -102,6 +102,8 @@ urlpatterns = [
     path('ready_for_pickup/', views.orders_ready_for_pickup_view, name='orders_ready_for_pickup_view'),
     path('view_address/<int:order_id>/', views.view_customer_address, name='view_customer_address'),
     path('mark_delivered/<int:order_id>/', views.mark_as_delivered, name='mark_as_delivered'),
+    path('mark_as_delivered/<int:order_id>/', views.mark_as_delivered, name='mark_as_delivered'),
+    # path('otp_verification/<int:order_id>/', views.otp_verification, name='otp_verification'),
 
 
 

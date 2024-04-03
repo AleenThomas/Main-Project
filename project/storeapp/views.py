@@ -2309,3 +2309,41 @@ def mark_as_delivered(request, order_id):
     order.delivered = True
     order.save()
     return redirect('orders_ready_for_pickup_view')
+# import random
+# def generate_otp():
+#     otp = ''.join(random.choices('0123456789', k=6))
+#     return otp    
+# def send_otp_via_twilio(customer_phone_number):
+#     client = Client("AC72d0d232baf2a2fba6788361351e6a46", "6e9f1f907246740d18f121972c80aec7")
+#     otp = generate_otp()  # Implement your OTP generation logic
+#     message = client.messages.create(
+#         body=f'Your OTP is: {otp}',
+#         from_=settings.,
+#         to=customer_phone_number
+#     )
+#     return otp
+
+
+
+# def mark_as_delivered(request, order_id):
+#     if request.method == 'POST':
+#         order = Order.objects.get(pk=order_id)
+#         otp_entered = request.POST.get('otp')
+
+#         # Compare the entered OTP with the OTP sent
+#         if otp_entered == request.session.get('otp'):
+#             order.delivered = True
+#             order.save()
+#             return redirect('orders_ready_for_pickup_view')
+#         else:
+#             return render(request, 'otp_verification.html', {'error_message': 'Invalid OTP. Please try again.'})
+
+#     else:
+#         order = Order.objects.get(pk=order_id)
+#         customer_phone_number = order.address.phone
+#         otp = send_otp_via_twilio(customer_phone_number)
+#         request.session['otp'] = otp
+#         return redirect('otp_verification', order_id=order_id)
+
+# def otp_verification(request, order_id):
+#     return render(request, 'otp_verification.html', {'order_id': order_id})
