@@ -1102,47 +1102,47 @@ def order_notification(seller_id, product_id):
 
     
 
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
-import numpy as np
-from django.core.files.uploadedfile import InMemoryUploadedFile
-import io
-def quality(request):
-    if request.method == 'POST':
-        img = request.FILES.get('image')
-        img2 = request.FILES.get('image')
-        print(img)
+# import tensorflow as tf
+# from tensorflow.keras.models import load_model
+# from tensorflow.keras.preprocessing import image
+# import numpy as np
+# from django.core.files.uploadedfile import InMemoryUploadedFile
+# import io
+# def quality(request):
+#     if request.method == 'POST':
+#         img = request.FILES.get('image')
+#         img2 = request.FILES.get('image')
+#         print(img)
         
-        # Check if the uploaded file is an image (you may want to add additional validation)
-        if img.content_type.startswith('image'):
-            model = load_model("models/Coffee.h5")
+#         # Check if the uploaded file is an image (you may want to add additional validation)
+#         if img.content_type.startswith('image'):
+#             model = load_model("models/Coffee.h5")
             
-            # Read image data from the InMemoryUploadedFile
-            img_data = img.read()
+#             # Read image data from the InMemoryUploadedFile
+#             img_data = img.read()
             
-            # Load the image from the image data
-            img = image.load_img(io.BytesIO(img_data), target_size=(224, 224))
-            img = image.img_to_array(img)
-            img = np.expand_dims(img, axis=0)
-            img = img / 255.0  # Normalize the image
-            print(img)
-            wict = model.predict(img)
-            predicted_class_index = np.argmax(predict)
-            print("Helllllllloooooooooo",predicted_class_index)
-            class_names = ["Dark", "Green", "Light", "Medium"]  # Update with your actual class names
-            predicted_class = class_names[predicted_class_index]
-            pred=PredictionImage(
-                user_id=request.user.id,
-                image=img2,
-                prediction=predicted_class
-            )
-            pred.save()
-            return render(request, "quality_check.html",{'prediction':predicted_class,'img':pred.image})
-        else:
-            print("The uploaded file is not an image.")
+#             # Load the image from the image data
+#             img = image.load_img(io.BytesIO(img_data), target_size=(224, 224))
+#             img = image.img_to_array(img)
+#             img = np.expand_dims(img, axis=0)
+#             img = img / 255.0  # Normalize the image
+#             print(img)
+#             wict = model.predict(img)
+#             predicted_class_index = np.argmax(predict)
+#             print("Helllllllloooooooooo",predicted_class_index)
+#             class_names = ["Dark", "Green", "Light", "Medium"]  # Update with your actual class names
+#             predicted_class = class_names[predicted_class_index]
+#             pred=PredictionImage(
+#                 user_id=request.user.id,
+#                 image=img2,
+#                 prediction=predicted_class
+#             )
+#             pred.save()
+#             return render(request, "quality_check.html",{'prediction':predicted_class,'img':pred.image})
+#         else:
+#             print("The uploaded file is not an image.")
     
-    return render(request, "quality_check.html")
+#     return render(request, "quality_check.html")
 # def quality(request):
 #     if request.method == 'POST':
 #         img = request.FILES.get('image')
@@ -2083,7 +2083,20 @@ def delivery_registration(request):
 
     return render(request, 'delivery_registration.html')
 def delivery_agent_home(request):
-    return render(request,'delivery_agent_home.html')
+    delivery_agent = DeliveryAgent.objects.get(user=request.user)
+
+    # Count orders for the current delivery agent based on different statuses
+    ready_for_pickup_count = Order.objects.filter(accepted_by_store=True,ready_for_pickup=False,delivery_agent=delivery_agent,).count()
+    delivered_count = Order.objects.filter(delivery_agent=delivery_agent,delivered=True).count()
+    accepted_by_store_count = Order.objects.filter(ready_for_pickup=True,delivered=False).count()
+
+    context = {
+        'ready_for_pickup_count': ready_for_pickup_count,
+        'delivered_count': delivered_count,
+        'accepted_by_store_count': accepted_by_store_count,
+    }
+
+    return render(request, 'delivery_agent_home.html',context)
 def delivery_agent_profile(request):
     print("save buttonnn clicked")
 
